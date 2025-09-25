@@ -1,6 +1,6 @@
-import crud_academico
+import crud_de_base
 
-db = crud_academico.crud()
+db = crud_de_base.crud()
 
 class crud_alumno:
     def consultar(self, buscar):

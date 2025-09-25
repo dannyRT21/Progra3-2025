@@ -1,11 +1,11 @@
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from urllib import parse
 import json 
-import crud_alumno
+import crud_productos
 
 port = 3000
 
-crudAlumno = crud_alumno.crud_alumno()
+crudAlumno = crud_productos.crud_alumno()
 
 class miServidor(SimpleHTTPRequestHandler):
     def do_GET(self):

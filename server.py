@@ -30,6 +30,23 @@ class miServidor(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(json.dumps(resp).encode("utf-8"))
 
+        #metodo para eliminar registros
+    def do_DELETE(self):
+        longitud = int(self.headers['Content-Length'])
+        datos = self.rfile.read(longitud)
+        datos = datos.decode("utf-8")
+        datos = parse.unquote(datos)
+        datos = json.loads(datos)
+        resp = {"msg": crudAlumno.eliminar(datos)}
+        
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(json.dumps(resp).encode("utf-8"))
+
+        #metodos para administrar docentes
+        
+
+
 print("Servidor ejecutandose en el puerto", port)
 server = HTTPServer(("localhost", port), miServidor)
 server.serve_forever()

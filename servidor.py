@@ -1,7 +1,7 @@
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from urllib import parse
 import json 
-import crud_productos
+import Model.crud_productos as crud_productos
 
 port = 3000
 

@@ -1,35 +1,17 @@
 from http.server import HTTPServer, SimpleHTTPRequestHandler
-from urllib import parse
-import json 
-import Model.crud_productos as crud_productos
+import os
 
-port = 3000
+# Cambia el directorio de trabajo a la carpeta Templates (donde están los HTML y recursos)
+os.chdir(os.path.join(os.path.dirname(__file__), "Templates"))
 
-crudAlumno = crud_productos.crud_alumno()
+class ServidorArchivos(SimpleHTTPRequestHandler):
+    pass  # Puedes agregar cabeceras CORS u otras personalizaciones si lo necesitas
 
-class miServidor(SimpleHTTPRequestHandler):
-    def do_GET(self):
-        if self.path=="/":
-            self.path="index.html"
-            return SimpleHTTPRequestHandler.do_GET(self)
-        if self.path=="/alumnos":
-            alumnos = crudAlumno.consultar("")
-            self.send_response(200)
-            self.end_headers()
-            self.wfile.write(json.dumps(alumnos).encode('utf-8'))
-    
-    def do_POST(self):
-        longitud = int(self.headers['Content-Length'])
-        datos = self.rfile.read(longitud)
-        datos = datos.decode("utf-8")
-        datos = parse.unquote(datos)
-        datos = json.loads(datos)
-        resp = {"msg": crudAlumno.administrar(datos)}
-        
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(json.dumps(resp).encode("utf-8"))
+def run(server_class=HTTPServer, handler_class=ServidorArchivos, port=2020):
+    server_address = ("", port)
+    httpd = server_class(server_address, handler_class)
+    print(f"Servidor corriendo en http://localhost:{port}")
+    httpd.serve_forever()
 
-print("Servidor ejecutandose en el puerto", port)
-server = HTTPServer(("localhost", port), miServidor)
-server.serve_forever()
+if __name__ == "__main__":
+    run()

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>iCREAM - Productos</title>
+    <title>iCREAM - Detalles del Producto</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <!-- Favicon -->
@@ -78,7 +78,6 @@
                 </button>
 
                 <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
-
                     <a href="index.html" class="navbar-brand d-none d-lg-block mr-3">
                         <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
                     </a>
@@ -88,7 +87,6 @@
                         <a href="gallery.html" class="nav-item nav-link">papeleria</a>
                         <a href="contact.html" class="nav-item nav-link">Abarrotes</a>
                     </div>
-
                 </div>
 
             </nav>
@@ -100,99 +98,61 @@
     <!-- Header Start -->
     <div class="jumbotron jumbotron-fluid page-header" style="margin-bottom: 90px;">
         <div class="container text-center py-5">
-            <h1 class="text-white display-3 mt-lg-5">Productos subidos</h1>
+            <h1 class="text-white display-3 mt-lg-5">Detalles del producto</h1>
             <div class="d-inline-flex align-items-center text-white">
-                <p class="m-0"><a class="text-white" href="">Home</a></p>
+                <p class="m-0"><a class="text-white" href="index.html">Home</a></p>
                 <i class="fa fa-circle px-3"></i>
-                <p class="m-0">Productos</p>
+                <p class="m-0">Detalles</p>
             </div>
         </div>
     </div>
     <!-- Header End -->
 
 
-    <!-- Products Counter Start -->
-    <div class="container mb-4">
-        <div class="row justify-content-center">
-            <div class="col-lg-4 col-md-6">
-                <div class="bg-secondary text-white text-center rounded py-3">
-                    <h5 class="mb-1">Total de productos</h5>
-                    <h2 id="product-counter" class="mb-0 display-4">0</h2>
+    <!-- Product Details Start -->
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <!-- Imagen grande -->
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <div class="position-relative bg-primary rounded p-3">
+                    <img class="w-100 rounded" src="img/product-1.jpg" style="object-fit: cover;" alt="Imagen del producto">
                 </div>
+            </div>
+
+            <!-- Información -->
+            <div class="col-lg-6">
+                <h2 class="font-weight-bold mb-3">Helado de Vainilla Artesanal</h2>
+                <h4 class="text-primary mb-3">$9.99</h4>
+                <p class="mb-4">Delicioso helado artesanal con sabor clásico de vainilla. Preparado con ingredientes frescos y de alta calidad para brindarte una experiencia cremosa y única.</p>
+
+                <ul class="list-unstyled mb-4">
+                    <li><i class="fa fa-check text-primary mr-2"></i> 100% natural</li>
+                    <li><i class="fa fa-check text-primary mr-2"></i> Sin colorantes artificiales</li>
+                    <li><i class="fa fa-check text-primary mr-2"></i> Ideal para postres y eventos</li>
+                </ul>
+
+                <a href="productos.html" class="btn btn-secondary btn-lg"><i class="fa fa-arrow-left mr-2"></i> Regresar a productos</a>
             </div>
         </div>
     </div>
-    <!-- Products Counter End -->
+    <!-- Product Details End -->
 
 
-    <!-- Products Start -->
-    <div class="container-fluid py-5">
-        <div class="container py-5">
-            <div class="row" id="product-list">
-                <!-- Producto 1 -->
-                <div class="col-lg-3 col-md-6 mb-4 pb-2 product-card">
-                    <div class="product-item d-flex flex-column align-items-center text-center bg-light rounded py-5 px-3">
-                        <div class="bg-primary mt-n5 py-3" style="width: 80px;">
-                            <h4 class="font-weight-bold text-white mb-0">$9.99</h4>
-                        </div>
-                        <div class="position-relative bg-primary rounded-circle mt-n3 mb-4 p-3" style="width: 150px; height: 150px;">
-                            <img class="rounded-circle w-100 h-100" src="img/product-1.jpg" style="object-fit: cover;">
-                        </div>
-                        <h5 class="font-weight-bold mb-2">Helado de Vainilla</h5>
-                        <p class="mb-3">Cremoso helado artesanal con sabor clásico de vainilla.</p>
-                        <a href="detalles.html" target="_blank" class="btn btn-sm btn-secondary">Detalles de producto</a>
-                    </div>
-                </div>
-
-                <!-- Producto 2 -->
-                <div class="col-lg-3 col-md-6 mb-4 pb-2 product-card">
-                    <div class="product-item d-flex flex-column align-items-center text-center bg-light rounded py-5 px-3">
-                        <div class="bg-primary mt-n5 py-3" style="width: 80px;">
-                            <h4 class="font-weight-bold text-white mb-0">$12.50</h4>
-                        </div>
-                        <div class="position-relative bg-primary rounded-circle mt-n3 mb-4 p-3" style="width: 150px; height: 150px;">
-                            <img class="rounded-circle w-100 h-100" src="img/product-2.jpg" style="object-fit: cover;">
-                        </div>
-                        <h5 class="font-weight-bold mb-2">Helado de Fresa</h5>
-                        <p class="mb-3">Helado natural con fresas frescas y un toque de crema.</p>
-                        <a href="detalles.html" target="_blank" class="btn btn-sm btn-secondary">Detalles de producto</a>
-                    </div>
-                </div>
-
-                <!-- Producto 3 -->
-                <div class="col-lg-3 col-md-6 mb-4 pb-2 product-card">
-                    <div class="product-item d-flex flex-column align-items-center text-center bg-light rounded py-5 px-3">
-                        <div class="bg-primary mt-n5 py-3" style="width: 80px;">
-                            <h4 class="font-weight-bold text-white mb-0">$11.00</h4>
-                        </div>
-                        <div class="position-relative bg-primary rounded-circle mt-n3 mb-4 p-3" style="width: 150px; height: 150px;">
-                            <img class="rounded-circle w-100 h-100" src="img/product-3.jpg" style="object-fit: cover;">
-                        </div>
-                        <h5 class="font-weight-bold mb-2">Helado de Chocolate</h5>
-                        <p class="mb-3">Delicioso helado de chocolate con cacao premium.</p>
-                        <a href="detalles.html" target="_blank" class="btn btn-sm btn-secondary">Detalles de producto</a>
-                    </div>
-                </div>
-
-                <!-- Producto 4 -->
-                <div class="col-lg-3 col-md-6 mb-4 pb-2 product-card">
-                    <div class="product-item d-flex flex-column align-items-center text-center bg-light rounded py-5 px-3">
-                        <div class="bg-primary mt-n5 py-3" style="width: 80px;">
-                            <h4 class="font-weight-bold text-white mb-0">$13.00</h4>
-                        </div>
-                        <div class="position-relative bg-primary rounded-circle mt-n3 mb-4 p-3" style="width: 150px; height: 150px;">
-                            <img class="rounded-circle w-100 h-100" src="img/product-4.jpg" style="object-fit: cover;">
-                        </div>
-                        <h5 class="font-weight-bold mb-2">Helado de Mango</h5>
-                        <p class="mb-3">Helado tropical con el auténtico sabor del mango maduro.</p>
-                        <a href="detalles.html" target="_blank" class="btn btn-sm btn-secondary">Detalles de producto</a>
-                    </div>
-                </div>
-            </div>
+    <!-- Descripción extendida Start -->
+    <div class="container py-5">
+        <div class="bg-light rounded p-4">
+            <h4 class="font-weight-bold mb-3">Descripción completa</h4>
+            <p>
+                Nuestro helado de vainilla artesanal es elaborado con métodos tradicionales para conservar su textura cremosa y su sabor natural. 
+                Es perfecto para acompañar pasteles, frutas frescas o simplemente disfrutarlo solo. 
+                Cada cucharada es una explosión de sabor auténtico que te transportará a tu infancia.
+            </p>
+            <p>
+                Disponible en presentaciones individuales y familiares. Ideal para cafeterías, tiendas y eventos especiales.
+            </p>
         </div>
     </div>
-    <!-- Products End -->
-
+    <!-- Descripción extendida End -->
 
 
     <!-- Footer Start -->
@@ -248,26 +208,6 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
-
-    <!-- Custom Counter Script -->
-    <script>
-        // Contar productos y mostrar número total
-        document.addEventListener('DOMContentLoaded', () => {
-            const totalProductos = document.querySelectorAll('.product-card').length;
-            const counterElement = document.getElementById('product-counter');
-            let count = 0;
-
-            // Animación autoincremental
-            const interval = setInterval(() => {
-                if (count < totalProductos) {
-                    count++;
-                    counterElement.textContent = count;
-                } else {
-                    clearInterval(interval);
-                }
-            }, 150);
-        });
-    </script>
 
 </body>
 

@@ -23,11 +23,63 @@
     <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
 
     <!-- Customized Bootstrap Stylesheet -->
+    <!-- Nota: Asumimos que esta hoja de estilo existe y define btn-primary, etc. -->
     <link href="css/style.css" rel="stylesheet">
+
+    <!-- CSS Personalizado para los Nuevos Botones -->
+    <style>
+        /*
+         * Colores personalizados basados en el ejercicio anterior de CopyVariedades:
+         * Azul Principal: #00aaff
+         * Rojo de Acción: #E74C3C
+         */
+        
+        /* Estilo para el botón de Consultas (Azul) */
+        .btn-secundario-azul {
+            background-color: #00aaff !important;
+            border-color: #00aaff !important;
+            color: white !important;
+        }
+        .btn-secundario-azul:hover {
+            background-color: #0099dd !important; /* Tono más oscuro para el hover */
+            border-color: #0099dd !important;
+        }
+
+        /* Estilo para el botón de Urgencias (Rojo) */
+        .btn-accion-rojo {
+            background-color: #E74C3C !important; /* Un rojo vibrante */
+            border-color: #E74C3C !important;
+            color: white !important;
+        }
+        .btn-accion-rojo:hover {
+            background-color: #C0392B !important; /* Rojo más oscuro para el hover */
+            border-color: #C0392B !important;
+        }
+
+        /* Ajuste de márgenes para la fila de botones */
+        .btn-row {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap; /* Asegura que los botones se apilen en pantallas pequeñas */
+        }
+        
+        .btn-row .btn {
+            flex: 1 1 30%; /* Permite que cada botón ocupe ~30% del espacio, asegurando 3 en línea */
+            margin: 5px; /* Pequeño margen entre botones */
+        }
+        
+        @media (max-width: 576px) {
+             .btn-row .btn {
+                flex: 1 1 100%; /* En móviles, cada botón ocupa todo el ancho */
+                margin: 5px 0;
+            }
+        }
+    </style>
 </head>
 
 <body>
-   <!-- Topbar Start -->
+    <!-- Topbar Start -->
     <div class="container-fluid bg-primary py-3 d-none d-md-block">
         <div class="container">
             <div class="row">
@@ -97,16 +149,15 @@
 </div>
     <!-- Navbar End -->
 
+
     
-
-
     <!-- Header Start -->
     <div class="jumbotron jumbotron-fluid page-header" style="margin-bottom: 90px;">
         <div class="container text-center py-5">
             <h1 class="text-white display-3 mt-lg-5">Contactenos</h1>
             <div class="d-inline-flex align-items-center text-white">
-                <p class="m-0"><a class="text-white" href="">!Estamos feciles de recibir soporte y sugerencias!</a></p>
-             
+                <p class="m-0"><a class="text-white" href="">¡Estamos feciles de recibir soporte y sugerencias!</a></p>
+                
                 
             </div>
         </div>
@@ -145,9 +196,17 @@
                                 <textarea class="form-control p-4" rows="6" id="txtMensaje" placeholder="Mensaje" required="required" data-validation-required-message="Please enter your message"></textarea>
                                 <p class="help-block text-danger"></p>
                             </div>
-                            <div>
-                                <button class="btn btn-primary btn-block py-3 px-5" type="submit" id="btnEnviar">Enviar sugerencias</button>
+                            <!-- INICIO: Botones múltiples agregados aquí -->
+                            <div class="btn-row">
+                                <button class="btn btn-primary py-3 flex-fill" type="submit" id="btnEnviar">Enviar sugerencias</button>
+                                
+                                <!-- Nuevo Botón Azul -->
+                                <button class="btn btn-secundario-azul py-3 flex-fill" type="button">Editar comentario</button>
+                                
+                                <!-- Nuevo Botón Rojo -->
+                                <button class="btn btn-accion-rojo py-3 flex-fill" type="button">Eliminar comentario </button>
                             </div>
+                            <!-- FIN: Botones múltiples agregados -->
                         </form>
                     </div>
                 </div>
@@ -157,7 +216,7 @@
     <!-- Contact End -->
 
 
-   <!-- Footer Start -->
+    <!-- Footer Start -->
     <div class="container-fluid footer bg-light py-5" style="margin-top: 90px;">
         <div class="container text-center py-5">
             <div class="row">

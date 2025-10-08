@@ -168,57 +168,212 @@
     <!-- Header End -->
      
 
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <h1 class="section-title position-relative text-center mb-5">Contáctenos para consultas aquí:</h1>
+            </div>
+        </div>
 
-    <!-- Contact Start -->
-    <div class="container-fluid py-5">
-        <div class="container py-5">
-            <div class="row justify-content-center">
-                <div class="col-lg-6">
-                    <h1 class="section-title position-relative text-center mb-5">Contactenos para consultas aqui:</h1>
+        <!-- FORMULARIO -->
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <div class="contact-form bg-light rounded p-5">
+                    <form id="contactForm" novalidate>
+                        <div class="form-row">
+                            <div class="col-sm-6 control-group">
+                                <input type="text" class="form-control p-4" id="txtNombre" placeholder="Su nombre" required />
+                            </div>
+                            <div class="col-sm-6 control-group">
+                                <input type="email" class="form-control p-4" id="txtEmail" placeholder="Su correo" required />
+                            </div>
+                        </div>
+                        <div class="control-group mt-3">
+                            <input type="text" class="form-control p-4" id="txtAsunto" placeholder="Asunto" required />
+                        </div>
+                        <div class="control-group mt-3">
+                            <textarea class="form-control p-4" rows="6" id="txtMensaje" placeholder="Mensaje" required></textarea>
+                        </div>
+                        <div class="btn-row mt-4">
+                            <button class="btn btn-primary py-3 flex-fill" type="submit" id="btnEnviar">Enviar sugerencias</button>
+                            <button class="btn btn-secundario-azul py-3 flex-fill" type="button">Editar comentario</button>
+                            <button class="btn btn-accion-rojo py-3 flex-fill" type="button">Eliminar comentario</button>
+                        </div>
+                    </form>
                 </div>
             </div>
-            <div class="row justify-content-center">
-                <div class="col-lg-9">
-                    <div class="contact-form bg-light rounded p-5">
-                        <div id="success"></div>
-                        <form name="sentMessage" id="contactForm" novalidate="novalidate">
-                            <div class="form-row">
-                                <div class="col-sm-6 control-group">
-                                    <input type="text" class="form-control p-4" id="txtNombre" placeholder="Su nombre" required="required" data-validation-required-message="Please enter your name" />
-                                    <p class="help-block text-danger"></p>
-                                </div>
-                                <div class="col-sm-6 control-group">
-                                    <input type="email" class="form-control p-4" id="txtEmail" placeholder="Su correo" required="required" data-validation-required-message="Please enter your email" />
-                                    <p class="help-block text-danger"></p>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <input type="text" class="form-control p-4" id="txtAsunto" placeholder="Asunto" required="required" data-validation-required-message="Please enter a subject" />
-                                <p class="help-block text-danger"></p>
-                            </div>
-                            <div class="control-group">
-                                <textarea class="form-control p-4" rows="6" id="txtMensaje" placeholder="Mensaje" required="required" data-validation-required-message="Please enter your message"></textarea>
-                                <p class="help-block text-danger"></p>
-                            </div>
-                            <!-- INICIO: Botones múltiples agregados aquí -->
-                            <div class="btn-row">
-                                <button class="btn btn-primary py-3 flex-fill" type="submit" id="btnEnviar">Enviar sugerencias</button>
-                                
-                                <!-- Nuevo Botón Azul -->
-                                <button class="btn btn-secundario-azul py-3 flex-fill" type="button">Editar comentario</button>
-                                
-                                <!-- Nuevo Botón Rojo -->
-                                <button class="btn btn-accion-rojo py-3 flex-fill" type="button">Eliminar comentario </button>
-                            </div>
-                            <!-- FIN: Botones múltiples agregados -->
-                        </form>
-                    </div>
+        </div>
+
+        <!-- TABLA COMENTARIOS -->
+        <div class="row justify-content-center mt-5">
+            <div class="col-lg-11">
+                <h3 class="text-center mb-4">Comentarios Recibidos</h3>
+                <div class="table-responsive">
+                    <table class="table table-bordered text-center">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Asunto</th>
+                                <th>Comentario</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaComentarios">
+                            <!-- Comentarios dinámicos -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Contact End -->
+</div>
 
+<script>
+    const txtNombre = document.getElementById('txtNombre');
+    const txtEmail = document.getElementById('txtEmail');
+    const txtAsunto = document.getElementById('txtAsunto');
+    const txtMensaje = document.getElementById('txtMensaje');
+
+    let idComentario = null;
+    let accion = "nuevo";
+
+    const btnEnviar = document.getElementById('btnEnviar');
+    const btnEditar = document.querySelector('.btn-secundario-azul');
+    const btnEliminar = document.querySelector('.btn-accion-rojo');
+
+    async function guardarComentario() {
+        let datos = {
+            accion,
+            id: idComentario,
+            nombre: txtNombre.value,
+            e_mail: txtEmail.value,
+            asunto: txtAsunto.value,
+            comentario: txtMensaje.value,
+            fecha_envio: new Date().toISOString()
+        };
+
+        let response = await fetch("http://localhost:2020/comentarios", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(datos),
+        });
+
+        let respuesta = await response.json();
+
+        if (respuesta.msg !== "ok") {
+            alert(`Error al procesar comentario: ${respuesta.msg}`);
+            return;
+        }
+
+        if (accion === "nuevo") {
+            alert('✔️ Comentario agregado con éxito');
+        } else {
+            alert('✏️ Comentario modificado con éxito');
+        }
+
+        limpiarFormulario();
+        obtenerComentarios();
+    }
+
+    async function obtenerComentarios() {
+        let response = await fetch("http://localhost:2020/comentarios");
+        let comentarios = await response.json();
+        const tabla = document.getElementById("tablaComentarios");
+
+        tabla.innerHTML = "";
+
+        // Opcional: ordenar por id descendente
+        comentarios.sort((a, b) => b.id - a.id);
+
+        comentarios.forEach(com => {
+            const fila = document.createElement("tr");
+            fila.innerHTML = `
+                <td>${com.nombre}</td>
+                <td>${com.e_mail}</td>
+                <td>${com.asunto}</td>
+                <td>${com.comentario}</td>
+                <td>
+                    <button class="btn btn-sm btn-warning mr-2" onclick='editarComentario(${JSON.stringify(com)})'>Editar</button>
+                    <button class="btn btn-sm btn-danger" onclick='confirmarEliminar(${com.id})'>Eliminar</button>
+                </td>
+            `;
+            tabla.appendChild(fila);
+        });
+    }
+
+    function editarComentario(com) {
+        accion = "modificar";
+        idComentario = com.id;
+        txtNombre.value = com.nombre;
+        txtEmail.value = com.e_mail;
+        txtAsunto.value = com.asunto;
+        txtMensaje.value = com.comentario;
+    }
+
+    function confirmarEliminar(id) {
+        if (confirm("¿Estás seguro de eliminar este comentario?")) {
+            idComentario = id;
+            eliminarComentario();
+        }
+    }
+
+    async function eliminarComentario() {
+        if (!idComentario) {
+            alert("Selecciona un comentario para eliminar");
+            return;
+        }
+
+        let datos = {
+            accion: "eliminar",
+            id: idComentario
+        };
+
+        let response = await fetch("http://localhost:2020/comentarios", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(datos),
+        });
+
+        let respuesta = await response.json();
+
+        if (respuesta.msg !== "ok") {
+            alert(`Error al eliminar comentario: ${respuesta.msg}`);
+            return;
+        }
+
+        alert('🗑️ Comentario eliminado con éxito');
+        limpiarFormulario();
+        obtenerComentarios();
+    }
+
+    function limpiarFormulario() {
+        txtNombre.value = "";
+        txtEmail.value = "";
+        txtAsunto.value = "";
+        txtMensaje.value = "";
+        idComentario = null;
+        accion = "nuevo";
+    }
+
+    btnEnviar.addEventListener('click', (e) => {
+        e.preventDefault();
+        guardarComentario();
+    });
+
+    btnEditar.addEventListener('click', (e) => {
+        e.preventDefault();
+        accion = "modificar";
+        guardarComentario();
+    });
+
+    btnEliminar.addEventListener('click', (e) => {
+        e.preventDefault();
+        eliminarComentario();
+    });
+    document.addEventListener('DOMContentLoaded', obtenerComentarios);
+</script>
 
     <!-- Footer Start -->
     <div class="container-fluid footer bg-light py-5" style="margin-top: 90px;">

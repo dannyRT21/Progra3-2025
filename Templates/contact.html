@@ -1,83 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <title>iCREAM - Ice Cream Shop Website Template</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
-
+ 
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
-
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
+ 
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+ 
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-
-    <!-- Libraries Stylesheet -->
+ 
+    <!-- Libraries CSS -->
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
-
-    <!-- Customized Bootstrap Stylesheet -->
-    <!-- Nota: Asumimos que esta hoja de estilo existe y define btn-primary, etc. -->
+ 
+    <!-- Custom CSS -->
     <link href="css/style.css" rel="stylesheet">
-
-    <!-- CSS Personalizado para los Nuevos Botones -->
+ 
+    <!-- Estilos para botones CRUD -->
     <style>
-        /*
-         * Colores personalizados basados en el ejercicio anterior de CopyVariedades:
-         * Azul Principal: #00aaff
-         * Rojo de Acción: #E74C3C
-         */
-        
-        /* Estilo para el botón de Consultas (Azul) */
         .btn-secundario-azul {
             background-color: #00aaff !important;
             border-color: #00aaff !important;
             color: white !important;
         }
         .btn-secundario-azul:hover {
-            background-color: #0099dd !important; /* Tono más oscuro para el hover */
+            background-color: #0099dd !important;
             border-color: #0099dd !important;
         }
-
-        /* Estilo para el botón de Urgencias (Rojo) */
         .btn-accion-rojo {
-            background-color: #E74C3C !important; /* Un rojo vibrante */
+            background-color: #E74C3C !important;
             border-color: #E74C3C !important;
             color: white !important;
         }
         .btn-accion-rojo:hover {
-            background-color: #C0392B !important; /* Rojo más oscuro para el hover */
+            background-color: #C0392B !important;
             border-color: #C0392B !important;
         }
-
-        /* Ajuste de márgenes para la fila de botones */
         .btn-row {
             margin-top: 20px;
             display: flex;
             justify-content: space-between;
-            flex-wrap: wrap; /* Asegura que los botones se apilen en pantallas pequeñas */
+            flex-wrap: wrap;
         }
-        
         .btn-row .btn {
-            flex: 1 1 30%; /* Permite que cada botón ocupe ~30% del espacio, asegurando 3 en línea */
-            margin: 5px; /* Pequeño margen entre botones */
+            flex: 1 1 30%;
+            margin: 5px;
         }
-        
         @media (max-width: 576px) {
-             .btn-row .btn {
-                flex: 1 1 100%; /* En móviles, cada botón ocupa todo el ancho */
+            .btn-row .btn {
+                flex: 1 1 100%;
                 margin: 5px 0;
             }
         }
     </style>
 </head>
-
+ 
 <body>
     <!-- Topbar Start -->
     <div class="container-fluid bg-primary py-3 d-none d-md-block">
@@ -94,80 +78,54 @@
                 </div>
                 <div class="col-md-6 text-center text-lg-right">
                     <div class="d-inline-flex align-items-center">
-                        <a class="text-white px-3" href="">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a class="text-white px-3" href="">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a class="text-white px-3" href="">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a class="text-white px-3" href="">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a class="text-white pl-3" href="">
-                            <i class="fab fa-youtube"></i>
-                        </a>
+                        <a class="text-white px-3" href=""><i class="fab fa-facebook-f"></i></a>
+                        <a class="text-white px-3" href=""><i class="fab fa-twitter"></i></a>
+                        <a class="text-white px-3" href=""><i class="fab fa-linkedin-in"></i></a>
+                        <a class="text-white px-3" href=""><i class="fab fa-instagram"></i></a>
+                        <a class="text-white pl-3" href=""><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- Topbar End -->
-
-
+ 
     <!-- Navbar Start -->
-<div class="container-fluid position-relative nav-bar p-0">
-    <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
-        <nav class="navbar navbar-expand-lg bg-white navbar-light shadow p-lg-0 justify-content-center">
-            
-            <a href="index.html" class="navbar-brand d-block d-lg-none">
-                <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
-            </a>
-            
-            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
-                
-                <a href="index.html" class="navbar-brand d-none d-lg-block mr-3">
+    <div class="container-fluid position-relative nav-bar p-0">
+        <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
+            <nav class="navbar navbar-expand-lg bg-white navbar-light shadow p-lg-0 justify-content-center">
+                <a href="index.html" class="navbar-brand d-block d-lg-none">
                     <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
                 </a>
-
-                <div class="navbar-nav py-0"> 
-                    <a href="index.html" class="nav-item nav-link">Home</a>
-                    <a href="productos.html" class="nav-item nav-link">papeleria y abarrotes</a>
-                    <a href="contact.html" class="nav-item nav-link">Contactanos</a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
+                    <a href="index.html" class="navbar-brand d-none d-lg-block mr-3">
+                        <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
+                    </a>
+                    <div class="navbar-nav py-0">
+                        <a href="index.html" class="nav-item nav-link">Home</a>
+                        <a href="productos.html" class="nav-item nav-link">papeleria y abarrotes</a>
+                        <a href="contact.html" class="nav-item nav-link active">Contactanos</a>
+                    </div>
                 </div>
-                
-            </div>
-            
-        </nav>
+            </nav>
+        </div>
     </div>
-</div>
     <!-- Navbar End -->
-
-
-    
- <!-- Header Start -->
+ 
+    <!-- Header Start -->
     <div class="jumbotron jumbotron-fluid page-header" style="margin-bottom: 90px;">
         <div class="container text-center py-5">
             <h1 class="text-white display-3 mt-lg-5">Contactanos</h1>
             <h1 class="text-white display-4 mb-4">para consultas y sugerencias</h1>
-            <div class="d-inline-flex align-items-center text-white">
-                <p class="m-0"><a class="text-white" href="">Home</a></p>
-                    <a href = "index.html" class = "fa fa-angle-double-right px-3"></a>
-                <i class="fa fa-circle px-3"></i>
-                <p class="m-0">ver productos</p>
-                <a href = "productos.html" class = "fa fa-angle-double-right px-3"></a>
-            </div>
         </div>
     </div>
     <!-- Header End -->
-     
+ <!-- ...todo tu código HEAD y NAVBAR permanece igual... -->
 
+<!-- Contact Start -->
 <div class="container-fluid py-5">
     <div class="container py-5">
         <div class="row justify-content-center">
@@ -175,30 +133,28 @@
                 <h1 class="section-title position-relative text-center mb-5">Contáctenos para consultas aquí:</h1>
             </div>
         </div>
-
-        <!-- FORMULARIO -->
         <div class="row justify-content-center">
             <div class="col-lg-9">
                 <div class="contact-form bg-light rounded p-5">
-                    <form id="contactForm" novalidate>
+                    <form id="contactForm">
                         <div class="form-row">
-                            <div class="col-sm-6 control-group">
+                            <div class="col-sm-6">
                                 <input type="text" class="form-control p-4" id="txtNombre" placeholder="Su nombre" required />
                             </div>
-                            <div class="col-sm-6 control-group">
+                            <div class="col-sm-6">
                                 <input type="email" class="form-control p-4" id="txtEmail" placeholder="Su correo" required />
                             </div>
                         </div>
-                        <div class="control-group mt-3">
+                        <div class="form-group mt-3">
                             <input type="text" class="form-control p-4" id="txtAsunto" placeholder="Asunto" required />
                         </div>
-                        <div class="control-group mt-3">
+                        <div class="form-group">
                             <textarea class="form-control p-4" rows="6" id="txtMensaje" placeholder="Mensaje" required></textarea>
                         </div>
-                        <div class="btn-row mt-4">
-                            <button class="btn btn-primary py-3 flex-fill" type="submit" id="btnEnviar">Enviar sugerencias</button>
-                            <button class="btn btn-secundario-azul py-3 flex-fill" type="button">Editar comentario</button>
-                            <button class="btn btn-accion-rojo py-3 flex-fill" type="button">Eliminar comentario</button>
+                        <div class="btn-row">
+                            <button class="btn btn-primary py-3" type="button" onclick="guardarComentario('nuevo')">Enviar sugerencia</button>
+                            <button class="btn btn-secundario-azul py-3" type="button" onclick="guardarComentario('modificar')">Editar comentario</button>
+                            <button class="btn btn-accion-rojo py-3" type="button" onclick="eliminarComentario()">Eliminar comentario</button>
                         </div>
                     </form>
                 </div>
@@ -221,73 +177,119 @@
                             </tr>
                         </thead>
                         <tbody id="tablaComentarios">
-                            <!-- Comentarios dinámicos -->
+                            <!-- Comentarios cargados dinámicamente -->
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
+<!-- Contact End -->
 
+<!-- Script CRUD Comentarios -->
 <script>
-    const txtNombre = document.getElementById('txtNombre');
-    const txtEmail = document.getElementById('txtEmail');
-    const txtAsunto = document.getElementById('txtAsunto');
-    const txtMensaje = document.getElementById('txtMensaje');
+    const API_URL = "http://localhost:2020/comentarios";
+
+    const campos = {
+        nombre: document.getElementById('txtNombre'),
+        email: document.getElementById('txtEmail'),
+        asunto: document.getElementById('txtAsunto'),
+        comentario: document.getElementById('txtMensaje')
+    };
 
     let idComentario = null;
     let accion = "nuevo";
 
-    const btnEnviar = document.getElementById('btnEnviar');
-    const btnEditar = document.querySelector('.btn-secundario-azul');
-    const btnEliminar = document.querySelector('.btn-accion-rojo');
+    document.addEventListener('DOMContentLoaded', cargarComentarios);
 
-    async function guardarComentario() {
-        let datos = {
-            accion,
+    function limpiarFormulario() {
+        Object.values(campos).forEach(campo => campo.value = '');
+        idComentario = null;
+        accion = "nuevo";
+    }
+
+    function validarCampos() {
+        return Object.values(campos).every(input => input.value.trim() !== '');
+    }
+
+    function getDatosFormulario() {
+        return {
             id: idComentario,
-            nombre: txtNombre.value,
-            e_mail: txtEmail.value,
-            asunto: txtAsunto.value,
-            comentario: txtMensaje.value,
-            fecha_envio: new Date().toISOString()
+            accion,
+            nombre: campos.nombre.value,
+            e_mail: campos.email.value,
+            asunto: campos.asunto.value,
+            comentario: campos.comentario.value
         };
+    }
 
-        let response = await fetch("http://localhost:2020/comentarios", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(datos),
-        });
+    async function guardarComentario(tipo) {
+        accion = tipo;
 
-        let respuesta = await response.json();
-
-        if (respuesta.msg !== "ok") {
-            alert(`Error al procesar comentario: ${respuesta.msg}`);
+        if (!validarCampos()) {
+            alert("Todos los campos son obligatorios.");
             return;
         }
 
-        if (accion === "nuevo") {
-            alert('✔️ Comentario agregado con éxito');
-        } else {
-            alert('✏️ Comentario modificado con éxito');
-        }
+        const datos = getDatosFormulario();
 
-        limpiarFormulario();
-        obtenerComentarios();
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(datos)
+        });
+
+        const resultado = await response.json();
+
+        if (resultado.msg === "ok") {
+            alert(tipo === "nuevo" ? "Comentario agregado con éxito" : "Comentario actualizado con éxito");
+            limpiarFormulario();
+            cargarComentarios();
+        } else {
+            alert("Error: " + resultado.msg);
+        }
     }
 
-    async function obtenerComentarios() {
-        let response = await fetch("http://localhost:2020/comentarios");
-        let comentarios = await response.json();
-        const tabla = document.getElementById("tablaComentarios");
+    async function eliminarComentario() {
+        if (!idComentario) {
+            alert("Seleccione un comentario para eliminar.");
+            return;
+        }
 
-        tabla.innerHTML = "";
+        if (!confirm("¿Está seguro que desea eliminar este comentario?")) return;
 
-        // Opcional: ordenar por id descendente
-        comentarios.sort((a, b) => b.id - a.id);
+        const datos = { accion: "eliminar", id: idComentario };
 
-        comentarios.forEach(com => {
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(datos)
+        });
+
+        const resultado = await response.json();
+
+        if (resultado.msg === "ok") {
+            alert("Comentario eliminado correctamente");
+            limpiarFormulario();
+            cargarComentarios();
+        } else {
+            alert("Error al eliminar: " + resultado.msg);
+        }
+    }
+
+    async function cargarComentarios() {
+        const response = await fetch('/comentarios');
+        const comentarios = await response.json();
+        renderizarComentarios(comentarios.sort((a, b) => b.id - a.id));
+    }
+
+    function renderizarComentarios(lista) {
+        const tbody = document.getElementById("tablaComentarios");
+        tbody.innerHTML = "";
+
+        lista.forEach(com => {
             const fila = document.createElement("tr");
             fila.innerHTML = `
                 <td>${com.nombre}</td>
@@ -295,145 +297,38 @@
                 <td>${com.asunto}</td>
                 <td>${com.comentario}</td>
                 <td>
-                    <button class="btn btn-sm btn-warning mr-2" onclick='editarComentario(${JSON.stringify(com)})'>Editar</button>
-                    <button class="btn btn-sm btn-danger" onclick='confirmarEliminar(${com.id})'>Eliminar</button>
+                    <button class="btn btn-sm btn-warning mr-2" onclick='cargarComentario(${JSON.stringify(com)})'>Editar</button>
+                    <button class="btn btn-sm btn-danger" onclick='prepararEliminacion(${com.id})'>Eliminar</button>
                 </td>
             `;
-            tabla.appendChild(fila);
+            tbody.appendChild(fila);
         });
     }
 
-    function editarComentario(com) {
+    function cargarComentario(com) {
         accion = "modificar";
         idComentario = com.id;
-        txtNombre.value = com.nombre;
-        txtEmail.value = com.e_mail;
-        txtAsunto.value = com.asunto;
-        txtMensaje.value = com.comentario;
+        campos.nombre.value = com.nombre;
+        campos.email.value = com.e_mail;
+        campos.asunto.value = com.asunto;
+        campos.comentario.value = com.comentario;
     }
 
-    function confirmarEliminar(id) {
-        if (confirm("¿Estás seguro de eliminar este comentario?")) {
-            idComentario = id;
-            eliminarComentario();
-        }
+    function prepararEliminacion(id) {
+        idComentario = id;
     }
-
-    async function eliminarComentario() {
-        if (!idComentario) {
-            alert("Selecciona un comentario para eliminar");
-            return;
-        }
-
-        let datos = {
-            accion: "eliminar",
-            id: idComentario
-        };
-
-        let response = await fetch("http://localhost:2020/comentarios", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(datos),
-        });
-
-        let respuesta = await response.json();
-
-        if (respuesta.msg !== "ok") {
-            alert(`Error al eliminar comentario: ${respuesta.msg}`);
-            return;
-        }
-
-        alert('🗑️ Comentario eliminado con éxito');
-        limpiarFormulario();
-        obtenerComentarios();
-    }
-
-    function limpiarFormulario() {
-        txtNombre.value = "";
-        txtEmail.value = "";
-        txtAsunto.value = "";
-        txtMensaje.value = "";
-        idComentario = null;
-        accion = "nuevo";
-    }
-
-    btnEnviar.addEventListener('click', (e) => {
-        e.preventDefault();
-        guardarComentario();
-    });
-
-    btnEditar.addEventListener('click', (e) => {
-        e.preventDefault();
-        accion = "modificar";
-        guardarComentario();
-    });
-
-    btnEliminar.addEventListener('click', (e) => {
-        e.preventDefault();
-        eliminarComentario();
-    });
-    document.addEventListener('DOMContentLoaded', obtenerComentarios);
 </script>
 
-    <!-- Footer Start -->
-    <div class="container-fluid footer bg-light py-5" style="margin-top: 90px;">
-        <div class="container text-center py-5">
-            <div class="row">
-                <div class="col-12 mb-4">
-                    <a href="index.html" class="navbar-brand m-0">
-                        <h1 class="m-0 mt-n2 display-4 text-primary"><span class="text-secondary">Copy</span>Variedades</h1>
-                    </a>
-                </div>
-                <div class="col-12 mb-4">
-                    <a class="btn btn-outline-secondary btn-social mr-2" href="#"><i class="fab fa-twitter"></i></a>
-                    <a class="btn btn-outline-secondary btn-social mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-outline-secondary btn-social mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
-                    <a class="btn btn-outline-secondary btn-social" href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-                <div class="col-12 mt-2 mb-4">
-                    <div class="row">
-                        <div class="col-sm-6 text-center text-sm-right border-right mb-3 mb-sm-0">
-                            <h5 class="font-weight-bold mb-2">Contactanos</h5>
-                            <p class="mb-2">Barrio La Merced, al lado del Banco Agrícola</p>
-                            <p class="mb-0">+ 503 1234 - 5678</p>
-                        </div>
-                        <div class="col-sm-6 text-center text-sm-left">
-                            <h5 class="font-weight-bold mb-2">horarios de apertura</h5>
-                            <p class="mb-2">lunes – vieM|– 5PM</p>
-                            <p class="mb-0">Domingo: Cerrado</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <p class="m-0">&copy; <a href="#">Domain</a>. All Rights Reserved. Designed by <a href="https://htmlcodex.com">HTML Codex</a>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Footer End -->
-
-
-
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-secondary px-2 back-to-top"><i class="fa fa-angle-double-up"></i></a>
-
-
-    <!-- JavaScript Libraries -->
+ 
+    <!-- Librerías JS -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
     <script src="lib/easing/easing.min.js"></script>
     <script src="lib/waypoints/waypoints.min.js"></script>
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="lib/isotope/isotope.pkgd.min.js"></script>
     <script src="lib/lightbox/js/lightbox.min.js"></script>
-
-    <!-- Contact Javascript File -->
-    <script src="mail/jqBootstrapValidation.min.js"></script>
-    <script src="mail/contact.js"></script>
-
-    <!-- Template Javascript -->
     <script src="js/main.js"></script>
 </body>
-
 </html>
+ 
+ 

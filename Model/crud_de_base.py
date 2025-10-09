@@ -1,8 +1,10 @@
 # crud_de_base.py
 import os
 import psycopg2
+
 from psycopg2 import pool, sql
 from psycopg2.extras import RealDictCursor
+
 
 
 class DatabaseError(Exception):

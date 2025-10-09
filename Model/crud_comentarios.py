@@ -1,12 +1,13 @@
 # crud_comentarios.py
+import os, sys
+# 🔧 Agrega la carpeta actual ("Model") al path
+sys.path.append(os.path.dirname(__file__))
 
-import sys
-import os
+from crud_de_base import PostgresDB, DatabaseError
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import re
 from typing import Optional, Dict, Any
-
-from crud_de_base import PostgresDB, DatabaseError
 
 
 class ValidationError(Exception):

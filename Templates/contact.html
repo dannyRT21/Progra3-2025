@@ -190,133 +190,140 @@
 
 <!-- Script CRUD Comentarios -->
 <script>
-    const API_URL = "http://localhost:2020/comentarios";
+const API_URL = "http://localhost:2020/api/comentarios";
 
-    const campos = {
-        nombre: document.getElementById('txtNombre'),
-        email: document.getElementById('txtEmail'),
-        asunto: document.getElementById('txtAsunto'),
-        comentario: document.getElementById('txtMensaje')
+const campos = {
+    nombre: document.getElementById('txtNombre'),
+    email: document.getElementById('txtEmail'),
+    asunto: document.getElementById('txtAsunto'),
+    comentario: document.getElementById('txtMensaje')
+};
+
+let idComentario = null;
+
+document.addEventListener('DOMContentLoaded', cargarComentarios);
+
+function limpiarFormulario() {
+    Object.values(campos).forEach(campo => campo.value = '');
+    idComentario = null;
+}
+
+function validarCampos() {
+    return Object.values(campos).every(input => input.value.trim() !== '');
+}
+
+function getDatosFormulario() {
+    return {
+        nombre: campos.nombre.value.trim(),
+        e_mail: campos.email.value.trim(),
+        asunto: campos.asunto.value.trim(),
+        comentario: campos.comentario.value.trim()
     };
+}
 
-    let idComentario = null;
-    let accion = "nuevo";
-
-    document.addEventListener('DOMContentLoaded', cargarComentarios);
-
-    function limpiarFormulario() {
-        Object.values(campos).forEach(campo => campo.value = '');
-        idComentario = null;
-        accion = "nuevo";
+async function guardarComentario() {
+    if (!validarCampos()) {
+        alert("Todos los campos son obligatorios.");
+        return;
     }
 
-    function validarCampos() {
-        return Object.values(campos).every(input => input.value.trim() !== '');
-    }
+    const datos = getDatosFormulario();
+    const esNuevo = idComentario === null;
 
-    function getDatosFormulario() {
-        return {
-            id: idComentario,
-            accion,
-            nombre: campos.nombre.value,
-            e_mail: campos.email.value,
-            asunto: campos.asunto.value,
-            comentario: campos.comentario.value
-        };
-    }
+    const url = esNuevo ? API_URL : `${API_URL}/${idComentario}`;
+    const metodo = esNuevo ? "POST" : "PUT";
 
-    async function guardarComentario(tipo) {
-        accion = tipo;
-
-        if (!validarCampos()) {
-            alert("Todos los campos son obligatorios.");
-            return;
-        }
-
-        const datos = getDatosFormulario();
-
-        const response = await fetch(API_URL, {
-            method: "POST",
+    try {
+        const response = await fetch(url, {
+            method: metodo,
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(datos)
         });
 
         const resultado = await response.json();
 
-        if (resultado.msg === "ok") {
-            alert(tipo === "nuevo" ? "Comentario agregado con éxito" : "Comentario actualizado con éxito");
+        if (resultado.ok) {
+            alert(resultado.message || (esNuevo ? "Comentario agregado." : "Comentario actualizado."));
             limpiarFormulario();
             cargarComentarios();
         } else {
-            alert("Error: " + resultado.msg);
+            alert("⚠️ Error: " + (resultado.error || "No se pudo guardar."));
         }
+    } catch (error) {
+        alert("❌ Error de red: " + error);
+    }
+}
+
+async function eliminarComentario() {
+    if (!idComentario) {
+        alert("Seleccione un comentario para eliminar.");
+        return;
     }
 
-    async function eliminarComentario() {
-        if (!idComentario) {
-            alert("Seleccione un comentario para eliminar.");
-            return;
-        }
+    if (!confirm("¿Está seguro que desea eliminar este comentario?")) return;
 
-        if (!confirm("¿Está seguro que desea eliminar este comentario?")) return;
-
-        const datos = { accion: "eliminar", id: idComentario };
-
-        const response = await fetch(API_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(datos)
-        });
-
+    try {
+        const response = await fetch(`${API_URL}/${idComentario}`, { method: "DELETE" });
         const resultado = await response.json();
 
-        if (resultado.msg === "ok") {
-            alert("Comentario eliminado correctamente");
+        if (resultado.ok) {
+            alert(resultado.message || "Comentario eliminado.");
             limpiarFormulario();
             cargarComentarios();
         } else {
-            alert("Error al eliminar: " + resultado.msg);
+            alert("⚠️ Error al eliminar: " + (resultado.error || "No se pudo eliminar."));
         }
+    } catch (error) {
+        alert("❌ Error de red: " + error);
     }
+}
 
-    async function cargarComentarios() {
-        const response = await fetch('/comentarios');
-        const comentarios = await response.json();
-        renderizarComentarios(comentarios.sort((a, b) => b.id - a.id));
+async function cargarComentarios() {
+    try {
+        const response = await fetch(API_URL);
+        const resultado = await response.json();
+
+        if (resultado.ok) {
+            renderizarComentarios(resultado.data.sort((a, b) => b.id - a.id));
+        } else {
+            alert("⚠️ Error al cargar comentarios: " + (resultado.error || "Desconocido."));
+        }
+    } catch (error) {
+        alert("❌ Error al conectarse al servidor: " + error);
     }
+}
 
-    function renderizarComentarios(lista) {
-        const tbody = document.getElementById("tablaComentarios");
-        tbody.innerHTML = "";
+function renderizarComentarios(lista) {
+    const tbody = document.getElementById("tablaComentarios");
+    tbody.innerHTML = "";
 
-        lista.forEach(com => {
-            const fila = document.createElement("tr");
-            fila.innerHTML = `
-                <td>${com.nombre}</td>
-                <td>${com.e_mail}</td>
-                <td>${com.asunto}</td>
-                <td>${com.comentario}</td>
-                <td>
-                    <button class="btn btn-sm btn-warning mr-2" onclick='cargarComentario(${JSON.stringify(com)})'>Editar</button>
-                    <button class="btn btn-sm btn-danger" onclick='prepararEliminacion(${com.id})'>Eliminar</button>
-                </td>
-            `;
-            tbody.appendChild(fila);
-        });
-    }
+    lista.forEach(com => {
+        const fila = document.createElement("tr");
+        fila.innerHTML = `
+            <td>${com.nombre}</td>
+            <td>${com.e_mail}</td>
+            <td>${com.asunto}</td>
+            <td>${com.comentario}</td>
+            <td>
+                <button class="btn btn-sm btn-warning" onclick='cargarComentario(${JSON.stringify(com)})'>Editar</button>
+                <button class="btn btn-sm btn-danger" onclick='prepararEliminacion(${com.id})'>Eliminar</button>
+            </td>
+        `;
+        tbody.appendChild(fila);
+    });
+}
 
-    function cargarComentario(com) {
-        accion = "modificar";
-        idComentario = com.id;
-        campos.nombre.value = com.nombre;
-        campos.email.value = com.e_mail;
-        campos.asunto.value = com.asunto;
-        campos.comentario.value = com.comentario;
-    }
+function cargarComentario(com) {
+    idComentario = com.id;
+    campos.nombre.value = com.nombre;
+    campos.email.value = com.e_mail;
+    campos.asunto.value = com.asunto;
+    campos.comentario.value = com.comentario;
+}
 
-    function prepararEliminacion(id) {
-        idComentario = id;
-    }
+function prepararEliminacion(id) {
+    idComentario = id;
+}
 </script>
 
  

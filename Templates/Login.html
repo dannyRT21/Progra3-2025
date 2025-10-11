@@ -91,7 +91,7 @@
 
     <div class="login-container">
         <h2>CopyVariedades</h2>
-        <form action="/login" method="post"> <!-- esto luego se conecta con Python -->
+        <form action="{{ url_for('login') }}" method="post"></form>
             <div class="form-group">
                 <label for="username">Usuario</label>
                 <input type="text" id="username" name="username" required>

@@ -7,7 +7,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon">
+    <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -17,11 +17,11 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
     <!-- Libraries Stylesheet -->
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -69,7 +69,7 @@
         <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
             <nav class="navbar navbar-expand-lg bg-white navbar-light shadow p-lg-0 justify-content-center">
 
-                <a href="index.html" class="navbar-brand d-block d-lg-none">
+                <a href="{{ url_for('index') }}" class="navbar-brand d-block d-lg-none">
                     <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
                 </a>
 
@@ -79,14 +79,14 @@
 
                 <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
 
-                    <a href="index.html" class="navbar-brand d-none d-lg-block mr-3">
+                    <a href="{{ url_for('index') }}" class="navbar-brand d-none d-lg-block mr-3">
                         <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
                     </a>
 
                     <div class="navbar-nav py-0">
-                        <a href="service.html" class="nav-item nav-link">impresiones</a>
-                        <a href="gallery.html" class="nav-item nav-link">papeleria</a>
-                        <a href="contact.html" class="nav-item nav-link">Abarrotes</a>
+                        <a href="{{ url_for('service') }}" class="nav-item nav-link">impresiones</a>
+                        <a href="{{ url_for('gallery') }}" class="nav-item nav-link">papeleria</a>
+                        <a href="{{ url_for('contact') }}" class="nav-item nav-link">Abarrotes</a>
                     </div>
 
                 </div>
@@ -103,11 +103,11 @@
         <div class="container text-center py-5">
             <h1 class="text-white display-3 mt-lg-5">Productos subidos</h1>
             <div class="d-inline-flex align-items-center text-white">
-                <p class="m-0"><a class="text-white" href="">Home</a></p>
-                    <a href = "index.html" class = "fa fa-angle-double-right px-3"></a>
+                <p class="m-0"><a class="text-white" href="{{ url_for('index') }}">Home</a></p>
+                    <a href="{{ url_for('index') }}" class="fa fa-angle-double-right px-3"></a>
                 <i class="fa fa-circle px-4"></i>
                 <p class="m-0">contactenos</p>
-                <a href = "contact.html" class = "fa fa-angle-double-right px-3"></a>
+                <a href="{{ url_for('contact') }}" class="fa fa-angle-double-right px-3"></a>
             </div>
         </div>
     </div>
@@ -139,11 +139,11 @@
                             <h4 class="font-weight-bold text-white mb-0">$9.99</h4>
                         </div>
                         <div class="position-relative bg-primary rounded-circle mt-n3 mb-4 p-3" style="width: 150px; height: 150px;">
-                            <img class="rounded-circle w-100 h-100" src="img/product-1.jpg" style="object-fit: cover;">
+                            <img class="rounded-circle w-100 h-100" src="{{ url_for('static', filename='img/product-1.jpg') }}" style="object-fit: cover;">
                         </div>
                         <h5 class="font-weight-bold mb-2">Helado de Vainilla</h5>
                         <p class="mb-3">Cremoso helado artesanal con sabor clásico de vainilla.</p>
-                        <a href="detalles.html" target="_blank" class="btn btn-sm btn-secondary">Detalles de producto</a>
+                        <a href="{{ url_for('detalles') }}" target="_blank" class="btn btn-sm btn-secondary">Detalles de producto</a>
                     </div>
                 </div>
 
@@ -154,11 +154,11 @@
                             <h4 class="font-weight-bold text-white mb-0">$12.50</h4>
                         </div>
                         <div class="position-relative bg-primary rounded-circle mt-n3 mb-4 p-3" style="width: 150px; height: 150px;">
-                            <img class="rounded-circle w-100 h-100" src="img/product-2.jpg" style="object-fit: cover;">
+                            <img class="rounded-circle w-100 h-100" src="{{ url_for('static', filename='img/product-2.jpg') }}" style="object-fit: cover;">
                         </div>
                         <h5 class="font-weight-bold mb-2">Helado de Fresa</h5>
                         <p class="mb-3">Helado natural con fresas frescas y un toque de crema.</p>
-                        <a href="detalles.html" target="_blank" class="btn btn-sm btn-secondary">Detalles de producto</a>
+                        <a href="{{ url_for('detalles') }}" target="_blank" class="btn btn-sm btn-secondary">Detalles de producto</a>
                     </div>
                 </div>
 
@@ -169,11 +169,11 @@
                             <h4 class="font-weight-bold text-white mb-0">$11.00</h4>
                         </div>
                         <div class="position-relative bg-primary rounded-circle mt-n3 mb-4 p-3" style="width: 150px; height: 150px;">
-                            <img class="rounded-circle w-100 h-100" src="img/product-3.jpg" style="object-fit: cover;">
+                            <img class="rounded-circle w-100 h-100" src="{{ url_for('static', filename='img/product-3.jpg') }}" style="object-fit: cover;">
                         </div>
                         <h5 class="font-weight-bold mb-2">Helado de Chocolate</h5>
                         <p class="mb-3">Delicioso helado de chocolate con cacao premium.</p>
-                        <a href="detalles.html" target="_blank" class="btn btn-sm btn-secondary">Detalles de producto</a>
+                        <a href="{{ url_for('detalles') }}" target="_blank" class="btn btn-sm btn-secondary">Detalles de producto</a>
                     </div>
                 </div>
 
@@ -184,11 +184,11 @@
                             <h4 class="font-weight-bold text-white mb-0">$13.00</h4>
                         </div>
                         <div class="position-relative bg-primary rounded-circle mt-n3 mb-4 p-3" style="width: 150px; height: 150px;">
-                            <img class="rounded-circle w-100 h-100" src="img/product-4.jpg" style="object-fit: cover;">
+                            <img class="rounded-circle w-100 h-100" src="{{ url_for('static', filename='img/product-4.jpg') }}" style="object-fit: cover;">
                         </div>
                         <h5 class="font-weight-bold mb-2">Helado de Mango</h5>
                         <p class="mb-3">Helado tropical con el auténtico sabor del mango maduro.</p>
-                        <a href="detalles.html" target="_blank" class="btn btn-sm btn-secondary">Detalles de producto</a>
+                        <a href="{{ url_for('detalles') }}" target="_blank" class="btn btn-sm btn-secondary">Detalles de producto</a>
                     </div>
                 </div>
             </div>
@@ -203,7 +203,7 @@
         <div class="container text-center py-5">
             <div class="row">
                 <div class="col-12 mb-4">
-                    <a href="index.html" class="navbar-brand m-0">
+                    <a href="{{ url_for('index') }}" class="navbar-brand m-0"></a>
                         <h1 class="m-0 mt-n2 display-4 text-primary"><span class="text-secondary">Copy</span>Variedades</h1>
                     </a>
                 </div>
@@ -243,14 +243,14 @@
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="lib/isotope/isotope.pkgd.min.js"></script>
-    <script src="lib/lightbox/js/lightbox.min.js"></script>
+    <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/isotope/isotope.pkgd.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/lightbox/js/lightbox.min.js') }}"></script>
 
     <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
     <!-- Custom Counter Script -->
     <script>

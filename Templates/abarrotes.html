@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <title>Abarrotes - CopyVariedades</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <link href="img/favicon.ico" rel="icon">
+    <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -17,20 +17,20 @@
     <div class="container-fluid position-relative nav-bar p-0">
         <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
             <nav class="navbar navbar-expand-lg bg-white navbar-light shadow p-lg-0 justify-content-center">
-                <a href="index.html" class="navbar-brand d-block d-lg-none">
+                <a href="{{ url_for('index') }}" class="navbar-brand d-block d-lg-none">
                     <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
-                    <a href="index.html" class="navbar-brand d-none d-lg-block mr-3">
+                    <a href="{{ url_for('index') }}" class="navbar-brand d-none d-lg-block mr-3">
                         <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
                     </a>
                     <div class="navbar-nav py-0"> 
-                        <a href="subir.html" class="nav-item nav-link">agregar archivos</a>
-                        <a href="productos.html" class="nav-item nav-link">papeleria y abarrotes</a>
-                        <a href="contact.html" class="nav-item nav-link">contactanos</a>
+                        <a href="{{ url_for('subir') }}" class="nav-item nav-link">agregar archivos</a>
+                        <a href="{{ url_for('productos') }}" class="nav-item nav-link">papeleria y abarrotes</a>
+                        <a href="{{ url_for('contact') }}" class="nav-item nav-link">contactanos</a>
                     </div>
                 </div>
             </nav>
@@ -46,7 +46,7 @@
             <div class="row">
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="card border-0 shadow">
-                        <img src="img/portfolio-1.jpg" class="card-img-top" alt="">
+                        <img src="{{ url_for('static', filename='img/portfolio-1.jpg') }}" class="card-img-top" alt="">
                         <div class="card-body">
                             <h5 class="card-title text-primary">Refrescos y Bebidas</h5>
                             <p>Refrescos, jugos, agua y más productos para tu día a día.</p>
@@ -56,7 +56,7 @@
                 
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="card border-0 shadow">
-                        <img src="img/portfolio-2.jpg" class="card-img-top" alt="">
+                        <img src="{{ url_for('static', filename='img/portfolio-2.jpg') }}" class="card-img-top" alt="">
                         <div class="card-body">
                             <h5 class="card-title text-primary">Panadería</h5>
                             <p>Pan dulce, francés, y todo lo que te encanta recién hecho.</p>
@@ -66,7 +66,7 @@
                 
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="card border-0 shadow">
-                        <img src="img/portfolio-3.jpg" class="card-img-top" alt="">
+                        <img src="{{ url_for('static', filename='img/portfolio-3.jpg') }}" class="card-img-top" alt="">
                         <div class="card-body">
                             <h5 class="card-title text-primary">Golosinas</h5>
                             <p>Dulces, chocolates y snacks deliciosos.</p>
@@ -87,6 +87,6 @@
     <a href="#" class="btn btn-secondary px-2 back-to-top"><i class="fa fa-angle-double-up"></i></a>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

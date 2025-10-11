@@ -9,7 +9,7 @@
     <meta content="Free HTML Templates" name="description">
 
     <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon">
+    <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -19,45 +19,34 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
     <!-- Libraries Stylesheet -->
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 </head>
 
 <body>
-    
     <!-- Topbar Start -->
     <div class="container-fluid bg-primary py-3 d-none d-md-block">
         <div class="container">
             <div class="row">
                 <div class="col-md-6 text-center text-lg-left mb-2 mb-lg-0">
                     <div class="d-inline-flex align-items-center">
-                        <a class="text-white pr-3" href="">Desarrolladores</a>
+                        <a class="text-white pr-3" href="#">Desarrolladores</a>
                         <span class="text-white">|</span>
-                        <a class="text-white px-3" href="">Ayuda</a>
+                        <a class="text-white px-3" href="#">Ayuda</a>
                         <span class="text-white">|</span>
-                        <a class="text-white pl-3" href="">Soporte</a>
+                        <a class="text-white pl-3" href="#">Soporte</a>
                     </div>
                 </div>
                 <div class="col-md-6 text-center text-lg-right">
                     <div class="d-inline-flex align-items-center">
-                        <a class="text-white px-3" href="">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a class="text-white px-3" href="">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a class="text-white px-3" href="">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a class="text-white px-3" href="">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a class="text-white pl-3" href="">
-                            <i class="fab fa-youtube"></i>
-                        </a>
+                        <a class="text-white px-3" href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a class="text-white px-3" href="#"><i class="fab fa-twitter"></i></a>
+                        <a class="text-white px-3" href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a class="text-white px-3" href="#"><i class="fab fa-instagram"></i></a>
+                        <a class="text-white pl-3" href="#"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
             </div>
@@ -65,130 +54,106 @@
     </div>
     <!-- Topbar End -->
 
-
     <!-- Navbar Start -->
-<div class="container-fluid position-relative nav-bar p-0">
-    <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
-        <nav class="navbar navbar-expand-lg bg-white navbar-light shadow p-lg-0 justify-content-center">
-            
-            <a href="index.html" class="navbar-brand d-block d-lg-none">
-                <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
-            </a>
-            
-            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
-                
-                <a href="index.html" class="navbar-brand d-none d-lg-block mr-3">
+    <div class="container-fluid position-relative nav-bar p-0">
+        <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
+            <nav class="navbar navbar-expand-lg bg-white navbar-light shadow p-lg-0 justify-content-center">
+                <a href="{{ url_for('index') }}" class="navbar-brand d-block d-lg-none">
                     <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
                 </a>
-
-                <div class="navbar-nav py-0"> 
-                    <a href="subir.html" class="nav-item nav-link">agregar producrtos</a>
-                    <a href="productos.html" class="nav-item nav-link">papeleria y abarrotes</a>
-                    <a href="contact.html" class="nav-item nav-link">contactanos</a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
+                    <a href="{{ url_for('index') }}" class="navbar-brand d-none d-lg-block mr-3">
+                        <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
+                    </a>
+                    <div class="navbar-nav py-0">
+                        <a href="{{ url_for('subir') }}" class="nav-item nav-link">agregar archivos</a>
+                        <a href="{{ url_for('productos') }}" class="nav-item nav-link">papeleria y abarrotes</a>
+                        <a href="{{ url_for('contact') }}" class="nav-item nav-link">contactanos</a>
+                    </div>
                 </div>
-                
-            </div>
-            
-        </nav>
+            </nav>
+        </div>
     </div>
-</div>
     <!-- Navbar End -->
 
-
-   <div class="container-fluid p-0 mb-5 pb-5">
-    <div id="header-carousel" class="carousel slide" data-ride="carousel">
-        <div class="carousel-inner">
-            
-            <div class="carousel-item active">
-                <img class="w-100" src="img/Mercado Libre.jpg" alt="Image">
-                <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                    <div class="p-3" style="max-width: 900px;">
-                        <h4 class="text-white text-uppercase mb-md-3">Tienda de abarrotes</h4>
-                        <h1 class="display-3 text-white mb-md-4">Encuentra lo que necesites, bebidas, panaderia, golosinas y mas</h1>
-                        <a href="productos.html" class="btn btn-primary py-md-3 px-md-5 mt-2">Ver producrtos</a>
+    <div class="container-fluid p-0 mb-5 pb-5">
+        <div id="header-carousel" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img class="w-100" src="{{ url_for('static', filename='img/Mercado Libre.jpg') }}" alt="Image">
+                    <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                        <div class="p-3" style="max-width: 900px;">
+                            <h4 class="text-white text-uppercase mb-md-3">Tienda de abarrotes</h4>
+                            <h1 class="display-3 text-white mb-md-4">Encuentra lo que necesites, bebidas, panaderia, golosinas y mas</h1>
+                            <a href="{{ url_for('productos') }}" class="btn btn-primary py-md-3 px-md-5 mt-2">Ver productos</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img class="w-100" src="{{ url_for('static', filename='img/biblioteca.jpg') }}" alt="Image">
+                    <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                        <div class="p-3" style="max-width: 900px;">
+                            <h4 class="text-white text-uppercase mb-md-3">Papelería y útiles</h4>
+                            <h1 class="display-3 text-white mb-md-4">Libros, cuadernos, colores y todo lo que buscas aquí</h1>
+                            <a href="{{ url_for('productos') }}" class="btn btn-primary py-md-3 px-md-5 mt-2">Ver libros y cuadernos</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img class="w-100" src="{{ url_for('static', filename='img/copias jsjs.jpg') }}" alt="Image">
+                    <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                        <div class="p-3" style="max-width: 900px;">
+                            <h4 class="text-white text-uppercase mb-md-3">Servicio de impresiones</h4>
+                            <h1 class="display-3 text-white mb-md-4">Copias y fotocopias aquí!</h1>
+                            <a href="{{ url_for('productos') }}" class="btn btn-primary py-md-3 px-md-5 mt-2">Fotocopias ahora</a>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="carousel-item">
-                <img class="w-100" src="img/biblioteca.jpg" alt="Image">
-                <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                    <div class="p-3" style="max-width: 900px;">
-                        <h4 class="text-white text-uppercase mb-md-3">Papelería y útiles</h4>
-                        <h1 class="display-3 text-white mb-md-4">Libros, cuadernos, colores y todo lo que buscas aquí</h1>
-                        <a href="productos.html" class="btn btn-primary py-md-3 px-md-5 mt-2">Ver libros y cuadernos</a>
-  
-                    </div>
+            <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
+                <div class="btn btn-secondary px-0" style="width: 45px; height: 45px;">
+                    <span class="carousel-control-prev-icon mb-n1"></span>
                 </div>
-            </div>
-
-            <div class="carousel-item">
-                <img class="w-100" src="img/copias jsjs.jpg" alt="Image"> 
-                <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                    <div class="p-3" style="max-width: 900px;">
-                        <h4 class="text-white text-uppercase mb-md-3">Servicio de impresiones</h4>
-                        <h1 class="display-3 text-white mb-md-4">Copias y fotocopias aquí!</h1>
-                        <a href="productos.html" class="btn btn-primary py-md-3 px-md-5 mt-2">Fotocopias ahora</a>
-                    </div>
+            </a>
+            <a class="carousel-control-next" href="#header-carousel" data-slide="next">
+                <div class="btn btn-secondary px-0" style="width: 45px; height: 45px;">
+                    <span class="carousel-control-next-icon mb-n1"></span>
                 </div>
-            </div>
-
-        </div>
-        
-        <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
-            <div class="btn btn-secondary px-0" style="width: 45px; height: 45px;">
-                <span class="carousel-control-prev-icon mb-n1"></span>
-            </div>
-        </a>
-        <a class="carousel-control-next" href="#header-carousel" data-slide="next">
-            <div class="btn btn-secondary px-0" style="width: 45px; height: 45px;">
-                <span class="carousel-control-next-icon mb-n1"></span>
-            </div>
-        </a>
-    </div>
-</div>
-
-    <!-- About Start -->    
-<div class="container-fluid py-5">
-    <div class="container py-5">
-        
-        <div class="row justify-content-center">
-            <div class="col-lg-10 text-center">
-                <h1 class="section-title position-relative mb-5 display-4 text-primary">
-                    <span class="text-secondary">¡nos alegra</span> atenderles!
-                </h1>
-            </div>
-        </div>
-        
-        <div class="row">
-            
-            <div class="col-lg-6" style="min-height: 400px;">
-                <div class="position-relative h-100 rounded overflow-hidden">
-                    <img class="position-absolute w-100 h-100" src="img/ubicacion.jpg" style="object-fit: cover;" alt="Ubicación de copyVariedades">
-                </div>
-            </div>
-            
-            <div class="col-lg-6 py-5">
-                <h2 class="font-weight-bold mb-4 text-primary">Estamos ubicadxs<span class="text-secondary">  en:</span></h2>
-                
-                <p class="lead mb-4">
-                    <strong class="text-secondary"> 4Av guandique </strong> al lado del Banco Agrícola. ¡Aquí puedes hacer uso de todos nuestros servicios!
-                </p>
-                
-                <a href="https://maps.app.goo.gl/rqyU49jbpZFRca6M7" target="_blank" class="btn btn-secondary py-md-3 px-md-5 mt-2">
-                    <i class="fa fa-map-marker-alt mr-2"></i> ¡ Google Maps!
-                </a>
-            
-            </div>
-            
+            </a>
         </div>
     </div>
-</div>
 
+    <!-- About Start -->
+    <div class="container-fluid py-5">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 text-center">
+                    <h1 class="section-title position-relative mb-5 display-4 text-primary">
+                        <span class="text-secondary">¡nos alegra</span> atenderles!
+                    </h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6" style="min-height: 400px;">
+                    <div class="position-relative h-100 rounded overflow-hidden">
+                        <img class="position-absolute w-100 h-100" src="{{ url_for('static', filename='img/ubicacion.jpg') }}" style="object-fit: cover;" alt="Ubicación de copyVariedades">
+                    </div>
+                </div>
+                <div class="col-lg-6 py-5">
+                    <h2 class="font-weight-bold mb-4 text-primary">Estamos ubicadxs<span class="text-secondary">  en:</span></h2>
+                    <p class="lead mb-4">
+                        <strong class="text-secondary"> 4Av guandique </strong> al lado del Banco Agrícola. ¡Aquí puedes hacer uso de todos nuestros servicios!
+                    </p>
+                    <a href="https://maps.app.goo.gl/rqyU49jbpZFRca6M7" target="_blank" class="btn btn-secondary py-md-3 px-md-5 mt-2">
+                        <i class="fa fa-map-marker-alt mr-2"></i> ¡ Google Maps!
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Services Start -->
     <div class="container-fluid py-5">
@@ -204,32 +169,32 @@
                     <div class="owl-carousel service-carousel">
                         <div class="service-item">
                             <div class="service-img mx-auto">
-                                <img class="rounded-circle w-100 h-100 bg-light p-3" src="img/imagen.jpg" style="object-fit: cover;">
+                                <img class="rounded-circle w-100 h-100 bg-light p-3" src="{{ url_for('static', filename='img/imagen.jpg') }}" style="object-fit: cover;">
                             </div>
                             <div class="position-relative text-center bg-light rounded p-4 pb-5" style="margin-top: -75px;">
                                 <h5 class="font-weight-semi-bold mt-5 mb-3 pt-5">Tienda de abarrotes</h5>
                                 <p>Todos los articulos de abarrotes, bebidas, panaderia, golosinas todo eso encuentras aca.</p>
-                                <a href="abarrotes.html" class="border-bottom border-secondary text-decoration-none text-secondary">ir de compras</a>
+                                <a href="{{ url_for('abarrotes') }}" class="border-bottom border-secondary text-decoration-none text-secondary">ir de compras</a>
                             </div>
                         </div>
                         <div class="service-item">
                             <div class="service-img mx-auto">
-                                <img class="rounded-circle w-100 h-100 bg-light p-3" src="img/papeleriaUtiles-105.jpg" style="object-fit: cover;">
+                                <img class="rounded-circle w-100 h-100 bg-light p-3" src="{{ url_for('static', filename='img/papeleriaUtiles-105.jpg') }}" style="object-fit: cover;">
                             </div>
                             <div class="position-relative text-center bg-light rounded p-4 pb-5" style="margin-top: -75px;">
                                 <h5 class="font-weight-semi-bold mt-5 mb-3 pt-5">Papelería y útiles</h5>
                                 <p>Libros, cuadernos, colores, paginas y cartulinas... todo lo relazado con la papeleria y utiles lo tenemos.</p>
-                                <a href="papeleria.html" class="border-bottom border-secondary text-decoration-none text-secondary">ver cositas</a>
+                                <a href="{{ url_for('papeleria') }}" class="border-bottom border-secondary text-decoration-none text-secondary">ver cositas</a>
                             </div>
                         </div>
                         <div class="service-item">
                             <div class="service-img mx-auto">
-                                <img class="rounded-circle w-100 h-100 bg-light p-3" src="img/impreciones.jpg" style="object-fit: cover;">
+                                <img class="rounded-circle w-100 h-100 bg-light p-3" src="{{ url_for('static', filename='img/impreciones.jpg') }}" style="object-fit: cover;">
                             </div>
                             <div class="position-relative text-center bg-light rounded p-4 pb-5" style="margin-top: -75px;">
                                 <h5 class="font-weight-semi-bold mt-5 mb-3 pt-5">copias y fotocopias</h5>
                                 <p>Puedes subir tus archivos y espeficicar lo que vas a imprimir y solo pasas a recoger y pagar.</p>
-                                <a href="copias.html" class="border-bottom border-secondary text-decoration-none text-secondary">Vamos a imprimir</a>
+                                <a href="{{ url_for('copias') }}" class="border-bottom border-secondary text-decoration-none text-secondary">Vamos a imprimir</a>
                             </div>
                         </div>
                     </div>
@@ -238,7 +203,6 @@
         </div>
     </div>
     <!-- Services End -->
-
 
     <!-- Portfolio Start -->
     <div class="container-fluid my-5 py-5 px-0">
@@ -250,48 +214,48 @@
         <div class="row m-0 portfolio-container">
             <div class="col-lg-4 col-md-6 p-0 portfolio-item">
                 <div class="position-relative overflow-hidden">
-                    <img class="img-fluid w-100" src="img/tienda_abarrotes.jpg" alt="">
-                    <a class="portfolio-btn" href="img/tienda_abarrotes.jpg" data-lightbox="portfolio">
+                    <img class="img-fluid w-100" src="{{ url_for('static', filename='img/tienda_abarrotes.jpg') }}" alt="">
+                    <a class="portfolio-btn" href="{{ url_for('static', filename='img/tienda_abarrotes.jpg') }}" data-lightbox="portfolio">
                         <i class="fa fa-plus text-primary" style="font-size: 60px;"></i>
                     </a>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 p-0 portfolio-item">
                 <div class="position-relative overflow-hidden">
-                    <img class="img-fluid w-100" src="img/cosa5.jpg" alt="">
-                    <a class="portfolio-btn" href="img/cosa5.jpg" data-lightbox="portfolio">
+                    <img class="img-fluid w-100" src="{{ url_for('static', filename='img/cosa5.jpg') }}" alt="">
+                    <a class="portfolio-btn" href="{{ url_for('static', filename='img/cosa5.jpg') }}" data-lightbox="portfolio">
                         <i class="fa fa-plus text-primary" style="font-size: 60px;"></i>
                     </a>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 p-0 portfolio-item">
                 <div class="position-relative overflow-hidden">
-                    <img class="img-fluid w-100" src="img/cosa3.jpg" alt="">
-                    <a class="portfolio-btn" href="img/cosa-3.jpg" data-lightbox="portfolio">
+                    <img class="img-fluid w-100" src="{{ url_for('static', filename='img/cosa3.jpg') }}" alt="">
+                    <a class="portfolio-btn" href="{{ url_for('static', filename='img/cosa-3.jpg') }}" data-lightbox="portfolio">
                         <i class="fa fa-plus text-primary" style="font-size: 60px;"></i>
                     </a>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 p-0 portfolio-item">
                 <div class="position-relative overflow-hidden">
-                    <img class="img-fluid w-100" src="img/churros.jpg" alt="">
-                    <a class="portfolio-btn" href="img/churros.jpg" data-lightbox="portfolio">
+                    <img class="img-fluid w-100" src="{{ url_for('static', filename='img/churros.jpg') }}" alt="">
+                    <a class="portfolio-btn" href="{{ url_for('static', filename='img/churros.jpg') }}" data-lightbox="portfolio">
                         <i class="fa fa-plus text-primary" style="font-size: 60px;"></i>
                     </a>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 p-0 portfolio-item">
                 <div class="position-relative overflow-hidden">
-                    <img class="img-fluid w-100" src="img/sarita.jpg" alt="">
-                    <a class="portfolio-btn" href="img/sarita.jpg" data-lightbox="portfolio">
+                    <img class="img-fluid w-100" src="{{ url_for('static', filename='img/sarita.jpg') }}" alt="">
+                    <a class="portfolio-btn" href="{{ url_for('static', filename='img/sarita.jpg') }}" data-lightbox="portfolio">
                         <i class="fa fa-plus text-primary" style="font-size: 60px;"></i>
                     </a>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 p-0 portfolio-item">
                 <div class="position-relative overflow-hidden">
-                    <img class="img-fluid w-100" src="img/panes.jpg" alt="">
-                    <a class="portfolio-btn" href="img/panes.jpg" data-lightbox="portfolio">
+                    <img class="img-fluid w-100" src="{{ url_for('static', filename='img/panes.jpg') }}" alt="">
+                    <a class="portfolio-btn" href="{{ url_for('static', filename='img/panes.jpg') }}" data-lightbox="portfolio">
                         <i class="fa fa-plus text-primary" style="font-size: 60px;"></i>
                     </a>
                 </div>
@@ -300,15 +264,12 @@
     </div>
     <!-- Portfolio End -->
 
-
-   
-
     <!-- Footer Start -->
     <div class="container-fluid footer bg-light py-5" style="margin-top: 90px;">
         <div class="container text-center py-5">
             <div class="row">
                 <div class="col-12 mb-4">
-                    <a href="index.html" class="navbar-brand m-0">
+                    <a href="{{ url_for('index') }}" class="navbar-brand m-0">
                         <h1 class="m-0 mt-n2 display-4 text-primary"><span class="text-secondary">Copy</span>Variedades</h1>
                     </a>
                 </div>
@@ -341,26 +302,20 @@
     </div>
     <!-- Footer End -->
 
-
     <!-- Back to Top -->
     <a href="#" class="btn btn-secondary px-2 back-to-top"><i class="fa fa-angle-double-up"></i></a>
-
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="lib/isotope/isotope.pkgd.min.js"></script>
-    <script src="lib/lightbox/js/lightbox.min.js"></script>
-
-    <!-- Contact Javascript File -->
-    <script src="mail/jqBootstrapValidation.min.js"></script>
-    <script src="mail/contact.js"></script>
+    <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/isotope/isotope.pkgd.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/lightbox/js/lightbox.min.js') }}"></script>
 
     <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
-
 </html>
+

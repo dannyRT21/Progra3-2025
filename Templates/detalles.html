@@ -7,7 +7,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon">
+    <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -17,11 +17,11 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
     <!-- Libraries Stylesheet -->
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -57,20 +57,20 @@
     <div class="container-fluid position-relative nav-bar p-0">
         <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
             <nav class="navbar navbar-expand-lg bg-white navbar-light shadow p-lg-0 justify-content-center">
-                <a href="index.html" class="navbar-brand d-block d-lg-none">
+                <a href="{{ url_for('index') }}" class="navbar-brand d-block d-lg-none">
                     <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
-                    <a href="index.html" class="navbar-brand d-none d-lg-block mr-3">
+                    <a href="{{ url_for('index') }}" class="navbar-brand d-none d-lg-block mr-3">
                         <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
                     </a>
                     <div class="navbar-nav py-0">
-                        <a href="service.html" class="nav-item nav-link">impresiones</a>
-                        <a href="gallery.html" class="nav-item nav-link">papeleria</a>
-                        <a href="contact.html" class="nav-item nav-link">Abarrotes</a>
+                        <a href="{{ url_for('service') }}" class="nav-item nav-link">impresiones</a>
+                        <a href="{{ url_for('gallery') }}" class="nav-item nav-link">papeleria</a>
+                        <a href="{{ url_for('contact') }}" class="nav-item nav-link">Abarrotes</a>
                     </div>
                 </div>
             </nav>
@@ -83,7 +83,7 @@
         <div class="container text-center py-5">
             <h1 class="text-white display-3 mt-lg-5">Detalles del producto</h1>
             <div class="d-inline-flex align-items-center text-white">
-                <p class="m-0"><a class="text-white" href="index.html">Home</a></p>
+                <p class="m-0"><a class="text-white" href="{{ url_for('index') }}">Home</a></p>
                 <i class="fa fa-circle px-3"></i>
                 <p class="m-0">Detalles</p>
             </div>
@@ -96,7 +96,7 @@
         <div class="row align-items-center">
             <div class="col-lg-6 mb-4 mb-lg-0">
                 <div class="position-relative bg-primary rounded p-3">
-                    <img class="w-100 rounded" src="img/product-1.jpg" alt="Imagen del producto" style="object-fit: cover;">
+                    <img class="w-100 rounded" src="{{ url_for('static', filename='img/product-1.jpg') }}" alt="Imagen del producto" style="object-fit: cover;">
                 </div>
             </div>
             <div class="col-lg-6">
@@ -111,7 +111,7 @@
                 </ul>
 
                 <!-- Botones -->
-                <a href="productos.html" class="btn btn-secondary btn-lg mr-2"><i class="fa fa-arrow-left mr-2"></i>Regresar</a>
+                <a href="{{ url_for('productos') }}" class="btn btn-secondary btn-lg mr-2"><i class="fa fa-arrow-left mr-2"></i>Regresar</a>
                 <button class="btn btn-warning btn-lg mr-2" data-toggle="modal" data-target="#editModal"><i class="fa fa-edit"></i> Editar</button>
                 <button class="btn btn-danger btn-lg" onclick="confirmarEliminacion()"><i class="fa fa-trash"></i> Eliminar</button>
             </div>

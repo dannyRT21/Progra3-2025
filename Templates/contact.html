@@ -1,29 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8">
-    <title>iCREAM - Ice Cream Shop Website Template</title>
+    <title>iCREAM - Contactanos</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="Free HTML Templates" name="keywords">
-    <meta content="Free HTML Templates" name="description">
 
     <!-- Favicon -->
     <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
 
-    <!-- Google Fonts -->
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
-    <!-- Libraries CSS -->
+    <!-- Bootstrap CSS (necesario) -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
     <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
 
-    <!-- Custom CSS -->
+    <!-- Customized Stylesheet -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 
-    <!-- Estilos para botones CRUD -->
+    <!-- Estilos personalizados -->
     <style>
         .btn-secundario-azul {
             background-color: #00aaff !important;
@@ -59,6 +61,8 @@
                 margin: 5px 0;
             }
         }
+        /* Estética modal: encabezado con color y texto blanco */
+        .modal-header.bg-primary { background: #007bff; color: #fff; }
     </style>
 </head>
 
@@ -69,20 +73,20 @@
             <div class="row">
                 <div class="col-md-6 text-center text-lg-left mb-2 mb-lg-0">
                     <div class="d-inline-flex align-items-center">
-                        <a class="text-white pr-3" href="">Desarrolladores</a>
+                        <a class="text-white pr-3" href="#">Desarrolladores</a>
                         <span class="text-white">|</span>
-                        <a class="text-white px-3" href="">Ayuda</a>
+                        <a class="text-white px-3" href="#">Ayuda</a>
                         <span class="text-white">|</span>
-                        <a class="text-white pl-3" href="">Soporte panzona</a>
+                        <a class="text-white pl-3" href="#">Soporte panzona</a>
                     </div>
                 </div>
                 <div class="col-md-6 text-center text-lg-right">
                     <div class="d-inline-flex align-items-center">
-                        <a class="text-white px-3" href=""><i class="fab fa-facebook-f"></i></a>
-                        <a class="text-white px-3" href=""><i class="fab fa-twitter"></i></a>
-                        <a class="text-white px-3" href=""><i class="fab fa-linkedin-in"></i></a>
-                        <a class="text-white px-3" href=""><i class="fab fa-instagram"></i></a>
-                        <a class="text-white pl-3" href=""><i class="fab fa-youtube"></i></a>
+                        <a class="text-white px-3" href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a class="text-white px-3" href="#"><i class="fab fa-twitter"></i></a>
+                        <a class="text-white px-3" href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a class="text-white px-3" href="#"><i class="fab fa-instagram"></i></a>
+                        <a class="text-white pl-3" href="#"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
             </div>
@@ -97,17 +101,19 @@
                 <a href="{{ url_for('index') }}" class="navbar-brand d-block d-lg-none">
                     <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
                 </a>
+
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
                     <a href="{{ url_for('index') }}" class="navbar-brand d-none d-lg-block mr-3">
                         <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
                     </a>
                     <div class="navbar-nav py-0">
-                        <a href="{{ url_for('index') }}" class="nav-item nav-link">Home</a>
-                        <a href="{{ url_for('productos') }}" class="nav-item nav-link">papeleria y abarrotes</a>
-                        <a href="{{ url_for('contact') }}" class="nav-item nav-link active">Contactanos</a>
+                        <a href="{{ url_for('service') }}" class="nav-item nav-link">Impresiones</a>
+                        <a href="{{ url_for('gallery') }}" class="nav-item nav-link">Papelería</a>
+                        <a href="{{ url_for('contact') }}" class="nav-item nav-link active">Abarrotes</a>
                     </div>
                 </div>
             </nav>
@@ -115,224 +121,229 @@
     </div>
     <!-- Navbar End -->
 
-    <!-- Header Start -->
+    <!-- Header -->
     <div class="jumbotron jumbotron-fluid page-header" style="margin-bottom: 90px;">
         <div class="container text-center py-5">
-            <h1 class="text-white display-3 mt-lg-5">Contactanos</h1>
+            <h1 class="text-white display-3 mt-lg-5">Contáctanos</h1>
             <h1 class="text-white display-4 mb-4">para consultas y sugerencias</h1>
         </div>
     </div>
-    <!-- Header End -->
 
-<!-- Contact Start -->
-<div class="container-fluid py-5">
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-6">
-                <h1 class="section-title position-relative text-center mb-5">Contáctenos para consultas aquí:</h1>
+    <!-- Contact Section -->
+    <div class="container-fluid py-5">
+        <div class="container py-5">
+            <div class="row justify-content-center mb-4">
+                <div class="col-lg-6 text-center">
+                    <h1 class="section-title position-relative mb-3">Contáctenos para consultas aquí:</h1>
+                    <p class="text-muted">Envíanos tus sugerencias, preguntas o quejas. Responderemos lo antes posible.</p>
+                </div>
+
+    <!-- Contact Section -->
+    <div class="container-fluid py-5">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-9">
+                    <div class="contact-form bg-light rounded p-5">
+                        <form id="contactForm">
+                            <div class="form-row">
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control p-4" id="txtNombre" placeholder="Su nombre" required />
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="email" class="form-control p-4" id="txtEmail" placeholder="Su correo" required />
+                                </div>
+                            </div>
+                            <div class="form-group mt-3">
+                                <input type="text" class="form-control p-4" id="txtAsunto" placeholder="Asunto" required />
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-control p-4" rows="6" id="txtMensaje" placeholder="Mensaje" required></textarea>
+                            </div>
+                            <div class="btn-row">
+                                <button class="btn btn-primary py-3" type="button" onclick="guardarComentario()">Enviar sugerencia</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-lg-9">
-                <div class="contact-form bg-light rounded p-5">
-                    <form id="contactForm">
-                        <div class="form-row">
-                            <div class="col-sm-6">
-                                <input type="text" class="form-control p-4" id="txtNombre" placeholder="Su nombre" required />
-                            </div>
-                            <div class="col-sm-6">
-                                <input type="email" class="form-control p-4" id="txtEmail" placeholder="Su correo" required />
-                            </div>
-                        </div>
-                        <div class="form-group mt-3">
-                            <input type="text" class="form-control p-4" id="txtAsunto" placeholder="Asunto" required />
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control p-4" rows="6" id="txtMensaje" placeholder="Mensaje" required></textarea>
-                        </div>
-                        <div class="btn-row">
-                            <button class="btn btn-primary py-3" type="button" onclick="guardarComentario('nuevo')">Enviar sugerencia</button>
-                            <button class="btn btn-secundario-azul py-3" type="button" onclick="guardarComentario('modificar')">Editar comentario</button>
-                            <button class="btn btn-accion-rojo py-3" type="button" onclick="eliminarComentario()">Eliminar comentario</button>
-                        </div>
-                    </form>
+
+            <!-- Tabla de comentarios -->
+            <div class="row justify-content-center mt-5">
+                <div class="col-lg-11">
+                    <h3 class="text-center mb-4">Comentarios Recibidos</h3>
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Asunto</th>
+                                    <th>Comentario</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaComentarios"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <!-- TABLA COMENTARIOS -->
-        <div class="row justify-content-center mt-5">
-            <div class="col-lg-11">
-                <h3 class="text-center mb-4">Comentarios Recibidos</h3>
-                <div class="table-responsive">
-                    <table class="table table-bordered text-center">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Email</th>
-                                <th>Asunto</th>
-                                <th>Comentario</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaComentarios">
-                            <!-- Comentarios cargados dinámicamente -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
     </div>
-</div>
-<!-- Contact End -->
 
-<!-- Script CRUD Comentarios -->
-<script>
-const API_URL = "http://localhost:2020/api/comentarios";
+    <!-- MODAL DE EDICIÓN -->
+    <div class="modal fade" id="editarModal" tabindex="-1" role="dialog" aria-labelledby="editarModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="editarModalLabel">Editar comentario</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editId">
+                    <div class="form-group">
+                        <label>Nombre:</label>
+                        <input type="text" id="editNombre" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="editEmail" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Asunto:</label>
+                        <input type="text" id="editAsunto" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Comentario:</label>
+                        <textarea id="editComentario" class="form-control" rows="4" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" onclick="guardarEdicion()">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-const campos = {
-    nombre: document.getElementById('txtNombre'),
-    email: document.getElementById('txtEmail'),
-    asunto: document.getElementById('txtAsunto'),
-    comentario: document.getElementById('txtMensaje')
-};
+    <!-- CRUD Scripts -->
+    <script>
+        const API_URL = "http://localhost:2020/api/comentarios";
+        let idComentario = null;
 
-let idComentario = null;
+        document.addEventListener('DOMContentLoaded', cargarComentarios);
 
-document.addEventListener('DOMContentLoaded', cargarComentarios);
-
-function limpiarFormulario() {
-    Object.values(campos).forEach(campo => campo.value = '');
-    idComentario = null;
-}
-
-function validarCampos() {
-    return Object.values(campos).every(input => input.value.trim() !== '');
-}
-
-function getDatosFormulario() {
-    return {
-        nombre: campos.nombre.value.trim(),
-        e_mail: campos.email.value.trim(),
-        asunto: campos.asunto.value.trim(),
-        comentario: campos.comentario.value.trim()
-    };
-}
-
-async function guardarComentario() {
-    if (!validarCampos()) {
-        alert("Todos los campos son obligatorios.");
-        return;
-    }
-
-    const datos = getDatosFormulario();
-    const esNuevo = idComentario === null;
-
-    const url = esNuevo ? API_URL : `${API_URL}/${idComentario}`;
-    const metodo = esNuevo ? "POST" : "PUT";
-
-    try {
-        const response = await fetch(url, {
-            method: metodo,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(datos)
-        });
-
-        const resultado = await response.json();
-
-        if (resultado.ok) {
-            alert(resultado.message || (esNuevo ? "Comentario agregado." : "Comentario actualizado."));
-            limpiarFormulario();
-            cargarComentarios();
-        } else {
-            alert("⚠️ Error: " + (resultado.error || "No se pudo guardar."));
+        function getDatosFormulario() {
+            return {
+                nombre: document.getElementById('txtNombre').value.trim(),
+                e_mail: document.getElementById('txtEmail').value.trim(),
+                asunto: document.getElementById('txtAsunto').value.trim(),
+                comentario: document.getElementById('txtMensaje').value.trim()
+            };
         }
-    } catch (error) {
-        alert("❌ Error de red: " + error);
-    }
-}
 
-async function eliminarComentario() {
-    if (!idComentario) {
-        alert("Seleccione un comentario para eliminar.");
-        return;
-    }
+        async function guardarComentario() {
+            const datos = getDatosFormulario();
+            if (Object.values(datos).some(v => !v)) return alert("Todos los campos son obligatorios");
 
-    if (!confirm("¿Está seguro que desea eliminar este comentario?")) return;
-
-    try {
-        const response = await fetch(`${API_URL}/${idComentario}`, { method: "DELETE" });
-        const resultado = await response.json();
-
-        if (resultado.ok) {
-            alert(resultado.message || "Comentario eliminado.");
-            limpiarFormulario();
-            cargarComentarios();
-        } else {
-            alert("⚠️ Error al eliminar: " + (resultado.error || "No se pudo eliminar."));
+            try {
+                const res = await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(datos)
+                });
+                const r = await res.json();
+                if (r.ok) {
+                    alert("Comentario agregado correctamente.");
+                    document.getElementById("contactForm").reset();
+                    cargarComentarios();
+                } else alert("⚠️ " + r.error);
+            } catch (err) {
+                alert("❌ Error de red: " + err);
+            }
         }
-    } catch (error) {
-        alert("❌ Error de red: " + error);
-    }
-}
 
-async function cargarComentarios() {
-    try {
-        const response = await fetch(API_URL);
-        const resultado = await response.json();
-
-        if (resultado.ok) {
-            renderizarComentarios(resultado.data.sort((a, b) => b.id - a.id));
-        } else {
-            alert("⚠️ Error al cargar comentarios: " + (resultado.error || "Desconocido."));
+        async function cargarComentarios() {
+            try {
+                const res = await fetch(API_URL);
+                const r = await res.json();
+                if (r.ok) renderizarComentarios(r.data);
+            } catch (err) {
+                alert("❌ Error: " + err);
+            }
         }
-    } catch (error) {
-        alert("❌ Error al conectarse al servidor: " + error);
-    }
-}
 
-function renderizarComentarios(lista) {
-    const tbody = document.getElementById("tablaComentarios");
-    tbody.innerHTML = "";
+        function renderizarComentarios(lista) {
+            const tbody = document.getElementById("tablaComentarios");
+            tbody.innerHTML = "";
+            lista.forEach(com => {
+                const fila = document.createElement("tr");
+                fila.innerHTML = `
+                    <td>${com.nombre}</td>
+                    <td>${com.e_mail}</td>
+                    <td>${com.asunto}</td>
+                    <td>${com.comentario}</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick='abrirModal(${JSON.stringify(com)})'>Editar</button>
+                        <button class="btn btn-sm btn-danger" onclick='eliminarComentario(${com.id})'>Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(fila);
+            });
+        }
 
-    lista.forEach(com => {
-        const fila = document.createElement("tr");
-        fila.innerHTML = `
-            <td>${com.nombre}</td>
-            <td>${com.e_mail}</td>
-            <td>${com.asunto}</td>
-            <td>${com.comentario}</td>
-            <td>
-                <button class="btn btn-sm btn-warning" onclick='cargarComentario(${JSON.stringify(com)})'>Editar</button>
-                <button class="btn btn-sm btn-danger" onclick='prepararEliminacion(${com.id})'>Eliminar</button>
-            </td>
-        `;
-        tbody.appendChild(fila);
-    });
-}
+        function abrirModal(com) {
+            document.getElementById("editId").value = com.id;
+            document.getElementById("editNombre").value = com.nombre;
+            document.getElementById("editEmail").value = com.e_mail;
+            document.getElementById("editAsunto").value = com.asunto;
+            document.getElementById("editComentario").value = com.comentario;
+            $("#editarModal").modal("show");
+        }
 
-function cargarComentario(com) {
-    idComentario = com.id;
-    campos.nombre.value = com.nombre;
-    campos.email.value = com.e_mail;
-    campos.asunto.value = com.asunto;
-    campos.comentario.value = com.comentario;
-}
+        async function guardarEdicion() {
+            const id = document.getElementById("editId").value;
+            const datos = {
+                nombre: document.getElementById("editNombre").value.trim(),
+                e_mail: document.getElementById("editEmail").value.trim(),
+                asunto: document.getElementById("editAsunto").value.trim(),
+                comentario: document.getElementById("editComentario").value.trim()
+            };
+            try {
+                const res = await fetch(`${API_URL}/${id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(datos)
+                });
+                const r = await res.json();
+                if (r.ok) {
+                    alert("Comentario actualizado correctamente.");
+                    $("#editarModal").modal("hide");
+                    cargarComentarios();
+                } else alert("⚠️ " + r.error);
+            } catch (err) {
+                alert("❌ Error al actualizar: " + err);
+            }
+        }
 
-function prepararEliminacion(id) {
-    idComentario = id;
-}
-</script>
+        async function eliminarComentario(id) {
+            if (!confirm("¿Desea eliminar este comentario?")) return;
+            try {
+                const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+                const r = await res.json();
+                if (r.ok) {
+                    alert("Comentario eliminado.");
+                    cargarComentarios();
+                } else alert("⚠️ " + r.error);
+            } catch (err) {
+                alert("❌ Error de red: " + err);
+            }
+        }
+    </script>
 
-
-    <!-- Librerías JS -->
+    <!-- JS Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='lib/lightbox/js/lightbox.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

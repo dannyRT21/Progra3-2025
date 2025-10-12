@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify, request, render_template, redirect
+from flask import Flask, jsonify, request, render_template, redirect, session, url_for
 from flask_cors import CORS
 from Model.crud_comentarios import CrudComentarios
 from Model.crud_de_base import PostgresDB, DatabaseError
@@ -13,12 +13,14 @@ import uuid
 APP_PORT = int(os.getenv("APP_PORT", "2020"))
 APP_HOST = os.getenv("APP_HOST", "0.0.0.0")
 
-# Inicializar Flask (con soporte de plantillas y archivos estáticos)
 app = Flask(
     __name__,
     template_folder='templates',
     static_folder='static'
 )
+
+# 🔐 Clave secreta para sesiones
+app.secret_key = "clave_secreta_segura_123"  # puedes cambiarla
 
 # Habilitar CORS solo para endpoints /api/*
 CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -58,7 +60,10 @@ def fail(error_message, status=400, data=None):
 
 @app.route('/')
 def index():
-    return render_template('index.html')  # ✅ Cambiado para mostrar página de inicio real
+    # ✅ Verificamos si el usuario está logueado
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+    return render_template('index.html')
 
 
 @app.route('/contact')
@@ -68,11 +73,12 @@ def contact():
 
 @app.route('/subir', methods=['GET', 'POST'])
 def subir():
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+
     if request.method == 'POST':
         try:
             print("DEBUG: Iniciando subida de producto...")
-
-            # Log de los datos recibidos
             print(f"DEBUG: Datos del formulario: {dict(request.form)}")
             print(f"DEBUG: Archivos recibidos: {dict(request.files)}")
 
@@ -84,17 +90,12 @@ def subir():
             inventario = int(request.form['inventario'])
             activo = 'activo' in request.form
 
-            print(f"DEBUG: Datos procesados - Nombre: {nombre}, Precio: {precio}, Cod Barras: {cod_barras}")
-
             imagen = request.files.get('imagen')
             filename = None
             if imagen and imagen.filename:
                 safe_name = secure_filename(imagen.filename)
                 filename = f"{uuid.uuid4().hex}_{safe_name}"
-                print(f"DEBUG: Guardando imagen como: {filename}")
                 imagen.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            else:
-                print("DEBUG: No se recibió imagen")
 
             datos_producto = {
                 "nombre": nombre,
@@ -107,26 +108,22 @@ def subir():
                 "imagen": filename
             }
 
-            print(f"DEBUG: Enviando a BD: {datos_producto}")
-
             result = productos_service.crear(datos_producto)
-            print(f"DEBUG: Resultado de crear producto: {result}")
-
             if result["ok"]:
-                print("DEBUG: Producto creado exitosamente, redirigiendo...")
                 return redirect('/productos')
             else:
-                print(f"DEBUG: Error al crear producto: {result['error']}")
                 return fail(result["error"], status=500)
 
         except Exception as e:
-            print(f"DEBUG: Excepción en subir: {str(e)}")
             return fail(str(e), status=500)
     return render_template('subir.html')
 
 
 @app.route('/productos')
 def productos():
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+
     result = productos_service.listar()
     if result["ok"]:
         return render_template('productos.html', productos=result["data"])
@@ -168,26 +165,29 @@ def login():
     return render_template('Login.html')
 
 
-# 🔹 Nueva ruta para procesar el formulario de login
+# 🔹 Ruta para procesar login
 @app.route('/procesar_login', methods=['POST'])
 def procesar_login():
-    """
-    Procesa los datos del formulario de login enviado por POST desde Login.html
-    """
     username = request.form.get('username')
     password = request.form.get('password')
 
-    # Validación de campos vacíos
     if not username or not password:
         error = "Por favor, ingresa usuario y contraseña."
         return render_template('Login.html', error=error)
 
-    # Ejemplo de validación (puedes cambiar esto para usar PostgreSQL)
     if username == "admin@copyvariedades.com" and password == "1234":
-        return redirect('/')  # ✅ Redirige al index después de login
+        session['usuario'] = username  # ✅ Guardar sesión
+        return redirect(url_for('index'))
     else:
         error = "Usuario o contraseña incorrectos"
         return render_template('Login.html', error=error)
+
+
+# 🔸 Ruta para cerrar sesión
+@app.route('/logout')
+def logout():
+    session.pop('usuario', None)
+    return redirect(url_for('login'))
 
 
 @app.route('/service')

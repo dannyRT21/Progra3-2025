@@ -3,6 +3,10 @@ from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 from Model.crud_comentarios import CrudComentarios
 from Model.crud_de_base import PostgresDB, DatabaseError
+from werkzeug.utils import secure_filename
+from Model.crud_productos import CrudProductos
+import uuid
+from flask import Flask, jsonify, request, render_template, redirect  # <-- agregar redirect
 
 # -------------------------------------------------------
 # Configuración general
@@ -19,6 +23,13 @@ app = Flask(
 
 # Habilitar CORS solo para endpoints /api/*
 CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+# Configurar carpeta de subida de imágenes
+app.config['UPLOAD_FOLDER'] = os.path.join('static', 'img', 'productos')
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+# Servicio de productos
+productos_service = CrudProductos()
 
 # Servicio CRUD de comentarios
 comentarios_service = CrudComentarios()
@@ -56,13 +67,70 @@ def index():
 def contact():
     return render_template('contact.html')
 
-@app.route('/subir')
+@app.route('/subir', methods=['GET', 'POST'])
 def subir():
+    if request.method == 'POST':
+        try:
+            print("DEBUG: Iniciando subida de producto...")
+            
+            # Log de los datos recibidos
+            print(f"DEBUG: Datos del formulario: {dict(request.form)}")
+            print(f"DEBUG: Archivos recibidos: {dict(request.files)}")
+            
+            nombre = request.form['nombre']
+            categoria_id = request.form.get('categoria_id')
+            descripcion = request.form.get('descripcion')
+            precio = float(request.form['precio'])
+            cod_barras = request.form['cod_barras']
+            inventario = int(request.form['inventario'])
+            activo = 'activo' in request.form
+
+            print(f"DEBUG: Datos procesados - Nombre: {nombre}, Precio: {precio}, Cod Barras: {cod_barras}")
+
+            imagen = request.files.get('imagen')
+            filename = None
+            if imagen and imagen.filename:
+                safe_name = secure_filename(imagen.filename)
+                filename = f"{uuid.uuid4().hex}_{safe_name}"
+                print(f"DEBUG: Guardando imagen como: {filename}")
+                imagen.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            else:
+                print("DEBUG: No se recibió imagen")
+
+            datos_producto = {
+                "nombre": nombre,
+                "categoria_id": categoria_id,
+                "descripcion": descripcion,
+                "precio": precio,
+                "cod_barras": cod_barras,
+                "inventario": inventario,
+                "activo": activo,
+                "imagen": filename
+            }
+            
+            print(f"DEBUG: Enviando a BD: {datos_producto}")
+            
+            result = productos_service.crear(datos_producto)
+            print(f"DEBUG: Resultado de crear producto: {result}")
+            
+            if result["ok"]:
+                print("DEBUG: Producto creado exitosamente, redirigiendo...")
+                return redirect('/productos')
+            else:
+                print(f"DEBUG: Error al crear producto: {result['error']}")
+                return fail(result["error"], status=500)
+                
+        except Exception as e:
+            print(f"DEBUG: Excepción en subir: {str(e)}")
+            return fail(str(e), status=500)
     return render_template('subir.html')
 
 @app.route('/productos')
 def productos():
-    return render_template('productos.html')
+    result = productos_service.listar()
+    if result["ok"]:
+        return render_template('productos.html', productos=result["data"])
+    return fail(result["error"], status=500)
 
 @app.route('/copias')
 def copias():
@@ -94,6 +162,8 @@ def login():
 @app.route('/service')
 def service():
     return render_template('service.html')
+
+
 
 
 # -------------------------------------------------------
@@ -160,6 +230,33 @@ def eliminar_comentario(comentario_id: int):
 
     status = 400 if "id" in msg or "inválido" in msg else 500
     return fail(result["error"], status=status)
+
+@app.put('/api/productos/<producto_id>')
+def actualizar_producto(producto_id):
+    try:
+        # Leer JSON del cuerpo
+        data = request.get_json(silent=True) or {}
+
+        # Validaciones básicas
+        if not data.get("nombre") or not data.get("precio"):
+            return fail("Nombre y precio son obligatorios", status=400)
+
+        # Llamada a tu CRUD
+        result = productos_service.actualizar(producto_id, data)
+
+        if result["ok"]:
+            return ok(message="Producto actualizado correctamente", data=result["data"])
+        return fail(result["error"], status=404)
+
+    except Exception as e:
+        return fail(str(e), status=500)
+
+@app.delete('/api/productos/<producto_id>')
+def eliminar_producto(producto_id):
+    result = productos_service.eliminar(producto_id)
+    if result["ok"]:
+        return ok(message=result["message"])
+    return fail(result["error"], status=404)
 
 
 # -------------------------------------------------------

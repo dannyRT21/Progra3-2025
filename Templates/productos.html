@@ -22,10 +22,71 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+    <style>
+        /* Botones ordenados uno debajo del otro */
+        .product-buttons {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        /* Fondo semitransparente del modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        /* Ventana flotante */
+        .modal-content {
+            background: #fff;
+            padding: 20px 25px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #555;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: #000;
+        }
+    </style>
 </head>
 
 <body>
-
     <!-- Topbar Start -->
     <div class="container-fluid bg-primary py-3 d-none d-md-block">
         <div class="container">
@@ -41,21 +102,11 @@
                 </div>
                 <div class="col-md-6 text-center text-lg-right">
                     <div class="d-inline-flex align-items-center">
-                        <a class="text-white px-3" href="">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a class="text-white px-3" href="">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a class="text-white px-3" href="">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a class="text-white px-3" href="">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a class="text-white pl-3" href="">
-                            <i class="fab fa-youtube"></i>
-                        </a>
+                        <a class="text-white px-3" href=""><i class="fab fa-facebook-f"></i></a>
+                        <a class="text-white px-3" href=""><i class="fab fa-twitter"></i></a>
+                        <a class="text-white px-3" href=""><i class="fab fa-linkedin-in"></i></a>
+                        <a class="text-white px-3" href=""><i class="fab fa-instagram"></i></a>
+                        <a class="text-white pl-3" href=""><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
             </div>
@@ -97,17 +148,14 @@
     <!-- Navbar End -->
 
 
-  
     <!-- Header Start -->
     <div class="jumbotron jumbotron-fluid page-header" style="margin-bottom: 90px;">
         <div class="container text-center py-5">
             <h1 class="text-white display-3 mt-lg-5">Productos subidos</h1>
             <div class="d-inline-flex align-items-center text-white">
                 <p class="m-0"><a class="text-white" href="{{ url_for('index') }}">Home</a></p>
-                    <a href="{{ url_for('index') }}" class="fa fa-angle-double-right px-3"></a>
-                <i class="fa fa-circle px-4"></i>
-                <p class="m-0">contactenos</p>
-                <a href="{{ url_for('contact') }}" class="fa fa-angle-double-right px-3"></a>
+                <i class="fa fa-angle-double-right px-2"></i>
+                <p class="m-0">Productos</p>
             </div>
         </div>
     </div>
@@ -128,82 +176,157 @@
     <!-- Products Counter End -->
 
 
-    <!-- Products Start -->
+    <!-- Products List -->
     <div class="container-fluid py-5">
         <div class="container py-5">
             <div class="row" id="product-list">
-                <!-- Producto 1 -->
+                {% for p in productos %}
                 <div class="col-lg-3 col-md-6 mb-4 pb-2 product-card">
-                    <div class="product-item d-flex flex-column align-items-center text-center bg-light rounded py-5 px-3">
-                        <div class="bg-primary mt-n5 py-3" style="width: 80px;">
-                            <h4 class="font-weight-bold text-white mb-0">$9.99</h4>
+                    <div class="product-item d-flex flex-column align-items-center text-center bg-light rounded py-5 px-3 position-relative">
+                        <!-- Botones Editar / Eliminar -->
+                        <div class="product-buttons">
+                            <button class="btn btn-sm btn-primary" onclick="editarProducto('{{ p.id }}', '{{ p.nombre }}', '{{ p.descripcion }}', '{{ p.precio }}', '{{ p.inventario }}')">Editar</button>
+                            <button class="btn btn-sm btn-danger" onclick="eliminarProducto('{{ p.id }}')">Eliminar</button>
                         </div>
-                        <div class="position-relative bg-primary rounded-circle mt-n3 mb-4 p-3" style="width: 150px; height: 150px;">
-                            <img class="rounded-circle w-100 h-100" src="{{ url_for('static', filename='img/product-1.jpg') }}" style="object-fit: cover;">
-                        </div>
-                        <h5 class="font-weight-bold mb-2">Helado de Vainilla</h5>
-                        <p class="mb-3">Cremoso helado artesanal con sabor clásico de vainilla.</p>
-                        <a href="{{ url_for('detalles') }}" target="_blank" class="btn btn-sm btn-secondary">Detalles de producto</a>
-                    </div>
-                </div>
 
-                <!-- Producto 2 -->
-                <div class="col-lg-3 col-md-6 mb-4 pb-2 product-card">
-                    <div class="product-item d-flex flex-column align-items-center text-center bg-light rounded py-5 px-3">
                         <div class="bg-primary mt-n5 py-3" style="width: 80px;">
-                            <h4 class="font-weight-bold text-white mb-0">$12.50</h4>
+                            <h4 class="font-weight-bold text-white mb-0">${{ '%.2f'|format(p.precio) }}</h4>
                         </div>
                         <div class="position-relative bg-primary rounded-circle mt-n3 mb-4 p-3" style="width: 150px; height: 150px;">
-                            <img class="rounded-circle w-100 h-100" src="{{ url_for('static', filename='img/product-2.jpg') }}" style="object-fit: cover;">
+                            <img class="rounded-circle w-100 h-100"
+                                src="{{ url_for('static', filename='img/productos/' ~ (p.imagen or 'placeholder.png')) }}"
+                                style="object-fit: cover;" alt="{{ p.nombre }}">
                         </div>
-                        <h5 class="font-weight-bold mb-2">Helado de Fresa</h5>
-                        <p class="mb-3">Helado natural con fresas frescas y un toque de crema.</p>
-                        <a href="{{ url_for('detalles') }}" target="_blank" class="btn btn-sm btn-secondary">Detalles de producto</a>
+                        <h5 class="font-weight-bold mb-2">{{ p.nombre }}</h5>
+                        <p class="mb-3">{{ p.descripcion or 'Sin descripción' }}</p>
+                        <small class="text-muted">Código: {{ p.cod_barras }}</small><br>
+                        <small class="text-muted">Inventario: {{ p.inventario }}</small>
                     </div>
                 </div>
-
-                <!-- Producto 3 -->
-                <div class="col-lg-3 col-md-6 mb-4 pb-2 product-card">
-                    <div class="product-item d-flex flex-column align-items-center text-center bg-light rounded py-5 px-3">
-                        <div class="bg-primary mt-n5 py-3" style="width: 80px;">
-                            <h4 class="font-weight-bold text-white mb-0">$11.00</h4>
-                        </div>
-                        <div class="position-relative bg-primary rounded-circle mt-n3 mb-4 p-3" style="width: 150px; height: 150px;">
-                            <img class="rounded-circle w-100 h-100" src="{{ url_for('static', filename='img/product-3.jpg') }}" style="object-fit: cover;">
-                        </div>
-                        <h5 class="font-weight-bold mb-2">Helado de Chocolate</h5>
-                        <p class="mb-3">Delicioso helado de chocolate con cacao premium.</p>
-                        <a href="{{ url_for('detalles') }}" target="_blank" class="btn btn-sm btn-secondary">Detalles de producto</a>
+                {% else %}
+                <div class="col-12 text-center">
+                    <div class="alert alert-warning">
+                        <h4>No hay productos disponibles</h4>
+                        <p>¡Sube el primer producto haciendo clic en el botón!</p>
+                        <a href="{{ url_for('subir') }}" class="btn btn-primary">Subir Producto</a>
                     </div>
                 </div>
-
-                <!-- Producto 4 -->
-                <div class="col-lg-3 col-md-6 mb-4 pb-2 product-card">
-                    <div class="product-item d-flex flex-column align-items-center text-center bg-light rounded py-5 px-3">
-                        <div class="bg-primary mt-n5 py-3" style="width: 80px;">
-                            <h4 class="font-weight-bold text-white mb-0">$13.00</h4>
-                        </div>
-                        <div class="position-relative bg-primary rounded-circle mt-n3 mb-4 p-3" style="width: 150px; height: 150px;">
-                            <img class="rounded-circle w-100 h-100" src="{{ url_for('static', filename='img/product-4.jpg') }}" style="object-fit: cover;">
-                        </div>
-                        <h5 class="font-weight-bold mb-2">Helado de Mango</h5>
-                        <p class="mb-3">Helado tropical con el auténtico sabor del mango maduro.</p>
-                        <a href="{{ url_for('detalles') }}" target="_blank" class="btn btn-sm btn-secondary">Detalles de producto</a>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
-    <!-- Products End -->
 
+    <!-- Modal flotante para editar producto -->
+    <div class="modal-overlay" id="modalEditar">
+        <div class="modal-content">
+            <button class="close-btn" onclick="cerrarModal()">×</button>
+            <h4 class="text-primary mb-3">Editar producto</h4>
+            <form id="formEditarProducto">
+                <input type="hidden" id="edit-id">
+                <div class="form-group mb-2">
+                    <label>Nombre</label>
+                    <input type="text" class="form-control" id="edit-nombre" required>
+                </div>
+                <div class="form-group mb-2">
+                    <label>Descripción</label>
+                    <textarea class="form-control" id="edit-descripcion" rows="2"></textarea>
+                </div>
+                <div class="form-group mb-2">
+                    <label>Precio</label>
+                    <input type="number" class="form-control" id="edit-precio" step="0.01" required>
+                </div>
+                <div class="form-group mb-2">
+                    <label>Inventario</label>
+                    <input type="number" class="form-control" id="edit-inventario" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label>Imagen</label>
+                    <input type="file" class="form-control" id="edit-imagen">
+                </div>
+                <button type="button" class="btn btn-primary w-100" onclick="guardarCambios()">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
 
+    <script>
+        // 🧹 Eliminar producto
+        function eliminarProducto(id) {
+            if (!confirm('¿Seguro que quieres eliminar este producto?')) return;
+            fetch(`/api/productos/${id}`, { method: 'DELETE' })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.ok) {
+                        alert('Producto eliminado correctamente');
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.error);
+                    }
+                })
+                .catch(error => alert('Error al eliminar producto: ' + error));
+        }
+
+        // ✏️ Abrir modal
+        function editarProducto(id, nombre, descripcion, precio, inventario) {
+            document.getElementById('modalEditar').style.display = 'flex';
+            document.getElementById('edit-id').value = id;
+            document.getElementById('edit-nombre').value = nombre;
+            document.getElementById('edit-descripcion').value = descripcion;
+            document.getElementById('edit-precio').value = precio;
+            document.getElementById('edit-inventario').value = inventario;
+        }
+
+        function cerrarModal() {
+            document.getElementById('modalEditar').style.display = 'none';
+        }
+
+        // 💾 Guardar cambios y enviar a Flask
+        function guardarCambios() {
+            const id = document.getElementById('edit-id').value;
+            const nombre = document.getElementById('edit-nombre').value;
+            const descripcion = document.getElementById('edit-descripcion').value;
+            const precio = parseFloat(document.getElementById('edit-precio').value);
+            const inventario = parseInt(document.getElementById('edit-inventario').value);
+
+            const data = { nombre, descripcion, precio, inventario };
+
+            fetch(`/api/productos/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+                .then(r => r.json())
+                .then(res => {
+                    if (res.ok) {
+                        alert('✅ Producto actualizado correctamente');
+                        cerrarModal();
+                        location.reload();
+                    } else {
+                        alert('❌ Error: ' + res.error);
+                    }
+                })
+                .catch(err => alert('⚠️ Error de conexión: ' + err));
+        }
+
+        // 🔢 Contador animado
+        document.addEventListener('DOMContentLoaded', () => {
+            const total = document.querySelectorAll('.product-card').length;
+            const counter = document.getElementById('product-counter');
+            let count = 0;
+            const interval = setInterval(() => {
+                if (count < total) {
+                    count++;
+                    counter.textContent = count;
+                } else clearInterval(interval);
+            }, 150);
+        });
+    </script>
 
     <!-- Footer Start -->
     <div class="container-fluid footer bg-light py-5" style="margin-top: 90px;">
         <div class="container text-center py-5">
             <div class="row">
                 <div class="col-12 mb-4">
-                    <a href="{{ url_for('index') }}" class="navbar-brand m-0"></a>
+                    <a href="{{ url_for('index') }}" class="navbar-brand m-0">
                         <h1 class="m-0 mt-n2 display-4 text-primary"><span class="text-secondary">Copy</span>Variedades</h1>
                     </a>
                 </div>
@@ -228,19 +351,16 @@
                     </div>
                 </div>
                 <div class="col-12">
-                    <p class="m-0">&copy; <a href="#">Domain</a>. All Rights Reserved. Designed by <a href="https://htmlcodex.com">HTML Codex</a>
-                    </p>
+                    <p class="m-0">&copy; <a href="#">Domain</a>. All Rights Reserved. Designed by <a
+                            href="https://htmlcodex.com">HTML Codex</a></p>
                 </div>
             </div>
         </div>
     </div>
     <!-- Footer End -->
 
-
-    <!-- Back to Top -->
     <a href="#" class="btn btn-secondary px-2 back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
-    <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
@@ -248,30 +368,6 @@
     <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
     <script src="{{ url_for('static', filename='lib/isotope/isotope.pkgd.min.js') }}"></script>
     <script src="{{ url_for('static', filename='lib/lightbox/js/lightbox.min.js') }}"></script>
-
-    <!-- Template Javascript -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-
-    <!-- Custom Counter Script -->
-    <script>
-        // Contar productos y mostrar número total
-        document.addEventListener('DOMContentLoaded', () => {
-            const totalProductos = document.querySelectorAll('.product-card').length;
-            const counterElement = document.getElementById('product-counter');
-            let count = 0;
-
-            // Animación autoincremental
-            const interval = setInterval(() => {
-                if (count < totalProductos) {
-                    count++;
-                    counterElement.textContent = count;
-                } else {
-                    clearInterval(interval);
-                }
-            }, 150);
-        });
-    </script>
-
 </body>
-
 </html>

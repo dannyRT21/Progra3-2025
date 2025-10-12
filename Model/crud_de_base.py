@@ -33,7 +33,7 @@ class PostgresDB:
         # Permite configuración por variables de entorno o argumentos
         self.dbname = dbname or os.getenv("PGDATABASE", "db_copyvariedades")
         self.user = user or os.getenv("PGUSER", "postgres")
-        self.password = password or os.getenv("PGPASSWORD", "12345678")
+        self.password = password or os.getenv("PGPASSWORD", "romero")
         self.host = host or os.getenv("PGHOST", "localhost")
         self.port = port or os.getenv("PGPORT", "5432")
 

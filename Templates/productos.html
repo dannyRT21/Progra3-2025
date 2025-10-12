@@ -135,7 +135,7 @@
                     </a>
 
                     <div class="navbar-nav py-0">
-                        <a href="{{ url_for('service') }}" class="nav-item nav-link">impresiones</a>
+                        <a href="{{ url_for('subir') }}" class="nav-item nav-link">Volver a Agregar Productos</a>
                         <a href="{{ url_for('gallery') }}" class="nav-item nav-link">papeleria</a>
                         <a href="{{ url_for('contact') }}" class="nav-item nav-link">Abarrotes</a>
                     </div>
@@ -175,79 +175,134 @@
     </div>
     <!-- Products Counter End -->
 
+     <!-- Search Bar Start -->
+<div class="container mb-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <input type="text" id="search-input" class="form-control form-control-lg" placeholder="Buscar por nombre o código de barras...">
+        </div>
+    </div>
+</div>
+<!-- Search Bar End -->
 
-    <!-- Products List -->
-    <div class="container-fluid py-5">
-        <div class="container py-5">
-            <div class="row" id="product-list">
-                {% for p in productos %}
-                <div class="col-lg-3 col-md-6 mb-4 pb-2 product-card">
-                    <div class="product-item d-flex flex-column align-items-center text-center bg-light rounded py-5 px-3 position-relative">
-                        <!-- Botones Editar / Eliminar -->
-                        <div class="product-buttons">
-                            <button class="btn btn-sm btn-primary" onclick="editarProducto('{{ p.id }}', '{{ p.nombre }}', '{{ p.descripcion }}', '{{ p.precio }}', '{{ p.inventario }}')">Editar</button>
-                            <button class="btn btn-sm btn-danger" onclick="eliminarProducto('{{ p.id }}')">Eliminar</button>
-                        </div>
+ <style>
+    .product-item {
+        position: relative;
+        padding-top: 60px; /* Espacio para botones y precio */
+    }
 
-                        <div class="bg-primary mt-n5 py-3" style="width: 80px;">
-                            <h4 class="font-weight-bold text-white mb-0">${{ '%.2f'|format(p.precio) }}</h4>
-                        </div>
-                        <div class="position-relative bg-primary rounded-circle mt-n3 mb-4 p-3" style="width: 150px; height: 150px;">
-                            <img class="rounded-circle w-100 h-100"
-                                src="{{ url_for('static', filename='img/productos/' ~ (p.imagen or 'placeholder.png')) }}"
-                                style="object-fit: cover;" alt="{{ p.nombre }}">
-                        </div>
-                        <h5 class="font-weight-bold mb-2">{{ p.nombre }}</h5>
-                        <p class="mb-3">{{ p.descripcion or 'Sin descripción' }}</p>
-                        <small class="text-muted">Código: {{ p.cod_barras }}</small><br>
-                        <small class="text-muted">Inventario: {{ p.inventario }}</small>
+    .product-buttons {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        z-index: 10;
+    }
+
+    .product-buttons .btn {
+        padding: 4px 10px;
+        font-size: 0.75rem;
+        white-space: nowrap;
+    }
+
+    .price-badge {
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #007bff;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 10px;
+        font-weight: bold;
+        z-index: 5;
+        font-size: 0.9rem;
+    }
+</style>
+
+<!-- Products List -->
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <div class="row" id="product-list">
+            {% for p in productos %}
+            <div class="col-lg-3 col-md-6 mb-4 pb-2 product-card">
+                <div class="product-item d-flex flex-column align-items-center text-center bg-light rounded px-3 pb-5 pt-4">
+                    
+                    <!-- Botones Editar / Eliminar -->
+                    <div class="product-buttons">
+                        <button class="btn btn-sm btn-primary"
+                            onclick="editarProducto('{{ p.id }}', '{{ p.nombre }}', '{{ p.descripcion }}', '{{ p.precio }}', '{{ p.inventario }}')">Editar</button>
+                        <button class="btn btn-sm btn-danger" onclick="eliminarProducto('{{ p.id }}')">Eliminar</button>
                     </div>
-                </div>
-                {% else %}
-                <div class="col-12 text-center">
-                    <div class="alert alert-warning">
-                        <h4>No hay productos disponibles</h4>
-                        <p>¡Sube el primer producto haciendo clic en el botón!</p>
-                        <a href="{{ url_for('subir') }}" class="btn btn-primary">Subir Producto</a>
+
+                    <!-- Precio -->
+                    <div class="price-badge">
+                        ${{ '%.2f'|format(p.precio) }}
                     </div>
+
+                    <!-- Imagen del producto -->
+                    <div class="position-relative bg-primary rounded-circle mt-5 mb-4 p-3" style="width: 150px; height: 150px;">
+                        <img class="rounded-circle w-100 h-100"
+                            src="{{ url_for('static', filename='img/productos/' ~ (p.imagen or 'placeholder.png')) }}"
+                            style="object-fit: cover;" alt="{{ p.nombre }}">
+                    </div>
+
+                    <!-- Detalles del producto -->
+                    <h5 class="font-weight-bold mb-2">{{ p.nombre }}</h5>
+                    <p class="mb-3">{{ p.descripcion or 'Sin descripción' }}</p>
+                    <small class="text-muted">Código: {{ p.cod_barras }}</small><br>
+                    <small class="text-muted">Inventario: {{ p.inventario }}</small>
                 </div>
-                {% endfor %}
             </div>
+            {% else %}
+            <div class="col-12 text-center">
+                <div class="alert alert-warning">
+                    <h4>No hay productos disponibles</h4>
+                    <p>¡Sube el primer producto haciendo clic en el botón!</p>
+                    <a href="{{ url_for('subir') }}" class="btn btn-primary">Subir Producto</a>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
+</div>
 
-    <!-- Modal flotante para editar producto -->
-    <div class="modal-overlay" id="modalEditar">
-        <div class="modal-content">
-            <button class="close-btn" onclick="cerrarModal()">×</button>
-            <h4 class="text-primary mb-3">Editar producto</h4>
-            <form id="formEditarProducto">
-                <input type="hidden" id="edit-id">
-                <div class="form-group mb-2">
-                    <label>Nombre</label>
-                    <input type="text" class="form-control" id="edit-nombre" required>
-                </div>
-                <div class="form-group mb-2">
-                    <label>Descripción</label>
-                    <textarea class="form-control" id="edit-descripcion" rows="2"></textarea>
-                </div>
-                <div class="form-group mb-2">
-                    <label>Precio</label>
-                    <input type="number" class="form-control" id="edit-precio" step="0.01" required>
-                </div>
-                <div class="form-group mb-2">
-                    <label>Inventario</label>
-                    <input type="number" class="form-control" id="edit-inventario" required>
-                </div>
-                <div class="form-group mb-3">
-                    <label>Imagen</label>
-                    <input type="file" class="form-control" id="edit-imagen">
-                </div>
-                <button type="button" class="btn btn-primary w-100" onclick="guardarCambios()">Guardar Cambios</button>
-            </form>
-        </div>
+<!-- Modal flotante para editar producto -->
+<div class="modal-overlay" id="modalEditar">
+    <div class="modal-content">
+        <button class="close-btn" onclick="cerrarModal()">×</button>
+        <h4 class="text-primary mb-3">Editar producto</h4>
+        <form id="formEditarProducto">
+            <input type="hidden" id="edit-id">
+            <div class="form-group mb-2">
+                <label>Nombre</label>
+                <input type="text" class="form-control" id="edit-nombre" required>
+            </div>
+            <div class="form-group mb-2">
+                <label>Descripción</label>
+                <textarea class="form-control" id="edit-descripcion" rows="2"></textarea>
+            </div>
+            <div class="form-group mb-2">
+                <label>Precio</label>
+                <input type="number" class="form-control" id="edit-precio" step="0.01" required>
+            </div>
+            <div class="form-group mb-2">
+                <label>Inventario</label>
+                <input type="number" class="form-control" id="edit-inventario" required>
+            </div>
+            <div class="form-group mb-3">
+                <label>Imagen</label>
+                <input type="file" class="form-control" id="edit-imagen">
+            </div>
+            <button type="button" class="btn btn-primary w-100" onclick="guardarCambios()">Guardar Cambios</button>
+        </form>
     </div>
+</div>
 
+ 
+    <!-- JavaScript para funcionalidades -->
     <script>
         // 🧹 Eliminar producto
         function eliminarProducto(id) {
@@ -319,6 +374,28 @@
                 } else clearInterval(interval);
             }, 150);
         });
+
+        // 🔍 Buscador por nombre y código de barras
+document.getElementById('search-input').addEventListener('input', function () {
+    const search = this.value.toLowerCase();
+    const cards = document.querySelectorAll('.product-card');
+    let visibles = 0;
+
+    cards.forEach(card => {
+        const nombre = card.querySelector('h5')?.textContent.toLowerCase() || '';
+        const codBar = Array.from(card.querySelectorAll('small.text-muted'))
+                            .find(el => el.textContent.toLowerCase().includes('código'))?.textContent.toLowerCase() || '';
+        const codLimpio = codBar.replace('código: ', '');
+
+        const visible = nombre.includes(search) || codLimpio.includes(search);
+        card.style.display = visible ? 'block' : 'none';
+        if (visible) visibles++;
+    });
+
+    // Actualizar el contador visible
+    document.getElementById('product-counter').textContent = visibles;
+});
+
     </script>
 
     <!-- Footer Start -->

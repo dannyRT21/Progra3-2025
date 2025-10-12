@@ -1,12 +1,11 @@
 import os
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template, redirect
 from flask_cors import CORS
 from Model.crud_comentarios import CrudComentarios
 from Model.crud_de_base import PostgresDB, DatabaseError
 from werkzeug.utils import secure_filename
 from Model.crud_productos import CrudProductos
 import uuid
-from flask import Flask, jsonify, request, render_template, redirect  # <-- agregar redirect
 
 # -------------------------------------------------------
 # Configuración general
@@ -28,10 +27,8 @@ CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.config['UPLOAD_FOLDER'] = os.path.join('static', 'img', 'productos')
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-# Servicio de productos
+# Servicios
 productos_service = CrudProductos()
-
-# Servicio CRUD de comentarios
 comentarios_service = CrudComentarios()
 
 # -------------------------------------------------------
@@ -61,22 +58,24 @@ def fail(error_message, status=400, data=None):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html')  # ✅ Cambiado para mostrar página de inicio real
+
 
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
+
 
 @app.route('/subir', methods=['GET', 'POST'])
 def subir():
     if request.method == 'POST':
         try:
             print("DEBUG: Iniciando subida de producto...")
-            
+
             # Log de los datos recibidos
             print(f"DEBUG: Datos del formulario: {dict(request.form)}")
             print(f"DEBUG: Archivos recibidos: {dict(request.files)}")
-            
+
             nombre = request.form['nombre']
             categoria_id = request.form.get('categoria_id')
             descripcion = request.form.get('descripcion')
@@ -107,23 +106,24 @@ def subir():
                 "activo": activo,
                 "imagen": filename
             }
-            
+
             print(f"DEBUG: Enviando a BD: {datos_producto}")
-            
+
             result = productos_service.crear(datos_producto)
             print(f"DEBUG: Resultado de crear producto: {result}")
-            
+
             if result["ok"]:
                 print("DEBUG: Producto creado exitosamente, redirigiendo...")
                 return redirect('/productos')
             else:
                 print(f"DEBUG: Error al crear producto: {result['error']}")
                 return fail(result["error"], status=500)
-                
+
         except Exception as e:
             print(f"DEBUG: Excepción en subir: {str(e)}")
             return fail(str(e), status=500)
     return render_template('subir.html')
+
 
 @app.route('/productos')
 def productos():
@@ -132,38 +132,67 @@ def productos():
         return render_template('productos.html', productos=result["data"])
     return fail(result["error"], status=500)
 
+
 @app.route('/copias')
 def copias():
     return render_template('copias.html')
+
 
 @app.route('/papeleria')
 def papeleria():
     return render_template('papeleria.html')
 
+
 @app.route('/abarrotes')
 def abarrotes():
     return render_template('abarrotes.html')
+
 
 @app.route('/detalles')
 def detalles():
     return render_template('detalles.html')
 
+
 @app.route('/gallery')
 def gallery():
     return render_template('gallery.html')
+
 
 @app.route('/product')
 def product():
     return render_template('product.html')
 
-@app.route('/login')
+
+@app.route('/login', methods=['GET'])
 def login():
     return render_template('Login.html')
+
+
+# 🔹 Nueva ruta para procesar el formulario de login
+@app.route('/procesar_login', methods=['POST'])
+def procesar_login():
+    """
+    Procesa los datos del formulario de login enviado por POST desde Login.html
+    """
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    # Validación de campos vacíos
+    if not username or not password:
+        error = "Por favor, ingresa usuario y contraseña."
+        return render_template('Login.html', error=error)
+
+    # Ejemplo de validación (puedes cambiar esto para usar PostgreSQL)
+    if username == "admin@copyvariedades.com" and password == "1234":
+        return redirect('/')  # ✅ Redirige al index después de login
+    else:
+        error = "Usuario o contraseña incorrectos"
+        return render_template('Login.html', error=error)
+
+
 @app.route('/service')
 def service():
     return render_template('service.html')
-
-
 
 
 # -------------------------------------------------------
@@ -172,9 +201,6 @@ def service():
 
 @app.get("/api/comentarios")
 def listar_comentarios():
-    """
-    Lista comentarios (opcionalmente filtrando por texto en 'buscar')
-    """
     buscar = request.args.get("buscar", "", type=str)
     result = comentarios_service.consultar(buscar)
     return ok(data=result["data"]) if result["ok"] else fail(result["error"], status=500)
@@ -182,9 +208,6 @@ def listar_comentarios():
 
 @app.post("/api/comentarios")
 def crear_comentario():
-    """
-    Crea un nuevo comentario
-    """
     payload = request.get_json(silent=True) or {}
     result = comentarios_service.crear(payload)
     if result["ok"]:
@@ -197,12 +220,8 @@ def crear_comentario():
 
 @app.put("/api/comentarios/<int:comentario_id>")
 def actualizar_comentario(comentario_id: int):
-    """
-    Actualiza un comentario existente
-    """
     payload = request.get_json(silent=True) or {}
     result = comentarios_service.actualizar(comentario_id, payload)
-
     if result["ok"]:
         return ok(data=result["data"], message=result["message"])
 
@@ -216,11 +235,7 @@ def actualizar_comentario(comentario_id: int):
 
 @app.delete("/api/comentarios/<int:comentario_id>")
 def eliminar_comentario(comentario_id: int):
-    """
-    Elimina un comentario por ID
-    """
     result = comentarios_service.eliminar(comentario_id)
-
     if result["ok"]:
         return ok(data=result["data"], message=result["message"])
 
@@ -231,25 +246,21 @@ def eliminar_comentario(comentario_id: int):
     status = 400 if "id" in msg or "inválido" in msg else 500
     return fail(result["error"], status=status)
 
+
 @app.put('/api/productos/<producto_id>')
 def actualizar_producto(producto_id):
     try:
-        # Leer JSON del cuerpo
         data = request.get_json(silent=True) or {}
-
-        # Validaciones básicas
         if not data.get("nombre") or not data.get("precio"):
             return fail("Nombre y precio son obligatorios", status=400)
 
-        # Llamada a tu CRUD
         result = productos_service.actualizar(producto_id, data)
-
         if result["ok"]:
             return ok(message="Producto actualizado correctamente", data=result["data"])
         return fail(result["error"], status=404)
-
     except Exception as e:
         return fail(str(e), status=500)
+
 
 @app.delete('/api/productos/<producto_id>')
 def eliminar_producto(producto_id):

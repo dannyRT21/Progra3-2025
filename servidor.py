@@ -2,7 +2,9 @@ import os
 from flask import Flask, jsonify, request, render_template, redirect, session, url_for
 from flask_cors import CORS
 from Model.crud_comentarios import CrudComentarios
+from Model.crud_de_login import CrudUsuarios
 from Model.crud_de_base import PostgresDB, DatabaseError
+
 from werkzeug.utils import secure_filename
 from Model.crud_productos import CrudProductos
 import uuid
@@ -32,6 +34,7 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 # Servicios
 productos_service = CrudProductos()
 comentarios_service = CrudComentarios()
+usuarios_service = CrudUsuarios()
 
 # -------------------------------------------------------
 # Helpers de respuesta estándar
@@ -46,6 +49,14 @@ def ok(data=None, message=None, status=200):
 
 
 def fail(error_message, status=400, data=None):
+    return jsonify({
+        "ok": False,
+        "data": data,
+        "message": None,
+        "error": error_message
+    }), status
+
+def fail_500(error_message, status=500, data=None):
     return jsonify({
         "ok": False,
         "data": data,
@@ -165,22 +176,31 @@ def login():
     return render_template('Login.html')
 
 
-# 🔹 Ruta para procesar login
+crudUsuarios = CrudUsuarios()
+
 @app.route('/procesar_login', methods=['POST'])
 def procesar_login():
-    username = request.form.get('username')
-    password = request.form.get('password')
+    data = request.get_json(force=True)
+    username = data.get('username', '').strip()
+    password = data.get('password', '').strip()
 
     if not username or not password:
-        error = "Por favor, ingresa usuario y contraseña."
-        return render_template('Login.html', error=error)
+        return jsonify({"ok": False, "error": "Por favor, ingresa usuario y contraseña."})
 
-    if username == "admin@copyvariedades.com" and password == "1234":
-        session['usuario'] = username  # ✅ Guardar sesión
-        return redirect(url_for('index'))
+    # Consulta segura
+    resultado = crudUsuarios.db.execute_select(
+        "SELECT * FROM usuarios WHERE correo_electronico = %s LIMIT 1", (username,)
+    )
+
+    if not resultado:
+        return jsonify({"ok": False, "error": "Usuario no encontrado."})
+
+    usuario = resultado[0]
+    if usuario["contrasena"].strip() == password.strip():  # ⚠️ luego usar hashing (bcrypt)
+        session['usuario'] = username
+        return jsonify({"ok": True, "redirect": url_for('index')})
     else:
-        error = "Usuario o contraseña incorrectos"
-        return render_template('Login.html', error=error)
+        return jsonify({"ok": False, "error": "Contraseña incorrecta."})
 
 
 # 🔸 Ruta para cerrar sesión
@@ -269,6 +289,12 @@ def eliminar_producto(producto_id):
         return ok(message=result["message"])
     return fail(result["error"], status=404)
 
+@app.get('/api/usuarios')
+def listar_usuarios():
+    buscar = request.args.get("buscar", "", type=str)
+    result = usuarios_service.consultar(buscar)
+    return ok(data=result["data"]) if result["ok"] else fail(result["error"], status=500)
+
 
 # -------------------------------------------------------
 # MANEJADORES DE ERRORES
@@ -290,9 +316,19 @@ def internal_error(e):
 
 
 # -------------------------------------------------------
-# ARRANQUE DE LA APLICACIÓN
+# ARRANQUE DE LA APLICACIÓN (Con apertura automática de Login)
 # -------------------------------------------------------
 
 if __name__ == "__main__":
     print(f"🚀 Servidor Flask corriendo en: http://{APP_HOST}:{APP_PORT}")
-    app.run(host=APP_HOST, port=APP_PORT, debug=True)
+    
+    # 🧠 Solución: abrir automáticamente la vista de login sin error 500
+    import webbrowser, threading, time
+
+    def abrir_login():
+        time.sleep(1)  # Espera a que el servidor esté listo
+        webbrowser.open_new_tab(f"http://127.0.0.1:{APP_PORT}/login")
+
+    threading.Thread(target=abrir_login).start()
+
+    app.run(host=APP_HOST, port=APP_PORT, debug=True, use_reloader=True)

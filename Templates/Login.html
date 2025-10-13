@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - CopyVariedades</title>
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
+        * { box-sizing: border-box; }
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -18,7 +15,6 @@
             align-items: center;
             height: 100vh;
         }
-
         .login-container {
             background-color: white;
             padding: 40px;
@@ -27,82 +23,35 @@
             width: 100%;
             max-width: 400px;
         }
-
-        .login-container h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #00aaff;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            color: #333;
-            margin-bottom: 5px;
-        }
-
+        .login-container h2 { text-align: center; margin-bottom: 30px; color: #00aaff; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; color: #333; margin-bottom: 5px; }
         .form-group input {
-            width: 100%;
-            padding: 10px;
+            width: 100%; padding: 10px;
             border: 2px solid #a1c4fd;
-            border-radius: 8px;
-            font-size: 16px;
-            outline: none;
-            transition: border-color 0.3s;
+            border-radius: 8px; font-size: 16px;
+            outline: none; transition: border-color 0.3s;
         }
-
-        .form-group input:focus {
-            border-color: #00aaff;
-        }
-
+        .form-group input:focus { border-color: #00aaff; }
         .btn-login {
-            width: 100%;
-            background-color: #00aaff;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+            width: 100%; background-color: #00aaff; color: white;
+            border: none; padding: 12px; border-radius: 8px;
+            font-size: 16px; cursor: pointer; transition: background-color 0.3s;
         }
-
-        .btn-login:hover {
-            background-color: #0099dd;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            color: #666;
-            font-size: 14px;
-        }
-
-        .footer span {
-            font-weight: bold;
-            color: #00aaff;
-        }
-
-        .error {
-            color: red;
-            text-align: center;
-            margin-bottom: 15px;
-        }
+        .btn-login:hover { background-color: #0099dd; }
+        .footer { text-align: center; margin-top: 20px; color: #666; font-size: 14px; }
+        .footer span { font-weight: bold; color: #00aaff; }
+        .error { color: red; text-align: center; margin-bottom: 15px; }
     </style>
 </head>
+
 <body>
 
     <div class="login-container">
         <h2>CopyVariedades</h2>
+        <p id="error-msg" class="error"></p>
 
-        {% if error %}
-            <p class="error">{{ error }}</p>
-        {% endif %}
-
-        <form action="{{ url_for('procesar_login') }}" method="post">
+        <form id="loginForm">
             <div class="form-group">
                 <label for="username">Correo electrónico</label>
                 <input type="email" id="username" name="username" placeholder="usuario@correo.com" required>
@@ -120,6 +69,47 @@
             &copy; 2025 <span>CopyVariedades</span>. Todos los derechos reservados.
         </div>
     </div>
+<script>
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const errorMsg = document.getElementById("error-msg");
+    errorMsg.textContent = "";
+
+    const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+    if (!username || !emailRegex.test(username)) {
+        errorMsg.textContent = "Por favor, ingresa un correo electrónico válido.";
+        return;
+    }
+    if (!password || password.length < 4) {
+        errorMsg.textContent = "La contraseña debe tener al menos 4 caracteres.";
+        return;
+    }
+
+    errorMsg.textContent = "⏳ Conectando...";
+    try {
+        const response = await fetch("/procesar_login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+        console.log("Respuesta del servidor:", data);
+
+        if (data.ok) {
+            window.location.href = data.redirect || "/";
+        } else {
+            errorMsg.textContent = data.error || "Usuario o contraseña incorrectos.";
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        errorMsg.textContent = "Error de conexión con el servidor.";
+    }
+});
+</script>
 
 </body>
 </html>

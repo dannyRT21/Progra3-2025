@@ -3,11 +3,14 @@ from urllib.parse import urlparse, parse_qs
 import json
 import crud_alumno
 import crud_docente
+import crud_materias  # <-- agregado
 
 port = 5000
 
 crudAlumno = crud_alumno.crud_alumno()
 crudDocente = crud_docente.crud_docente()
+crudMateria = crud_materias.crud_materia()  # <-- agregado
+
 
 class miServidor(SimpleHTTPRequestHandler):
 
@@ -19,30 +22,84 @@ class miServidor(SimpleHTTPRequestHandler):
         if self.path == "/":
             self.path = "index.html"
             return SimpleHTTPRequestHandler.do_GET(self)
-
-        if self.path == "/alumnos":
-            alumnos = crudAlumno.consultar("")
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.end_headers()
-            self.wfile.write(json.dumps(alumnos).encode("utf-8"))
+        # ---------- ALUMNOS ----------
+        if path == "/alumnos":
+            buscar = parametros.get('buscar', [""])[0]
+            try:
+                alumnos = crudAlumno.consultar(buscar)
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(json.dumps(alumnos, default=str).encode("utf-8"))
+            except Exception as ex:
+                # Log claro en servidor
+                print("ERROR /alumnos:", ex)
+                self.send_response(500)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(json.dumps({"msg": f"error: {str(ex)}"}, default=str).encode("utf-8"))
             return
 
-        if self.path == "/docentes":
-            docentes = crudDocente.consultar("")
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.end_headers()
-            self.wfile.write(json.dumps(docentes).encode("utf-8"))
+        # ---------- DOCENTES ----------
+        if path == "/docentes":
+            buscar = parametros.get('buscar', [""])[0]
+            try:
+                docentes = crudDocente.consultar(buscar)
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(json.dumps(docentes, default=str).encode("utf-8"))
+            except Exception as ex:
+                print("ERROR /docentes:", ex)
+                self.send_response(500)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(json.dumps({"msg": f"error: {str(ex)}"}, default=str).encode("utf-8"))
             return
 
+        # ---------- MATERIAS ----------
+        if path == "/materias":
+            buscar = parametros.get('buscar', [""])[0]
+            try:
+                materias = crudMateria.consultar(buscar)
+                # Esperado: lista de filas. Si tu DB devuelve None, normaliza a []
+                if materias is None:
+                    materias = []
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(json.dumps(materias, default=str).encode("utf-8"))
+            except Exception as ex:
+                print("ERROR /materias:", ex)
+                self.send_response(500)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(json.dumps({"msg": f"error: {str(ex)}"}, default=str).encode("utf-8"))
+            return
+
+
+              # ---------- VISTAS PARCIALES ----------
         if path == "/vistas":
-            # sirve vistas parciales desde /modulos?form=nombre
-            self.path = '/modulos/' + parametros['form'][0] + '.html'
-            return SimpleHTTPRequestHandler.do_GET(self)
+            # Sirve vistas parciales desde /modulos?form=nombre (según tu árbol de carpetas)
+            form = parametros.get('form', [None])[0]
+            if not form:
+                self.send_response(400)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(b'{"msg":"Parametro form requerido"}')
+                return
 
-        # fallback: servir archivos estáticos (js, css, modulos/*, etc.)
-        return SimpleHTTPRequestHandler.do_GET(self)
+            # pequeña sanitización para evitar ../
+            seguro = "".join(ch for ch in form if ch.isalnum() or ch in ("_", "-"))
+            if not seguro:
+                self.send_response(400)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(b'{"msg":"Nombre de vista invalido"}')
+                return
+
+            self.path = '/modulos/' + seguro + '.html'
+            return SimpleHTTPRequestHandler.do_GET(self)
 
     def do_POST(self):
         # Leer body
@@ -53,7 +110,7 @@ class miServidor(SimpleHTTPRequestHandler):
 
         body = self.rfile.read(longitud).decode("utf-8")
 
-        # Parsear JSON (sin unquote)
+        # Parsear JSON
         try:
             datos = json.loads(body) if body else {}
         except json.JSONDecodeError:
@@ -63,11 +120,13 @@ class miServidor(SimpleHTTPRequestHandler):
             self.wfile.write(b'{"msg":"JSON invalido"}')
             return
 
-        # Enrutamiento por PATH (recomendado)
+        # Enrutamiento por PATH
         if self.path == "/alumnos":
             target = crudAlumno
         elif self.path == "/docentes":
             target = crudDocente
+        elif self.path == "/materias":  # <-- NUEVO
+            target = crudMateria
         else:
             # Fallback por 'tabla' en el JSON (opcional)
             tabla = (datos.get('tabla') or '').lower()
@@ -75,6 +134,8 @@ class miServidor(SimpleHTTPRequestHandler):
                 target = crudDocente
             elif tabla in ('alumnos', 'alumno'):
                 target = crudAlumno
+            elif tabla in ('materias', 'materia'):  # <-- NUEVO
+                target = crudMateria
             else:
                 self.send_response(404)
                 self.send_header("Content-Type", "application/json; charset=utf-8")
@@ -85,17 +146,18 @@ class miServidor(SimpleHTTPRequestHandler):
         # Ejecutar la operación en el CRUD correspondiente
         try:
             resultado = target.administrar(datos)
+            # Se espera que db.ejecutar retorne "ok" al terminar satisfactoriamente
             resp = {"msg": resultado}
             self.send_response(200)
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.end_headers()
             self.wfile.write(json.dumps(resp).encode("utf-8"))
         except Exception as ex:
-            # Manejo de errores en CRUD
             self.send_response(500)
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.end_headers()
             self.wfile.write(json.dumps({"msg": f"error: {str(ex)}"}).encode("utf-8"))
+
 
 print("Servidor ejecutandose en el puerto", port)
 server = HTTPServer(("localhost", port), miServidor)

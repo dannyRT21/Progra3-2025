@@ -29,7 +29,7 @@ async function guardarDocentes(){
     const respuesta = await response.json();
 
     if(respuesta.msg!="ok"){
-        alertify.error(`Error al procesar docente: ${respuesta}`);
+        alertify.error(`Error al procesar docente 01: ${respuesta}`);
         return;
     }
     limpiarFormularioDocentes();

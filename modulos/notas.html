@@ -1,0 +1,254 @@
+<!-- notas.html -->
+<form id="frmNotas">
+  <div class="card text-bg-dark" style="min-width: 760px;">
+    <div class="card-header">
+      <div class="d-flex">
+        ADMINISTRACION DE NOTAS
+        <div class="ms-auto">
+          <button data-form="notas" type="button" class="btn-close btn-close-white" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="row p-1">
+        <div class="col-3 col-md-2">ALUMNO</div>
+        <div class="col-9 col-md-6">
+          <select required id="cmbAlumno" name="cmbAlumno" class="form-control form-control-sm">
+            <option value="">-- Seleccione un alumno --</option>
+            <!-- dinámico -->
+          </select>
+        </div>
+      </div>
+
+      <div class="row p-1">
+        <div class="col-3 col-md-2">MATERIA</div>
+        <div class="col-9 col-md-6">
+          <select required id="cmbMateria" name="cmbMateria" class="form-control form-control-sm">
+            <option value="">-- Seleccione una materia --</option>
+            <!-- dinámico -->
+          </select>
+        </div>
+      </div>
+
+      <div class="row p-1">
+        <div class="col-3 col-md-2">NOTA</div>
+        <div class="col-9 col-md-3">
+          <input required type="number" step="0.01" id="txtNota" name="txtNota" class="form-control form-control-sm" />
+          <small class="text-secondary">Ej.: 0-100 (decimal permitido)</small>
+        </div>
+      </div>
+
+      <div class="row p-1">
+        <div class="col-3 col-md-2">APROBADO</div>
+        <div class="col-9 col-md-3">
+          <select id="cmbAprobado" name="cmbAprobado" class="form-control form-control-sm">
+            <option value="">-- Seleccione --</option>
+            <option value="SI">SI</option>
+            <option value="NO">NO</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer text-center">
+      <input type="submit" id="btnGuardarNota" name="btnGuardarNota" class="btn btn-outline-primary" value="GUARDAR" />
+      <input type="reset" id="btnNuevaNota" name="btnNuevaNota" class="btn btn-outline-warning" value="NUEVO" />
+      <input type="button" id="btnBuscarNota" name="btnBuscarNota" class="btn btn-outline-info" value="BUSCAR" />
+    </div>
+  </div>
+</form>
+
+<script>
+  // --- Estado global de Notas ---
+  var accionNota = "nuevo",
+      idNota = 0;
+
+  // Eventos
+  frmNotas.addEventListener("submit", (e) => {
+    e.preventDefault();
+    guardarNotas();
+  });
+
+  btnBuscarNota.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (typeof abrirVentana === "function") abrirVentana('busqueda_notas');
+  });
+
+  // Cargar combos al abrir
+  (async function initNotasView(){
+    await Promise.all([cargarAlumnosCombo(), cargarMateriasCombo()]);
+  })();
+
+  async function cargarAlumnosCombo(){
+    try{
+      const resp = await fetch("/alumnos");
+      const lista = await resp.json();
+      const selPrevio = cmbAlumno.value || "";
+      let opts = `<option value="">-- Seleccione un alumno --</option>`;
+      lista.forEach(a=>{
+        const id = a.idAlumno ?? a.id ?? "";
+        const nombre = a.nombre ?? a.nombre_alumno ?? "";
+        opts += `<option value="${id}">${nombre}</option>`;
+      });
+      cmbAlumno.innerHTML = opts;
+      if (selPrevio) cmbAlumno.value = selPrevio;
+    }catch(err){
+      console.error(err);
+      if (typeof alertify !== "undefined") alertify.error("No se pudieron cargar los alumnos.");
+    }
+  }
+
+  async function cargarMateriasCombo(){
+    try{
+      const resp = await fetch("/materias");
+      const lista = await resp.json();
+      const selPrevio = cmbMateria.value || "";
+      let opts = `<option value="">-- Seleccione una materia --</option>`;
+      lista.forEach(m=>{
+        const id = m.idMateria ?? m.id ?? "";
+        const nombre = m.nombre ?? m.nombre_materia ?? "";
+        opts += `<option value="${id}">${nombre}</option>`;
+      });
+      cmbMateria.innerHTML = opts;
+      if (selPrevio) cmbMateria.value = selPrevio;
+    }catch(err){
+      console.error(err);
+      if (typeof alertify !== "undefined") alertify.error("No se pudieron cargar las materias.");
+    }
+  }
+
+  // ------ CRUD ------
+  async function guardarNotas(){
+    const accionLocal = accionNota;
+
+    if (accionLocal === "eliminar"){
+      const payload = { accion: "eliminar", idNota };
+      const ok = await postNota(payload);
+      if (ok){
+        limpiarFormularioNotas();
+        if (typeof obtenerNotas === "function") obtenerNotas();
+        accionNota = "nuevo";
+      }
+      return ok;
+    }
+
+    const res = validarYNormalizarNota();
+    if (!res.ok){
+      if (typeof alertify !== "undefined") alertify.error(res.msg);
+      return false;
+    }
+
+    const v = res.values;
+    const payload = {
+      accion: accionLocal,           // "nuevo" | "modificar"
+      idNota,
+      idAlumno: v.idAlumno,
+      idMateria: v.idMateria,
+      nota: v.nota,
+      aprobado: v.aprobado
+    };
+
+    const ok = await postNota(payload);
+    if (ok){
+      limpiarFormularioNotas();
+      if (typeof obtenerNotas === "function") obtenerNotas();
+      accionNota = "nuevo";
+    }
+    return ok;
+  }
+
+  async function postNota(data){
+    try{
+      const response = await fetch("/notas",{
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+      const r = await response.json();
+      if (r.msg !== "ok"){
+        if (typeof alertify !== "undefined") alertify.error(`Error al procesar nota: ${JSON.stringify(r)}`);
+        return false;
+      }
+      if (typeof alertify !== "undefined") {
+        const accionTxt = data.accion === "eliminar" ? "Eliminada" : (data.accion === "modificar" ? "Actualizada" : "Guardada");
+        alertify.success(`Nota ${accionTxt} correctamente`);
+      }
+      return true;
+    }catch(err){
+      console.error(err);
+      if (typeof alertify !== "undefined") alertify.error("Error de comunicación con el servidor.");
+      return false;
+    }
+  }
+
+  function validarYNormalizarNota(){
+    const idAlumnoSel = (cmbAlumno.value || "").trim();
+    const idMateriaSel = (cmbMateria.value || "").trim();
+    let notaStr = (txtNota.value || "").trim();
+    const aprobadoSel = (cmbAprobado.value || "").trim() || null;
+
+    if (!idAlumnoSel) return { ok:false, msg: "Debe seleccionar un ALUMNO." };
+    if (!idMateriaSel) return { ok:false, msg: "Debe seleccionar una MATERIA." };
+    if (!notaStr) return { ok:false, msg: "La NOTA es requerida." };
+
+    const nota = Number(notaStr);
+    if (!isFinite(nota)) return { ok:false, msg: "La NOTA debe ser numérica." };
+    if (nota < 0 || nota > 100) return { ok:false, msg: "La NOTA debe estar entre 0 y 100." };
+
+    // espejos (por si hubo trims)
+    cmbAlumno.value = idAlumnoSel;
+    cmbMateria.value = idMateriaSel;
+    txtNota.value = String(nota);
+
+    return {
+      ok: true,
+      values: {
+        idAlumno: Number(idAlumnoSel),
+        idMateria: Number(idMateriaSel),
+        nota,
+        aprobado: aprobadoSel // "SI" | "NO" | null
+      }
+    };
+  }
+
+  function limpiarFormularioNotas(){
+    accionNota = "nuevo";
+    idNota = 0;
+    cmbAlumno.value = "";
+    cmbMateria.value = "";
+    txtNota.value = "";
+    cmbAprobado.value = "";
+  }
+
+  // Cargar datos desde la tabla de búsqueda
+  function mostrarNota(nota){
+    accionNota = "modificar";
+    idNota = nota.idNota ?? nota.id ?? 0;
+
+    const idAlu = nota.idAlumno ?? "";
+    const idMat = nota.idMateria ?? "";
+    const valor = nota.nota ?? 0;
+    const aprobado = nota.aprobado ?? "";
+
+    // Asegurar combos cargados
+    const setValues = ()=>{
+      cmbAlumno.value = String(idAlu);
+      cmbMateria.value = String(idMat);
+      txtNota.value = valor;
+      cmbAprobado.value = aprobado;
+    };
+
+    const necesitaCargar = (!cmbAlumno.options.length || !cmbMateria.options.length);
+    if (necesitaCargar){
+      Promise.all([cargarAlumnosCombo(), cargarMateriasCombo()]).then(setValues);
+    }else{
+      setValues();
+    }
+
+    if (typeof alertify !== "undefined"){
+      const nomA = nota.nombre_alumno ?? "";
+      const nomM = nota.nombre_materia ?? "";
+      alertify.success(`Nota de "${nomA}" en "${nomM}" cargada para editar`);
+    }
+  }
+</script>

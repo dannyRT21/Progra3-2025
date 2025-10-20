@@ -3,13 +3,15 @@ from urllib.parse import urlparse, parse_qs
 import json
 import crud_alumno
 import crud_docente
-import crud_materias  # <-- agregado
+import crud_materias
+import crud_notas  # <-- NOTAS: import
 
 port = 5000
 
 crudAlumno = crud_alumno.crud_alumno()
 crudDocente = crud_docente.crud_docente()
-crudMateria = crud_materias.crud_materia()  # <-- agregado
+crudMateria = crud_materias.crud_materia()
+crudNota   = crud_notas.crud_notas()  # <-- NOTAS: instancia
 
 
 class miServidor(SimpleHTTPRequestHandler):
@@ -22,6 +24,7 @@ class miServidor(SimpleHTTPRequestHandler):
         if self.path == "/":
             self.path = "index.html"
             return SimpleHTTPRequestHandler.do_GET(self)
+
         # ---------- ALUMNOS ----------
         if path == "/alumnos":
             buscar = parametros.get('buscar', [""])[0]
@@ -32,7 +35,6 @@ class miServidor(SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(json.dumps(alumnos, default=str).encode("utf-8"))
             except Exception as ex:
-                # Log claro en servidor
                 print("ERROR /alumnos:", ex)
                 self.send_response(500)
                 self.send_header("Content-Type", "application/json; charset=utf-8")
@@ -61,10 +63,7 @@ class miServidor(SimpleHTTPRequestHandler):
         if path == "/materias":
             buscar = parametros.get('buscar', [""])[0]
             try:
-                materias = crudMateria.consultar(buscar)
-                # Esperado: lista de filas. Si tu DB devuelve None, normaliza a []
-                if materias is None:
-                    materias = []
+                materias = crudMateria.consultar(buscar) or []
                 self.send_response(200)
                 self.send_header("Content-Type", "application/json; charset=utf-8")
                 self.end_headers()
@@ -77,10 +76,26 @@ class miServidor(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps({"msg": f"error: {str(ex)}"}, default=str).encode("utf-8"))
             return
 
+        # ---------- NOTAS ----------  <-- NOTAS: GET
+        if path == "/notas":
+            buscar = parametros.get('buscar', [""])[0]
+            try:
+                notas = crudNota.consultar(buscar) or []
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(json.dumps(notas, default=str).encode("utf-8"))
+            except Exception as ex:
+                print("ERROR /notas:", ex)
+                self.send_response(500)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(json.dumps({"msg": f"error: {str(ex)}"}, default=str).encode("utf-8"))
+            return
 
-              # ---------- VISTAS PARCIALES ----------
+        # ---------- VISTAS PARCIALES ----------
         if path == "/vistas":
-            # Sirve vistas parciales desde /modulos?form=nombre (según tu árbol de carpetas)
+            # Sirve vistas parciales desde /modulos?form=nombre
             form = parametros.get('form', [None])[0]
             if not form:
                 self.send_response(400)
@@ -125,8 +140,10 @@ class miServidor(SimpleHTTPRequestHandler):
             target = crudAlumno
         elif self.path == "/docentes":
             target = crudDocente
-        elif self.path == "/materias":  # <-- NUEVO
+        elif self.path == "/materias":
             target = crudMateria
+        elif self.path == "/notas":              # <-- NOTAS: POST directo
+            target = crudNota
         else:
             # Fallback por 'tabla' en el JSON (opcional)
             tabla = (datos.get('tabla') or '').lower()
@@ -134,8 +151,10 @@ class miServidor(SimpleHTTPRequestHandler):
                 target = crudDocente
             elif tabla in ('alumnos', 'alumno'):
                 target = crudAlumno
-            elif tabla in ('materias', 'materia'):  # <-- NUEVO
+            elif tabla in ('materias', 'materia'):
                 target = crudMateria
+            elif tabla in ('notas', 'nota'):      # <-- NOTAS: fallback
+                target = crudNota
             else:
                 self.send_response(404)
                 self.send_header("Content-Type", "application/json; charset=utf-8")

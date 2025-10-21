@@ -2,33 +2,16 @@
 var accionUsuario = "nuevo",
     idUsuario = 0;
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", event => {
   if (typeof frmUsuarios !== "undefined") {
     frmUsuarios.addEventListener("submit", (e) => {
       e.preventDefault();
       guardarUsuarios();
     });
   }
-
-  if (typeof btnBuscarUsuario !== "undefined") {
-    btnBuscarUsuario.addEventListener("click", (e) => {
-      e.preventDefault();
-      if (typeof abrirVentana === "function") abrirVentana("busqueda_usuarios");
-    });
-  }
-
-  if (typeof txtTelefonoUsuario !== "undefined") {
-    txtTelefonoUsuario.addEventListener("input", (e) => {
-      const d = e.target.value.replace(/\D/g, "").slice(0, 8);
-      e.target.value = d.length > 4 ? d.slice(0, 4) + "-" + d.slice(4) : d;
-    });
-  }
-
-  if (typeof obtenerUsuarios === "function" && typeof tblUsuarios !== "undefined") {
-    obtenerUsuarios();
-  }
+  obtenerUsuarios();
 });
-
+  
 function limpiarFormularioUsuarios() {
   accionUsuario = "nuevo";
   idUsuario = 0;
@@ -37,28 +20,6 @@ function limpiarFormularioUsuarios() {
   if (typeof txtNombreUsuario !== "undefined") txtNombreUsuario.value = "";
   if (typeof txtDireccionUsuario !== "undefined") txtDireccionUsuario.value = "";
   if (typeof txtTelefonoUsuario !== "undefined") txtTelefonoUsuario.value = "";
-}
-
-function validarYNormalizarUsuario() {
-  const usuario = (typeof txtUsuario !== "undefined" ? txtUsuario.value.trim() : "");
-  const clave = (typeof txtClave !== "undefined" ? txtClave.value.trim() : "");
-  const nombre = (typeof txtNombreUsuario !== "undefined" ? txtNombreUsuario.value.trim() : "");
-  const direccion = (typeof txtDireccionUsuario !== "undefined" ? txtDireccionUsuario.value.trim() : "");
-  let telefono = (typeof txtTelefonoUsuario !== "undefined" ? txtTelefonoUsuario.value.trim() : "");
-
-  if (!usuario) return { ok: false, msg: "El USUARIO es requerido." };
-  if (!nombre) return { ok: false, msg: "El NOMBRE es requerido." };
-  if (accionUsuario === "nuevo" && !clave) return { ok: false, msg: "La CLAVE es requerida." };
-
-  if (telefono) {
-    const telDigits = telefono.replace(/\D/g, "").slice(0, 8);
-    if (telDigits.length !== 8) return { ok: false, msg: "El TELÉFONO debe tener 8 dígitos (formato 1234-5678)." };
-    telefono = telDigits.slice(0, 4) + "-" + telDigits.slice(4);
-  }
-
-  if (typeof txtTelefonoUsuario !== "undefined") txtTelefonoUsuario.value = telefono;
-
-  return { ok: true, values: { usuario, clave, nombre, direccion, telefono } };
 }
 
 async function guardarUsuarios() {
@@ -154,8 +115,6 @@ function mostrarDatosUsuarios(lista) {
 
 function mostrarUsuario(u) {
   accionUsuario = "modificar";
-  idUsuario = u.idUsuario ?? u.id ?? 0;
-
   if (typeof txtUsuario !== "undefined") txtUsuario.value = u.usuario ?? "";
   if (typeof txtClave !== "undefined") txtClave.value = "";
   if (typeof txtNombreUsuario !== "undefined") txtNombreUsuario.value = u.nombre ?? "";
@@ -177,12 +136,3 @@ function eliminarUsuario(u, event) {
   guardarUsuarios();
 }
 
-function escapeHtml(str) {
-  if (str == null) return "";
-  return String(str)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}

@@ -27,22 +27,18 @@
 </form>
 
 <script>
-async function obtenerUsuarios(){
+async function obtenerUsuarios() {
   try {
-    const response = await fetch("/usuarios");
-    if (!response.ok) {
-      const texto = await response.text();
-      const msg = `Error HTTP ${response.status}: ${texto}`;
-      alertify && alertify.error ? alertify.error(msg) : alert(msg);
-      return;
-    }
-    const usuarios = await response.json();
-    mostrarDatosUsuarios(usuarios);
+    const resp = await fetch("/usuarios");
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const lista = await resp.json();
+    mostrarDatosUsuarios(lista);
   } catch (err) {
-    const msg = `Fallo al obtener usuarios: ${err}`;
-    alertify && alertify.error ? alertify.error(msg) : alert(msg);
+    console.error(err);
+    (window.alertify?.error || alert)(`Fallo al obtener usuarios: ${err.message || err}`);
   }
 }
+
 
 function mostrarDatosUsuarios(usuarios){
   const tbody = document.getElementById("tblUsuarios");
@@ -89,8 +85,32 @@ async function eliminarUsuario(usuario, event){
     obtenerUsuarios();
   }
 }
-
-
-
+  window.escapeHtml = function (str){
+    if (str === null || str === undefined) return "";
+    return String(str)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  };
 </script>
+
+<!-- 2) orquestador CRUD (define mostrarUsuario/guardarUsuarios/etc.) -->
+<script src="/usuarios.js"></script>
+
+<!-- 3) script local de la vista de búsqueda (el que pegaste) -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    obtenerUsuarios(); // <<--- LLÁMALO AL CARGAR
+  });
+
+  // ...tu mismo código: obtenerUsuarios(), mostrarDatosUsuarios(), eliminarUsuario()...
+</script>
+
+
+
+
+
+
 

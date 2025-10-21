@@ -135,4 +135,13 @@ function eliminarUsuario(u, event) {
   accionUsuario = "eliminar";
   guardarUsuarios();
 }
+  window.escapeHtml = function (str){
+    if (str === null || str === undefined) return "";
+    return String(str)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  };
 

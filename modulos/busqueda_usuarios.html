@@ -1,0 +1,96 @@
+<form id="frmBusquedaUsuarios">
+  <div class="card text-bg-dark">
+    <div class="card-header">
+      <div class="d-flex">
+        BÚSQUEDA DE USUARIOS
+        <div class="ms-auto">
+          <button data-form="busqueda_usuarios" type="button" class="btn-close btn-close-white" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <table class="table table-hover table-dark table-striped text-white">
+        <thead>
+          <tr>
+            <th>USUARIO</th>
+            <th>NOMBRE</th>
+            <th>DIRECCIÓN</th>
+            <th>TELÉFONO</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tblUsuarios"></tbody>
+      </table>
+    </div>
+  </div>
+</form>
+
+<script>
+async function obtenerUsuarios(){
+  try {
+    const response = await fetch("/usuarios");
+    if (!response.ok) {
+      const texto = await response.text();
+      const msg = `Error HTTP ${response.status}: ${texto}`;
+      alertify && alertify.error ? alertify.error(msg) : alert(msg);
+      return;
+    }
+    const usuarios = await response.json();
+    mostrarDatosUsuarios(usuarios);
+  } catch (err) {
+    const msg = `Fallo al obtener usuarios: ${err}`;
+    alertify && alertify.error ? alertify.error(msg) : alert(msg);
+  }
+}
+
+function mostrarDatosUsuarios(usuarios){
+  const tbody = document.getElementById("tblUsuarios");
+  if (!tbody) return;
+
+  let filas = "";
+  usuarios.forEach(u => {
+    filas += `
+      <tr onClick='mostrarUsuario(${ JSON.stringify(u) })'>
+        <td>${escapeHtml(u.usuario)}</td>
+        <td>${escapeHtml(u.nombre)}</td>
+        <td>${u.direccion ? escapeHtml(u.direccion) : ""}</td>
+        <td>${u.telefono ? escapeHtml(u.telefono) : ""}</td>
+        <td>
+          <button type="button"
+                  onClick='eliminarUsuario(${ JSON.stringify(u) }, event)'
+                  class="btn btn-outline-danger btn-sm">
+            ELIMINAR
+          </button>
+        </td>
+      </tr>
+    `;
+  });
+  tbody.innerHTML = filas;
+}
+async function eliminarUsuario(usuario, event){
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation(); // evita disparar mostrarUsuario() del <tr>
+  }
+
+  if (!confirm(`¿Está seguro de eliminar al usuario ${usuario.nombre}?`)) {
+    return;
+  }
+
+  accionUsuario = "eliminar";
+  idUsuario = usuario.idUsuario;
+
+  const result = await guardarUsuarios();
+  if (result === false) return;
+
+  // Refrescar tabla si estamos en la vista de búsqueda
+  if (document.getElementById("tblUsuarios")) {
+    obtenerUsuarios();
+  }
+}
+
+
+
+</script>
+

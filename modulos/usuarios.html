@@ -1,0 +1,186 @@
+<form id="frmUsuarios">
+  <div class="card text-bg-dark" style="min-width: 700px;">
+    <div class="card-header">
+      <div class="d-flex">
+        ADMINISTRACIÓN DE USUARIOS
+        <div class="ms-auto">
+          <button data-form="usuarios" type="button" class="btn-close btn-close-white" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="row p-1">
+        <div class="col-3 col-md-2">USUARIO</div>
+        <div class="col-9 col-md-3">
+          <input required type="text" id="txtUsuario" name="txtUsuario" class="form-control form-control-sm" />
+        </div>
+      </div>
+
+      <div class="row p-1">
+        <div class="col-3 col-md-2">CLAVE</div>
+        <div class="col-9 col-md-3">
+          <input required type="password" id="txtClave" name="txtClave" class="form-control form-control-sm" />
+        </div>
+      </div>
+
+      <div class="row p-1">
+        <div class="col-3 col-md-2">NOMBRE</div>
+        <div class="col-9 col-md-4">
+          <input required type="text" id="txtNombreUsuario" name="txtNombreUsuario" class="form-control form-control-sm" />
+        </div>
+      </div>
+
+      <div class="row p-1">
+        <div class="col-3 col-md-2">DIRECCIÓN</div>
+        <div class="col-9 col-md-8">
+          <input type="text" id="txtDireccionUsuario" name="txtDireccionUsuario" class="form-control form-control-sm" />
+        </div>
+      </div>
+
+      <div class="row p-1">
+        <div class="col-3 col-md-2">TELÉFONO</div>
+        <div class="col-9 col-md-3">
+          <input type="text" id="txtTelefonoUsuario" name="txtTelefonoUsuario" class="form-control form-control-sm" />
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer text-center">
+      <input type="submit" id="btnGuardarUsuario" name="btnGuardarUsuario" class="btn btn-outline-primary" value="GUARDAR" />
+      <input type="reset"  id="btnNuevoUsuario"   name="btnNuevoUsuario"  class="btn btn-outline-warning" value="NUEVO" />
+      <input type="button" id="btnBuscarUsuario"  name="btnBuscarUsuario" class="btn btn-outline-info" value="BUSCAR" />
+    </div>
+  </div>
+</form>
+<script>
+var form = 'nuevo',
+    idUsuario = 0;  
+frmUsuarios.addEventListener("submit", e => {
+    e.preventDefault();
+    guardarUsuarios();
+});
+
+async function guardarUsuarios(){
+  // Congelar la acción local para evitar condiciones de carrera
+  const accionLocal = accionUsuario;
+
+  let datos;
+
+  if (accionLocal === "eliminar") {
+    // Eliminación: no validar, enviar solo id y acción
+    datos = { accion: "eliminar", idUsuario };
+  } else {
+    // Crear / Modificar: validar y normalizar
+    const res = validarYNormalizarUsuario();
+    if (!res.ok) {
+      alertify && alertify.error ? alertify.error(res.msg) : alert(res.msg);
+      return false;
+    }
+    const v = res.values;
+
+    // Para modificar exigimos clave (la lógica del backend actualiza la clave siempre)
+    if (accionLocal === "modificar" && v.clave.length === 0) {
+      const msg = "La CLAVE es requerida al modificar.";
+      alertify && alertify.error ? alertify.error(msg) : alert(msg);
+      return false;
+    }
+
+    datos = {
+      accion: accionLocal,
+      idUsuario,
+      usuario: v.usuario,
+      clave: v.clave,
+      nombre: v.nombre,
+      direccion: v.direccion,
+      telefono: v.telefono
+    };
+  }
+
+  try {
+    const response = await fetch("/usuarios", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(datos),
+    });
+
+    // Manejo básico de HTTP
+    if (!response.ok) {
+      const texto = await response.text();
+      const msg = `Error HTTP ${response.status}: ${texto}`;
+      alertify && alertify.error ? alertify.error(msg) : alert(msg);
+      return false;
+    }
+
+    const respuesta = await response.json();
+    if (respuesta.msg !== "ok") {
+      const msg = `Error al procesar usuario: ${respuesta.msg || JSON.stringify(respuesta)}`;
+      alertify && alertify.error ? alertify.error(msg) : alert(msg);
+      return false;
+    }
+
+    limpiarFormularioUsuarios();
+    // Refrescar tabla si existe en la vista actual
+    if (document.getElementById("tblUsuarios")) {
+      obtenerUsuarios();
+    }
+
+    accionUsuario = "nuevo";
+    alertify && alertify.success && accionLocal !== "eliminar" && alertify.success("Usuario guardado correctamente");
+    return true;
+
+  } catch (err) {
+    const msg = `Fallo de red o servidor: ${err}`;
+    alertify && alertify.error ? alertify.error(msg) : alert(msg);
+    return false;
+  }
+}
+
+function limpiarFormularioUsuarios(){
+  accionUsuario = "nuevo";
+  idUsuario = 0;
+
+  const txtUsuarioEl   = document.getElementById("txtUsuario");
+  const txtClaveEl     = document.getElementById("txtClave");
+  const txtNombreEl    = document.getElementById("txtNombreUsuario");
+  const txtDireccionEl = document.getElementById("txtDireccionUsuario");
+  const txtTelefonoEl  = document.getElementById("txtTelefonoUsuario");
+
+  if (txtUsuarioEl)   txtUsuarioEl.value = "";
+  if (txtClaveEl)     txtClaveEl.value = "";
+  if (txtNombreEl)    txtNombreEl.value = "";
+  if (txtDireccionEl) txtDireccionEl.value = "";
+  if (txtTelefonoEl)  txtTelefonoEl.value = "";
+}
+function mostrarUsuario(usuario){
+  // Esta función se llama desde la tabla (vista búsqueda) y requiere el formulario cargado.
+  const txtUsuarioEl   = document.getElementById("txtUsuario");
+  const txtClaveEl     = document.getElementById("txtClave");
+  const txtNombreEl    = document.getElementById("txtNombreUsuario");
+  const txtDireccionEl = document.getElementById("txtDireccionUsuario");
+  const txtTelefonoEl  = document.getElementById("txtTelefonoUsuario");
+
+  if (!txtUsuarioEl || !txtClaveEl || !txtNombreEl) {
+    // Si no existe el form en esta vista, solo notificamos.
+    alertify && alertify.message && alertify.message("Abra la ventana de USUARIOS para editar.");
+    return;
+  }
+
+  accionUsuario = "modificar";
+  idUsuario = usuario.idUsuario;
+
+  txtUsuarioEl.value      = usuario.usuario ?? "";
+  txtClaveEl.value        = ""; // Por seguridad no mostramos la clave; se debe reingresar
+  txtNombreEl.value       = usuario.nombre ?? "";
+  if (txtDireccionEl) txtDireccionEl.value = usuario.direccion ?? "";
+  if (txtTelefonoEl)  txtTelefonoEl.value  = usuario.telefono ?? "";
+
+  alertify && alertify.success && alertify.success(`Usuario ${usuario.nombre} cargado para editar`);
+}
+  btnBuscarUsuario.addEventListener("click", e=>{
+        e.preventDefault();
+        abrirVentana('busqueda_usuarios');
+    });
+
+</script>
+

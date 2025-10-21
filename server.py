@@ -5,6 +5,7 @@ import crud_alumno
 import crud_docente
 import crud_materias
 import crud_notas  # <-- NOTAS: import
+import crud_usuarios  # <-- USUARIOS: import agregado
 
 port = 5000
 
@@ -12,6 +13,7 @@ crudAlumno = crud_alumno.crud_alumno()
 crudDocente = crud_docente.crud_docente()
 crudMateria = crud_materias.crud_materia()
 crudNota   = crud_notas.crud_notas()  # <-- NOTAS: instancia
+crudUsuario = crud_usuarios.crud_usuario()  # <-- USUARIOS: instancia
 
 
 class miServidor(SimpleHTTPRequestHandler):
@@ -93,6 +95,23 @@ class miServidor(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps({"msg": f"error: {str(ex)}"}, default=str).encode("utf-8"))
             return
 
+        # ---------- USUARIOS ----------  <-- USUARIOS: GET agregado
+        if path == "/usuarios":
+            buscar = parametros.get('buscar', [""])[0]
+            try:
+                usuarios = crudUsuario.consultar(buscar) or []
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(json.dumps(usuarios, default=str).encode("utf-8"))
+            except Exception as ex:
+                print("ERROR /usuarios:", ex)
+                self.send_response(500)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(json.dumps({"msg": f"error: {str(ex)}"}, default=str).encode("utf-8"))
+            return
+
         # ---------- VISTAS PARCIALES ----------
         if path == "/vistas":
             # Sirve vistas parciales desde /modulos?form=nombre
@@ -144,6 +163,8 @@ class miServidor(SimpleHTTPRequestHandler):
             target = crudMateria
         elif self.path == "/notas":              # <-- NOTAS: POST directo
             target = crudNota
+        elif self.path == "/usuarios":           # <-- USUARIOS: POST directo agregado
+            target = crudUsuario
         else:
             # Fallback por 'tabla' en el JSON (opcional)
             tabla = (datos.get('tabla') or '').lower()
@@ -155,6 +176,8 @@ class miServidor(SimpleHTTPRequestHandler):
                 target = crudMateria
             elif tabla in ('notas', 'nota'):      # <-- NOTAS: fallback
                 target = crudNota
+            elif tabla in ('usuarios', 'usuario'):  # <-- USUARIOS: fallback agregado
+                target = crudUsuario
             else:
                 self.send_response(404)
                 self.send_header("Content-Type", "application/json; charset=utf-8")

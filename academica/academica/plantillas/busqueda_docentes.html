@@ -1,0 +1,88 @@
+<form id="frmBusquedaDocentes">
+    <div class="card text-bg-dark">
+        <div class="card-header">
+            <div class="d-flex">
+                BUSQUEDA DE DOCENTES
+                <div class="ms-auto">
+                    <button data-form="busqueda_docentes" type="button" class="btn-close btn-close-white" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover table-dark table-striped text-white">
+                <thead>
+                    <tr>
+                        <th>CODIGO</th>
+                        <th>NOMBRE</th>
+                        <th>DIRECCION</th>
+                        <th>TELEFONO</th>
+                        <th>EMAIL</th>
+                        <th>DUI</th>
+                        <th>ESCALAFON</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tblDocentes"></tbody>
+            </table>
+        </div>
+    </div>
+</form>
+
+<script>
+    obtenerDocentes();
+
+    async function obtenerDocentes(){
+        const response = await fetch("/docentes");
+        const respuesta = await response.json();
+        mostrarDatosDocentes(respuesta);
+    }
+
+    function mostrarDatosDocentes(docentes){
+        let filas = "";
+        docentes.forEach(doc=>{
+            filas += `
+                <tr onClick='mostrarDocente(${ JSON.stringify(doc) })'>
+                    <td>${doc.codigo}</td>
+                    <td>${doc.nombre}</td>
+                    <td>${doc.direccion ?? ""}</td>
+                    <td>${doc.telefono ?? ""}</td>
+                    <td>${doc.email ?? ""}</td>
+                    <td>${doc.dui ?? ""}</td>
+                    <td>${doc.escalafon ?? ""}</td>
+                    <td>
+                        <button type="button"
+                                onClick='eliminarDocente(${ JSON.stringify(doc) }, event)'
+                                class="btn btn-outline-danger btn-sm">
+                            ELIMINAR
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+        tblDocentes.innerHTML = filas;
+    }
+
+    // Nota: guardarDocentes() debe manejar la acción "eliminar" sin validar.
+    async function eliminarDocente(docente, event){
+        event.preventDefault();
+        event.stopPropagation(); // <-- evita que se dispare mostrarDocente() del <tr>
+
+        if(!confirm(`¿Está seguro de eliminar a ${docente.nombre}?`)){
+            return;
+        }
+
+        // Seteamos acción e id para que guardarDocentes haga POST de eliminación
+        accionDocente = "eliminar";
+        idDocente = docente.idDocente;
+
+        // Llamamos al flujo central; allí se hace el fetch y el manejo de errores
+        const result = await guardarDocentes();
+        // Si tu guardarDocentes() no retorna boolean, igual refrescamos:
+        if (result === false) return;
+
+        // Actualiza la tabla después de eliminar
+        obtenerDocentes();
+    }
+ 
+</script>
+

@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-gk_gfkh57h^_j4_w4*c*(f97m2$d(*f0&f#b@v8y@ihuy&=-*h'
+SECRET_KEY = 'django-insecure-o$p8sko&5*b^wnd(5z(114m945lroa-23vv%eh-ewr$5d_$+3z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -54,7 +54,7 @@ ROOT_URLCONF = 'academica.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'academica/plantillas/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

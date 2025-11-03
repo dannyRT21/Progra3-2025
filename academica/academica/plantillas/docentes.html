@@ -1,0 +1,235 @@
+<form id="frmDocentes">
+    <div class="card text-bg-dark" style="min-width: 700px;">
+        <div class="card-header">
+            <div class="d-flex">
+                ADMINISTRACION DE DOCENTES
+                <div class="ms-auto">
+                    <button data-form="docentes" type="button" class="btn-close btn-close-white" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row p-1">
+                <div class="col-3 col-md-2">CODIGO</div>
+                <div class="col-9 col-md-3">
+                    <input required type="text" id="txtCodigoDocente" name="txtCodigoDocente" class="form-control form-control-sm" />
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-3 col-md-2">NOMBRE</div>
+                <div class="col-9 col-md-4">
+                    <input required type="text" id="txtNombreDocente" name="txtNombreDocente" class="form-control form-control-sm" />
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-3 col-md-2">DIRECCION</div>
+                <div class="col-9 col-md-8">
+                    <input required type="text" id="txtDireccionDocente" name="txtDireccionDocente" class="form-control form-control-sm" />
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-3 col-md-2">TELEFONO</div>
+                <div class="col-9 col-md-3">
+                    <input type="text" id="txtTelefonoDocente" name="txtTelefonoDocente" class="form-control form-control-sm" />
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-3 col-md-2">EMAIL</div>
+                <div class="col-9 col-md-4">
+                    <input type="email" id="txtEmailDocente" name="txtEmailDocente" class="form-control form-control-sm" />
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-3 col-md-2">DUI</div>
+                <div class="col-9 col-md-3">
+                    <input required type="text" id="txtDuiDocente" name="txtDuiDocente" class="form-control form-control-sm" />
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-3 col-md-2">ESCALAFON</div>
+                <div class="col-9 col-md-3">
+                    <input required type="text" id="txtEscalafonDocente" name="txtEscalafonDocente" class="form-control form-control-sm" />
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-center">
+            <input type="submit" id="btnGuardarDocente" name="btnGuardarDocente" class="btn btn-outline-primary" value="GUARDAR" />
+            <input type="reset" id="btnNuevoDocente" name="btnNuevoDocente" class="btn btn-outline-warning" value="NUEVO" />
+            <input type="button" id="btnBuscarDocente" name="btnBuscarDocente" class="btn btn-outline-info" value="BUSCAR" />
+        </div>
+    </div>
+</form>
+
+<script>
+    var accionDocente = "nuevo",
+        idDocente = 0;
+
+    frmDocentes.addEventListener("submit", e => {
+        e.preventDefault();
+        guardarDocentes();
+    });
+
+    btnBuscarDocente.addEventListener("click", e => {
+        e.preventDefault();
+        abrirVentana('busqueda_docentes');
+    });
+
+    // =========================
+    // Guardar / Modificar / Eliminar
+    // =========================
+    async function guardarDocentes(){
+        // Congelar la acción para que no sea alterada por otros handlers (ej. click en <tr>)
+        const accionLocal = accionDocente;
+
+        let datos;
+
+        if (accionLocal === "eliminar") {
+            // Eliminar: NO validar, solo enviar id y acción
+            datos = { accion: "eliminar", idDocente };
+        } else {
+            // Crear/Modificar: validar y normalizar
+            const res = validarYNormalizarDocente();
+            if(!res.ok){
+                alertify.error(res.msg);
+                return false;
+            }
+            const v = res.values;
+            datos = {
+                accion: accionLocal,
+                idDocente,
+                codigo: v.codigo,
+                nombre: v.nombre,
+                direccion: v.direccion,
+                telefono: v.telefono,
+                email: v.email,
+                dui: v.dui,
+                escalafon: v.escalafon
+            };
+        }
+
+        const response = await fetch("/docentes", {
+            method: "POST",
+            body: JSON.stringify(datos),
+        });
+        const respuesta = await response.json();
+
+        if(respuesta.msg!="ok"){
+            alertify.error(`Error al procesar docente 02 : ${respuesta}`);
+            return false;
+        }
+
+        limpiarFormularioDocentes();
+        obtenerDocentes();
+        // volver a estado "nuevo" tras cualquier operación
+        accionDocente = "nuevo";
+        return true;
+    }
+
+    // =========================
+    // Validaciones y normalización (solo para nuevo/modificar)
+    // =========================
+    function validarYNormalizarDocente(){
+        let codigo     = (txtCodigoDocente.value || "").trim();
+        let nombre     = (txtNombreDocente.value || "").trim();
+        let direccion  = (txtDireccionDocente.value || "").trim();
+        let telefono   = (txtTelefonoDocente.value || "").trim();
+        let email      = (txtEmailDocente.value || "").trim();
+        let dui        = (txtDuiDocente.value || "").trim();
+        let escalafon  = (txtEscalafonDocente.value || "").trim();
+
+        if (codigo.length === 0) {
+            return { ok:false, msg:"El CÓDIGO es requerido." };
+        }
+        if (codigo.length > 10) {
+            return { ok:false, msg:"El CÓDIGO debe tener como máximo 10 caracteres." };
+        }
+
+        let telDigits = telefono.replace(/\D/g, "").slice(0, 8);
+        if (telDigits.length !== 8) {
+            return { ok:false, msg:"El TELÉFONO debe tener 8 dígitos (formato 1234-5678)." };
+        }
+        telefono = telDigits.slice(0,4) + "-" + telDigits.slice(4);
+
+        if (!email.includes("@") || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return { ok:false, msg:"El EMAIL no es válido (debe contener @ y dominio)." };
+        }
+
+        let duiDigits = dui.replace(/\D/g, "").slice(0, 9);
+        if (duiDigits.length !== 9) {
+            return { ok:false, msg:"El DUI debe tener 9 dígitos (formato 12345678-9)." };
+        }
+        dui = duiDigits.slice(0,8) + "-" + duiDigits.slice(8);
+
+        let escDigits = escalafon.replace(/\D/g, "");
+        if (escDigits.length === 0) {
+            return { ok:false, msg:"El ESCALAFÓN debe contener solo números." };
+        }
+        escalafon = escDigits;
+
+        // Espejar formatos en el form
+        txtCodigoDocente.value     = codigo;
+        txtTelefonoDocente.value   = telefono;
+        txtEmailDocente.value      = email;
+        txtDuiDocente.value        = dui;
+        txtEscalafonDocente.value  = escalafon;
+
+        return {
+            ok: true,
+            values: { codigo, nombre, direccion, telefono, email, dui, escalafon }
+        };
+    }
+
+    // =========================
+    // Helpers de UI (máscaras)
+    // =========================
+    txtTelefonoDocente.addEventListener("input", (e)=>{
+        let d = e.target.value.replace(/\D/g, "").slice(0,8);
+        e.target.value = d.length > 4 ? (d.slice(0,4)+"-"+d.slice(4)) : d;
+    });
+
+    txtDuiDocente.addEventListener("input", (e)=>{
+        let d = e.target.value.replace(/\D/g, "").slice(0,9);
+        e.target.value = d.length > 8 ? (d.slice(0,8)+"-"+d.slice(8)) : d;
+    });
+
+    txtCodigoDocente.addEventListener("input", (e)=>{
+        e.target.value = e.target.value.slice(0,10);
+    });
+
+    txtEscalafonDocente.addEventListener("input", (e)=>{
+        e.target.value = e.target.value.replace(/\D/g, "");
+    });
+
+    function limpiarFormularioDocentes(){
+        accionDocente = "nuevo";
+        idDocente = 0;
+        txtCodigoDocente.value = "";
+        txtNombreDocente.value = "";
+        txtDireccionDocente.value = "";
+        txtTelefonoDocente.value = "";
+        txtEmailDocente.value = "";
+        txtDuiDocente.value = "";
+        txtEscalafonDocente.value = "";
+    }
+
+    function mostrarDocente(docente){
+        accionDocente = "modificar";
+        idDocente = docente.idDocente;
+        txtCodigoDocente.value = docente.codigo ?? "";
+        txtNombreDocente.value = docente.nombre ?? "";
+        txtDireccionDocente.value = docente.direccion ?? "";
+        txtTelefonoDocente.value = docente.telefono ?? "";
+        txtEmailDocente.value = docente.email ?? "";
+        txtDuiDocente.value = docente.dui ?? "";
+        txtEscalafonDocente.value = docente.escalafon ?? "";
+        alertify.success(`Docente ${docente.nombre} cargado para editar`);
+    }
+
+    // Usada por la vista de búsqueda
+    async function obtenerDocentes(){
+        const response = await fetch("/docentes");
+        const respuesta = await response.json();
+        return respuesta;
+    }
+    
+</script>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD - Academico - Python</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" 
+       crossorigin="anonymous" referrerpolicy="no-referrer" />
+       <!-- CSS -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/alertify.min.css"/>
+    <!-- Default theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/themes/default.min.css"/>
+    <!-- Semantic UI theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/themes/semantic.min.css"/>
+    <!-- Bootstrap theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/themes/bootstrap.min.css"/>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">::.. SISTEMA ACADEMICO ..::</a>
+            <div class="collapse navbar-collapse" id="mnxAcademica">
+       <div class="navbar-nav">
+  <a class="nav-link" href="#" data-form="alumnos">Alumnos</a>
+  <a class="nav-link" href="#" data-form="materias">Materias</a>
+  <a class="nav-link" href="#" data-form="docentes">Docentes</a>
+  <a class="nav-link" href="#" data-form="notas">Notas</a>
+  <a class="nav-link" href="#" data-form="usuarios">Usuarios</a> 
+</div>
+
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="position-absolute" id="alumnos"></div>
+        <div class="position-absolute" id="busqueda_alumnos"></div>
+        <div class="position-absolute" id="materias"></div>
+        <div class="position-absolute" id="busqueda_materias"></div>
+        <div class="position-absolute" id="docentes"></div>
+        <div class="position-absolute" id="busqueda_docentes"></div>
+        <div class="position-absolute" id="notas"></div>
+        <div class="position-absolute" id="busqueda_notas"></div>
+        <div class="position-absolute" id="usuarios"></div>
+        <div class="position-absolute" id="busqueda_usuarios"></div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.1/jquery-ui.min.js" integrity="sha512-MSOo1aY+3pXCOCdGAYoBZ6YGI0aragoQsg1mKKBHXCYPIWxamwOE7Drh+N5CPgGI5SA9IEKJiPjdfqWFWmZtRA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- JavaScript -->
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
+
+    
+   <script>
+  // --- Utilidades ---
+  function loadModuleScriptOnce(form) {
+    // evita duplicar carga si ya existe
+    const id = `script-mod-${form}`;
+    if (document.getElementById(id)) return Promise.resolve();
+
+    const url = `/modulos/${form}.js`;  // <--- modulos (NO modelos)
+    // comprobamos que exista antes de inyectar
+    return fetch(url, { method: 'HEAD' })
+      .then(resp => {
+        if (!resp.ok) return; // si no existe, no es error fatal
+        return new Promise((resolve) => {
+          const s = document.createElement('script');
+          s.src = url;
+          s.async = true;
+          s.id = id;
+          s.onload = () => resolve();
+          s.onerror = () => resolve(); // no rompemos el flujo si falla
+          document.head.appendChild(s);
+        });
+      })
+      .catch(() => {}); // sin ruido
+  }
+
+  function cerrarVentana(){
+    // re-enlaza los close de la vista cargada
+    $('.btn-close').off('click').on('click', e=>{
+      const form = e.currentTarget.dataset.form;
+      $(`#${form}`).hide();
+    });
+  }
+
+  function hacerDraggable(selector){
+    try { $(selector).draggable(); } catch(e) { /* opcional */ }
+  }
+
+  // --- Cargar vista parcial + JS del módulo ---
+  function abrirVentana(form, callback){
+    const host = $(`#${form}`);
+    if (host.length === 0) return;
+
+    if (host.find('> form').length === 0) {
+      fetch(`/vistas?form=${encodeURIComponent(form)}`)
+        .then(r => {
+          if(!r.ok) throw new Error('No se encontró la vista');
+          return r.text();
+        })
+        .then(html => {
+          host.html(html);
+          hacerDraggable(`#${form}`);
+          cerrarVentana();
+          // Cargar el JS de este módulo si existe (p.ej. modulos/materias.js)
+          return loadModuleScriptOnce(form);
+        })
+        .then(() => {
+          if (typeof callback === 'function') callback();
+        })
+        .catch(err => console.error('Error al cargar el formulario:', err));
+    } else {
+      host.show();
+    }
+  }
+
+  // --- Menu: abrir vistas por data-form ---
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('mnxAcademica').addEventListener('click', e => {
+      const a = e.target.closest('a[data-form]');
+      if (!a) return;
+      e.preventDefault();
+      const form = a.dataset.form;
+      if (!form) return;
+      abrirVentana(form);
+    });
+  });
+</script>
+
+</body>
+</html>

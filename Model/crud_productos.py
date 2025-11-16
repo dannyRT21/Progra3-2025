@@ -137,3 +137,4 @@ class CrudProductos:
             return {"ok": False, "error": str(e)}
         except Exception as e:
             return {"ok": False, "error": f"Error inesperado: {str(e)}"}
+

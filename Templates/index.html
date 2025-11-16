@@ -72,6 +72,8 @@
                         <a href="{{ url_for('subir') }}" class="nav-item nav-link">agregar archivos</a>
                         <a href="{{ url_for('productos') }}" class="nav-item nav-link">papeleria y abarrotes</a>
                         <a href="{{ url_for('contact') }}" class="nav-item nav-link">contactanos</a>
+                        <a href="{{ url_for('productos_clientes') }}" class="nav-item nav-link">clientes vista</a>
+                    
                     </div>
                 </div>
             </nav>
@@ -86,9 +88,9 @@
                     <img class="w-100" src="{{ url_for('static', filename='img/Mercado Libre.jpg') }}" alt="Image">
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3" style="max-width: 900px;">
-                            <h4 class="text-white text-uppercase mb-md-3">Tienda de abarrotes</h4>
-                            <h1 class="display-3 text-white mb-md-4">Encuentra lo que necesites, bebidas, panaderia, golosinas y mas</h1>
-                            <a href="{{ url_for('productos') }}" class="btn btn-primary py-md-3 px-md-5 mt-2">Ver productos</a>
+                            <h4 class="text-white text-uppercase mb-md-3">Tienda (ver panel de admins)</h4>
+                            <h1 class="display-3 text-white mb-md-4">Encuentra lo que necesites, como el panel</h1>
+                            <a href="{{ url_for('panel_admin') }}" class="btn btn-primary py-md-3 px-md-5 mt-2">Ver panel</a>
                         </div>
                     </div>
                 </div>

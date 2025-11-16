@@ -132,13 +132,18 @@ def subir():
 
 @app.route('/productos')
 def productos():
-    if 'usuario' not in session:
-        return redirect(url_for('login'))
-
     result = productos_service.listar()
-    if result["ok"]:
-        return render_template('productos.html', productos=result["data"])
-    return fail(result["error"], status=500)
+    if not result["ok"]:
+        return fail(result["error"], status=500)
+
+    productos = result["data"]
+
+    # Si el usuario está logueado mostramos la vista de admin,
+    # si no está logueado mostramos la vista para clientes con los mismos datos.
+    if 'usuario' in session:
+        return render_template('productos.html', productos=productos)
+
+    return render_template('vistas_clientes/productos_clientes.html', productos=productos)
 
 
 @app.route('/copias')
@@ -170,10 +175,14 @@ def gallery():
 def product():
     return render_template('product.html')
 
+@app.route('/panel_admin')
+def panel_admin():
+    return render_template('panel_admin.html')
 
 @app.route('/login', methods=['GET'])
 def login():
     return render_template('Login.html')
+
 
 
 crudUsuarios = CrudUsuarios()
@@ -213,6 +222,18 @@ def logout():
 @app.route('/service')
 def service():
     return render_template('service.html')
+
+@app.route('/productos_clientes')
+def productos_clientes():
+    result = productos_service.listar()
+    if not result["ok"]:
+        return fail(result["error"], status=500)
+    productos = result["data"]
+    return render_template('vistas_clientes/productos_clientes.html', productos=productos)
+
+@app.route('/carrito_compras')
+def carrito_compras():
+    return render_template('carrito_compras.html')
 
 
 # -------------------------------------------------------
@@ -271,12 +292,19 @@ def eliminar_comentario(comentario_id: int):
 def actualizar_producto(producto_id):
     try:
         data = request.get_json(silent=True) or {}
-        if not data.get("nombre") or not data.get("precio"):
+        # aceptar precio == 0, por eso comprobamos is not None
+        if not data.get("nombre") or data.get("precio") is None:
             return fail("Nombre y precio son obligatorios", status=400)
 
         result = productos_service.actualizar(producto_id, data)
         if result["ok"]:
-            return ok(message="Producto actualizado correctamente", data=result["data"])
+            # Obtener lista actualizada de productos para que la vista cliente pueda refrescar
+            lista = productos_service.listar()
+            productos = lista["data"] if lista["ok"] else []
+            return ok(
+                message="Producto actualizado correctamente",
+                data={"producto": result["data"], "productos": productos}
+            )
         return fail(result["error"], status=404)
     except Exception as e:
         return fail(str(e), status=500)
@@ -288,6 +316,20 @@ def eliminar_producto(producto_id):
     if result["ok"]:
         return ok(message=result["message"])
     return fail(result["error"], status=404)
+
+
+@app.get('/api/productos')
+def listar_productos():
+    """
+    Devuelve la lista de productos en formato JSON para el frontend.
+    """
+    # Usamos el mismo método que ya usas en /productos
+    result = productos_service.listar()
+
+    if result["ok"]:
+        return ok(data=result["data"])
+    else:
+        return fail(result["error"], status=500)
 
 @app.get('/api/usuarios')
 def listar_usuarios():

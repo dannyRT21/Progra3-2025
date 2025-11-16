@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>CopyVariedades - compras de productos</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
+
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+    <style>
+     .card {
+        --primary: #0ea5e9;
+        --primary-800: #0284c7;
+        --light: #f1f5f9;
+        --bg-linear: linear-gradient(0deg, var(--primary) 40%, var(--light) 120%);
+
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+
+        padding: 1rem;
+        width: 100%;
+        background-color: white !important; /* TARJETA BLANCA */
+        border-radius: 1rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+.image_container {
+    overflow: hidden;
+    position: relative;
+    z-index: 5;
+    width: 100%;
+    height: 10rem;
+    background-color: var(--primary-800);
+    border-radius: 0.5rem;
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+.image_container:hover .product-image {
+    transform: scale(1.05);
+}
+
+.title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: black;
+    text-transform: capitalize;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.description {
+    font-size: 0.85rem;
+    color: #444;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.inventory-code {
+    font-size: 0.75rem;
+    color: #666;
+}
+
+.action {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.price {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #22c55e;
+    text-align: center;
+}
+
+.cart-button {
+    cursor: pointer;
+    padding: 0.7rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white;
+    border-radius: 8px;
+    text-align: center;
+    border: none;
+    width: 100%;
+    background: var(--bg-linear);
+    border: 1px solid #7dd3fc;
+    box-shadow: inset 0 0 0.25rem 1px var(--light);
+    transition: transform 0.2s ease, background-color 0.3s;
+}
+
+.cart-button:hover {
+    background-color: var(--primary);
+    transform: scale(1.02);
+}
+
+.cart-icon {
+    width: 1rem;
+    margin-right: 0.5rem;
+    fill: white;
+}
+
+/* NUEVA BARRA DE BÚSQUEDA */
+.input-container {
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+  margin: auto;
+}
+
+.icon {
+  position: absolute;
+  right: 10px;
+  top: calc(50% + 5px);
+  transform: translateY(calc(-50% - 5px));
+}
+
+.input {
+  width: 100%;
+  height: 40px;
+  padding: 10px;
+  transition: .2s linear;
+  border: 2.5px solid black;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.input:focus {
+  outline: none;
+  border: 0.5px solid black;
+  box-shadow: -5px -5px 0px black;
+}
+
+.input-container:hover > .icon {
+  animation: anim 1s linear infinite;
+}
+
+@keyframes anim {
+  0%, 100% {
+    transform: translateY(calc(-50% - 5px)) scale(1);
+  }
+  50% {
+    transform: translateY(calc(-50% - 5px)) scale(1.1);
+  }
+}
+
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid bg-primary py-3 d-none d-md-block">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-lg-left mb-2 mb-lg-0">
+                    <div class="d-inline-flex align-items-center">
+                        <a class="text-white pr-3" href="">Desarrolladores</a>
+                        <span class="text-white">|</span>
+                        <a class="text-white px-3" href="">Ayuda</a>
+                        <span class="text-white">|</span>
+                        <a class="text-white pl-3" href="">Soporte panzona</a>
+                    </div>
+                </div>
+                <div class="col-md-6 text-center text-lg-right">
+                    <div class="d-inline-flex align-items-center">
+                        <a class="text-white px-3" href=""><i class="fab fa-facebook-f"></i></a>
+                        <a class="text-white px-3" href=""><i class="fab fa-twitter"></i></a>
+                        <a class="text-white px-3" href=""><i class="fab fa-linkedin-in"></i></a>
+                        <a class="text-white px-3" href=""><i class="fab fa-instagram"></i></a>
+                        <a class="text-white pl-3" href=""><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid position-relative nav-bar p-0">
+        <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
+            <nav class="navbar navbar-expand-lg bg-white navbar-light shadow p-lg-0 justify-content-center">
+
+                <a href="{{ url_for('index') }}" class="navbar-brand d-block d-lg-none">
+                    <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
+                </a>
+
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
+
+                    <a href="{{ url_for('index') }}" class="navbar-brand d-none d-lg-block mr-3">
+                        <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
+                    </a>
+
+                    <div class="navbar-nav py-0">
+                        <a href="{{ url_for('subir') }}" class="nav-item nav-link">Impreciones</a>
+                        <a href="{{ url_for('carrito_compras') }}" class="nav-item nav-link">mi carrito</a>
+                        <a href="{{ url_for('contact') }}" class="nav-item nav-link">comentarios</a>
+                    </div>
+
+                </div>
+
+            </nav>
+        </div>
+    </div>
+    <div class="jumbotron jumbotron-fluid page-header" style="margin-bottom: 90px;">
+        <div class="container text-center py-5">
+            <h1 class="text-white display-3 mt-lg-5">Productos disponibles</h1>
+            <div class="d-inline-flex align-items-center text-white">
+                <p class="m-0"><a class="text-white" href="{{ url_for('index') }}">Home</a></p>
+                <i class="fa fa-angle-double-right px-2"></i>
+                <p class="m-0">Productos</p>
+            </div>
+        </div>
+        
+    </div>
+    <div class="container mb-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6">
+                <div class="bg-secondary text-white text-center rounded py-3">
+                    <h5 class="mb-1">Total de productos disponibles jsjs</h5>
+                    <h2 id="product-counter" class="mb-0 display-4">0</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="container mb-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                <div class="input-container">
+                    <input type="text" id="search-input" class="input" placeholder="BUSCAR...">
+                    <span class="icon"><i class="fas fa-search"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid py-5">
+        <div class="container py-5">
+            <div class="row" id="product-list">
+                </div>
+        </div>
+    </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        cargarProductos();
+
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+            searchInput.addEventListener('input', filtrarProductos);
+        }
+    });
+
+function cargarProductos() {
+    fetch('/api/productos')
+        .then(r => r.json())
+        .then(res => {
+            if (res.ok) {
+                mostrarProductos(res.data);
+            } else {
+                alert("❌ Error al obtener productos: " + res.error);
+            }
+        })
+        .catch(err => {
+            alert("⚠️ Error de conexión: " + err);
+        });
+}
+
+    function mostrarProductos(productos) {
+        const contenedor = document.getElementById('product-list');
+        contenedor.innerHTML = '';
+        productos.forEach(p => {
+            contenedor.innerHTML += `
+            <div class="col-lg-3 col-md-6 mb-4 pb-2 product-card"
+                 data-nombre="${p.nombre}" data-codigo="${p.cod_barras}">
+                <div class="card">
+                    <div class="image_container">
+                        <img class="product-image"
+                             src="/static/img/productos/${p.imagen || 'placeholder.png'}"
+                             alt="${p.nombre}">
+                    </div>
+
+                    <div class="title">${p.nombre}</div>
+                    <div class="description">${p.descripcion || 'Sin descripción'}</div>
+                    <div class="inventory-code">Código: ${p.cod_barras} | Stock: ${p.inventario}</div>
+
+                    <div class="action">
+                        <div class="price">$${parseFloat(p.precio).toFixed(2)}</div>
+
+                        <button class="cart-button"
+                                onclick="agregarCarrito('${p.id}', '${p.nombre}', ${p.precio})">
+                            <svg class="cart-icon" xmlns="http://www.w3.org/2000/svg"
+                                 viewBox="0 0 576 512" fill="currentColor">
+                                <path d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h117.7c16.3 0 32.1 6.8 43.1 18.5l98.6 105.7c22.1 23.6 57.1 23.6 79.2 0l11.4-12.2c16.9-18.1 28.3-39.7 33.5-62.7c2.6-11.8 15.1-18.5 25.9-14.8s17.2 13.9 14.7 25.6c-5.7 25.5-17.7 48.9-34.9 68.6l-11.4 12.2c-15.5 16.6-35.8 25.6-57.5 25.6l-98.6-105.7c-17.1-18.4-40.7-28.7-65.5-28.7H133.5C124.7 97.4 116 100 107.5 100H24c-13.3 0-24-10.7-24-24s10.7-24 24-24H69.5c-9.2 17.5-27.1 30-47.5 30H24c-13.3 0-24-10.7-24-24s10.7-24 24-24zm0 240H576c13.3 0 24 10.7 24 24s-10.7 24-24 24H24c-13.3 0-24-10.7-24-24s10.7-24 24-24zm0 144H576c13.3 0 24 10.7 24 24s-10.7 24-24 24H24c-13.3 0-24-10.7-24-24s10.7-24 24-24z"/>
+                            </svg>
+                            Agregar Carrito
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+        });
+
+        actualizarContador(productos.length);
+    }
+
+    function actualizarContador(total) {
+        const counter = document.getElementById('product-counter');
+        if (counter) {
+            let count = 0;
+            const interval = setInterval(() => {
+                if (count < total) {
+                    count++;
+                    counter.textContent = count;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 50);
+        }
+    }
+
+    function filtrarProductos() {
+        const search = this.value.toLowerCase();
+        const cards = document.querySelectorAll('.product-card');
+        let visibles = 0;
+
+        cards.forEach(card => {
+            const nombre = (card.getAttribute('data-nombre') || '').toLowerCase();
+            const codBar = (card.getAttribute('data-codigo') || '').toLowerCase();
+
+            const visible = nombre.includes(search) || codBar.includes(search);
+            card.style.display = visible ? 'block' : 'none';
+            if (visible) visibles++;
+        });
+
+        const counter = document.getElementById('product-counter');
+        if (counter) counter.textContent = visibles;
+    }
+
+    function agregarCarrito(id, nombre, precio) {
+        console.log(`Producto ID ${id} (${nombre}) agregado al carrito por $${precio}`);
+        alert(`🛒 ¡${nombre} agregado al carrito!`);
+    }
+</script>
+
+
+    <div class="container-fluid footer bg-light py-5" style="margin-top: 90px;">
+        <div class="container text-center py-5">
+            <div class="row">
+                <div class="col-12 mb-4">
+                    <a href="{{ url_for('index') }}" class="navbar-brand m-0">
+                        <h1 class="m-0 mt-n2 display-4 text-primary"><span class="text-secondary">Copy</span>Variedades</h1>
+                    </a>
+                </div>
+                <div class="col-12 mb-4">
+                    <a class="btn btn-outline-secondary btn-social mr-2" href="#"><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-outline-secondary btn-social mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-outline-secondary btn-social mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a class="btn btn-outline-secondary btn-social" href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+                <div class="col-12 mt-2 mb-4">
+                    <div class="row">
+                        <div class="col-sm-6 text-center text-sm-right border-right mb-3 mb-sm-0">
+                            <h5 class="font-weight-bold mb-2">Contactanos</h5>
+                            <p class="mb-2">4Av guandique , al lado del Banco Agrícola</p>
+                            <p class="mb-0">+ 503 1234 - 5678</p>
+                        </div>
+                        <div class="col-sm-6 text-center text-sm-left">
+                            <h5 class="font-weight-bold mb-2">horarios de apertura</h5>
+                            <p class="mb-2">lunes – vieM|– 5PM</p>
+                            <p class="mb-0">Domingo: Cerrado</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <p class="m-0">&copy; <a href="#">Domain</a>. All Rights Reserved. Designed by <a
+                                href="https://htmlcodex.com">HTML Codex</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="#" class="btn btn-secondary px-2 back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/isotope/isotope.pkgd.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/lightbox/js/lightbox.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

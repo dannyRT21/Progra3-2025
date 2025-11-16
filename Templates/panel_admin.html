@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Papelería - CopyVariedades</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+    <style>
+    body {
+      background-color: #f4f6fc;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .card {
+      width: 300px;
+      padding: 20px;
+      background: #fff;
+      border: 6px solid #000;
+      box-shadow: 12px 12px 0 #000;
+      transition: transform 0.3s, box-shadow 0.3s;
+      text-align: center;
+    }
+
+    .card:hover {
+      transform: translate(-5px, -5px);
+      box-shadow: 17px 17px 0 #000;
+    }
+
+    .card__title {
+      font-size: 24px;
+      font-weight: 900;
+      color: #000;
+      text-transform: uppercase;
+      margin-bottom: 15px;
+      display: block;
+      position: relative;
+    }
+
+    .card__title::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: #000;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover .card__title::after {
+      transform: scaleX(1);
+    }
+
+    .card__content {
+      font-size: 16px;
+      line-height: 1.4;
+      color: #000;
+      margin-bottom: 20px;
+    }
+
+    .card__button {
+      border: 3px solid #000;
+      background: #000;
+      color: #fff;
+      padding: 10px;
+      font-size: 14px;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s;
+      width: 100%;
+    }
+
+    .card__button::before {
+      content: "Haz clic en mí";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #5ad641;
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateY(100%);
+      transition: transform 0.3s;
+      font-weight: bold;
+    }
+
+    .card__button:hover::before {
+      transform: translateY(0);
+    }
+
+    .card__button:active {
+      transform: scale(0.97);
+    }
+
+    .row.justify-content-center {
+      gap: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      .row.justify-content-center {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div class="container-fluid position-relative nav-bar p-0">
+        <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
+            <nav class="navbar navbar-expand-lg bg-white navbar-light shadow p-lg-0 justify-content-center">
+                <a href="{{ url_for('index') }}" class="navbar-brand d-block d-lg-none">
+                    <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
+                </a>
+                <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
+                    <a href="{{ url_for('index') }}" class="navbar-brand d-none d-lg-block mr-3">
+                        <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
+                    </a>
+                    <div class="navbar-nav py-0"></div>
+                </div>
+            </nav>
+        </div>
+    </div>
+<!-- Contenido principal -->
+<div class="container-fluid py-5">
+    <div class="container text-center py-5">
+        <h1 class="display-4 text-primary mb-4">
+            <span class="text-secondary">Panel</span> administración de servicios
+        </h1>
+        <p class="lead mb-5">todo para ser unx admin xd unu</p>
+
+        <div class="row justify-content-center">
+            <!-- Tarjeta 1 -->
+            <div class="col-md-5 d-flex justify-content-center mb-4">
+                <div class="card">
+                    <span class="card__title">Administrar Productos Subidos</span>
+                    <p class="card__content">Gestiona los productos existentes y sus detalles en el sistema.</p>
+                    <a href="{{ url_for('productos') }}">
+                        <button class="card__button"></button>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tarjeta 2 -->
+            <div class="col-md-5 d-flex justify-content-center mb-4">
+                <div class="card">
+                    <span class="card__title">Subir Productos al Inventario</span>
+                    <p class="card__content">Aca se agregan nuevos productos al inventario fácilmente.</p>
+                    <a href="{{ url_for('subir') }}">
+                        <button class="card__button"></button>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tarjeta 3 -->
+            <div class="col-md-5 d-flex justify-content-center mb-4">
+                <div class="card">
+                    <span class="card__title">Administrar Comentarios</span>
+                    <p class="card__content">Revisar y responde los comentarios realizados por los usuarios para mejor seguimiento.</p>
+                    <a href="{{ url_for('contact') }}">
+                        <button class="card__button"></button>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tarjeta 4 -->
+            <div class="col-md-5 d-flex justify-content-center mb-4">
+                <div class="card">
+                    <span class="card__title">Administrar Pedidos</span>
+                    <p class="card__content">Consulta y da seguimiento a los pedidos realizados por los clientes.</p>
+                    <a href="{{ url_for('carrito_compras') }}">
+                        <button class="card__button"></button>
+                    </a>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <!-- Footer -->
+    <div class="container-fluid footer bg-light py-5" style="margin-top: 90px;">
+        <div class="container text-center py-5">
+            <p>&copy; CopyVariedades. Todos los derechos reservados.</p>
+        </div>
+    </div>
+
+    <a href="#" class="btn btn-secondary px-2 back-to-top"><i class="fa fa-angle-double-up"></i></a>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

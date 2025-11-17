@@ -4,6 +4,8 @@ from flask_cors import CORS
 from Model.crud_comentarios import CrudComentarios
 from Model.crud_de_login import CrudUsuarios
 from Model.crud_de_base import PostgresDB, DatabaseError
+from Model.crud_carrito import carrito_bp
+
 
 from werkzeug.utils import secure_filename
 from Model.crud_productos import CrudProductos
@@ -336,6 +338,10 @@ def listar_usuarios():
     buscar = request.args.get("buscar", "", type=str)
     result = usuarios_service.consultar(buscar)
     return ok(data=result["data"]) if result["ok"] else fail(result["error"], status=500)
+
+# Registrar Blueprint del carrito
+app.register_blueprint(carrito_bp)
+
 
 
 # -------------------------------------------------------

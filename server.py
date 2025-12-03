@@ -1,205 +1,65 @@
 from http.server import HTTPServer, SimpleHTTPRequestHandler
+from urllib import parse
 from urllib.parse import urlparse, parse_qs
+import os
 import json
-import crud_alumno
-import crud_docente
-import crud_materias
-import crud_notas  # <-- NOTAS: import
-import crud_usuarios  # <-- USUARIOS: import agregado
+import numpy as np
 
-port = 5000
+# Configuración de logs de TensorFlow
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+import tensorflow as tf
 
-crudAlumno = crud_alumno.crud_alumno()
-crudDocente = crud_docente.crud_docente()
-crudMateria = crud_materias.crud_materia()
-crudNota   = crud_notas.crud_notas()  # <-- NOTAS: instancia
-crudUsuario = crud_usuarios.crud_usuario()  # <-- USUARIOS: instancia
-
+# Cargar el modelo existente (C -> F)
+model = tf.keras.models.load_model('grados.h5')
+port = 3000
 
 class miServidor(SimpleHTTPRequestHandler):
-
     def do_GET(self):
         url_parseada = urlparse(self.path)
-        path = url_parseada.path
-        parametros = parse_qs(url_parseada.query)
-
+        
         if self.path == "/":
             self.path = "index.html"
             return SimpleHTTPRequestHandler.do_GET(self)
-
-        # ---------- ALUMNOS ----------
-        if path == "/alumnos":
-            buscar = parametros.get('buscar', [""])[0]
-            try:
-                alumnos = crudAlumno.consultar(buscar)
-                self.send_response(200)
-                self.send_header("Content-Type", "application/json; charset=utf-8")
-                self.end_headers()
-                self.wfile.write(json.dumps(alumnos, default=str).encode("utf-8"))
-            except Exception as ex:
-                print("ERROR /alumnos:", ex)
-                self.send_response(500)
-                self.send_header("Content-Type", "application/json; charset=utf-8")
-                self.end_headers()
-                self.wfile.write(json.dumps({"msg": f"error: {str(ex)}"}, default=str).encode("utf-8"))
-            return
-
-        # ---------- DOCENTES ----------
-        if path == "/docentes":
-            buscar = parametros.get('buscar', [""])[0]
-            try:
-                docentes = crudDocente.consultar(buscar)
-                self.send_response(200)
-                self.send_header("Content-Type", "application/json; charset=utf-8")
-                self.end_headers()
-                self.wfile.write(json.dumps(docentes, default=str).encode("utf-8"))
-            except Exception as ex:
-                print("ERROR /docentes:", ex)
-                self.send_response(500)
-                self.send_header("Content-Type", "application/json; charset=utf-8")
-                self.end_headers()
-                self.wfile.write(json.dumps({"msg": f"error: {str(ex)}"}, default=str).encode("utf-8"))
-            return
-
-        # ---------- MATERIAS ----------
-        if path == "/materias":
-            buscar = parametros.get('buscar', [""])[0]
-            try:
-                materias = crudMateria.consultar(buscar) or []
-                self.send_response(200)
-                self.send_header("Content-Type", "application/json; charset=utf-8")
-                self.end_headers()
-                self.wfile.write(json.dumps(materias, default=str).encode("utf-8"))
-            except Exception as ex:
-                print("ERROR /materias:", ex)
-                self.send_response(500)
-                self.send_header("Content-Type", "application/json; charset=utf-8")
-                self.end_headers()
-                self.wfile.write(json.dumps({"msg": f"error: {str(ex)}"}, default=str).encode("utf-8"))
-            return
-
-        # ---------- NOTAS ----------  <-- NOTAS: GET
-        if path == "/notas":
-            buscar = parametros.get('buscar', [""])[0]
-            try:
-                notas = crudNota.consultar(buscar) or []
-                self.send_response(200)
-                self.send_header("Content-Type", "application/json; charset=utf-8")
-                self.end_headers()
-                self.wfile.write(json.dumps(notas, default=str).encode("utf-8"))
-            except Exception as ex:
-                print("ERROR /notas:", ex)
-                self.send_response(500)
-                self.send_header("Content-Type", "application/json; charset=utf-8")
-                self.end_headers()
-                self.wfile.write(json.dumps({"msg": f"error: {str(ex)}"}, default=str).encode("utf-8"))
-            return
-
-        # ---------- USUARIOS ----------  <-- USUARIOS: GET agregado
-        if path == "/usuarios":
-            buscar = parametros.get('buscar', [""])[0]
-            try:
-                usuarios = crudUsuario.consultar(buscar) or []
-                self.send_response(200)
-                self.send_header("Content-Type", "application/json; charset=utf-8")
-                self.end_headers()
-                self.wfile.write(json.dumps(usuarios, default=str).encode("utf-8"))
-            except Exception as ex:
-                print("ERROR /usuarios:", ex)
-                self.send_response(500)
-                self.send_header("Content-Type", "application/json; charset=utf-8")
-                self.end_headers()
-                self.wfile.write(json.dumps({"msg": f"error: {str(ex)}"}, default=str).encode("utf-8"))
-            return
-
-        # ---------- VISTAS PARCIALES ----------
-        if path == "/vistas":
-            # Sirve vistas parciales desde /modulos?form=nombre
-            form = parametros.get('form', [None])[0]
-            if not form:
-                self.send_response(400)
-                self.send_header("Content-Type", "application/json; charset=utf-8")
-                self.end_headers()
-                self.wfile.write(b'{"msg":"Parametro form requerido"}')
-                return
-
-            # pequeña sanitización para evitar ../
-            seguro = "".join(ch for ch in form if ch.isalnum() or ch in ("_", "-"))
-            if not seguro:
-                self.send_response(400)
-                self.send_header("Content-Type", "application/json; charset=utf-8")
-                self.end_headers()
-                self.wfile.write(b'{"msg":"Nombre de vista invalido"}')
-                return
-
-            self.path = '/modulos/' + seguro + '.html'
-            return SimpleHTTPRequestHandler.do_GET(self)
-
+        
+        # Permite servir otros archivos estáticos (css, js, etc)
+        return SimpleHTTPRequestHandler.do_GET(self)
+    
     def do_POST(self):
-        # Leer body
-        try:
-            longitud = int(self.headers.get('Content-Length', '0'))
-        except ValueError:
-            longitud = 0
+        # 1. Obtener longitud y leer datos
+        longitud = int(self.headers['Content-Length'])
+        datos = self.rfile.read(longitud)
+        datos = datos.decode("utf-8")
+        datos = parse.unquote(datos) # No es estrictamente necesario con JSON puro, pero se deja por compatibilidad
+        datos = json.loads(datos)
+        
+        resp = {}
 
-        body = self.rfile.read(longitud).decode("utf-8")
+        # 2. Rutas (Endpoints)
+        
+        # CASO 1: Celsius a Fahrenheit (Usando el Modelo IA)
+        if self.path == "/celsiusToFahrenheit":
+            c = float(datos['celsius']) # Usar float es más seguro que int
+            prediccion = model.predict(np.array([c]), verbose=0)
+            resp = {"grados": str(prediccion[0][0])}
 
-        # Parsear JSON
-        try:
-            datos = json.loads(body) if body else {}
-        except json.JSONDecodeError:
-            self.send_response(400)
-            self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.end_headers()
-            self.wfile.write(b'{"msg":"JSON invalido"}')
-            return
-
-        # Enrutamiento por PATH
-        if self.path == "/alumnos":
-            target = crudAlumno
-        elif self.path == "/docentes":
-            target = crudDocente
-        elif self.path == "/materias":
-            target = crudMateria
-        elif self.path == "/notas":              # <-- NOTAS: POST directo
-            target = crudNota
-        elif self.path == "/usuarios":           # <-- USUARIOS: POST directo agregado
-            target = crudUsuario
+        # CASO 2: Fahrenheit a Celsius (Usando Fórmula Matemática)
+        elif self.path == "/fahrenheitToCelsius":
+            f = float(datos['fahrenheit'])
+            # Fórmula: (F - 32) * 5/9
+            c_calculado = (f - 32) * 5.0 / 9.0
+            resp = {"grados": str(c_calculado)}
+        
         else:
-            # Fallback por 'tabla' en el JSON (opcional)
-            tabla = (datos.get('tabla') or '').lower()
-            if tabla in ('docentes', 'docente'):
-                target = crudDocente
-            elif tabla in ('alumnos', 'alumno'):
-                target = crudAlumno
-            elif tabla in ('materias', 'materia'):
-                target = crudMateria
-            elif tabla in ('notas', 'nota'):      # <-- NOTAS: fallback
-                target = crudNota
-            elif tabla in ('usuarios', 'usuario'):  # <-- USUARIOS: fallback agregado
-                target = crudUsuario
-            else:
-                self.send_response(404)
-                self.send_header("Content-Type", "application/json; charset=utf-8")
-                self.end_headers()
-                self.wfile.write(b'{"msg":"Ruta o tabla no soportada"}')
-                return
+            # Ruta no encontrada
+            resp = {"error": "Ruta no válida"}
 
-        # Ejecutar la operación en el CRUD correspondiente
-        try:
-            resultado = target.administrar(datos)
-            # Se espera que db.ejecutar retorne "ok" al terminar satisfactoriamente
-            resp = {"msg": resultado}
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.end_headers()
-            self.wfile.write(json.dumps(resp).encode("utf-8"))
-        except Exception as ex:
-            self.send_response(500)
-            self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.end_headers()
-            self.wfile.write(json.dumps({"msg": f"error: {str(ex)}"}).encode("utf-8"))
-
+        # 3. Enviar respuesta
+        self.send_response(200)
+        self.send_header("Content-type", "application/json")
+        self.send_header("Access-Control-Allow-Origin", "*") # Opcional: Para evitar problemas de CORS si abres el HTML directo
+        self.end_headers()
+        self.wfile.write(json.dumps(resp).encode("utf-8"))
 
 print("Servidor ejecutandose en el puerto", port)
 server = HTTPServer(("localhost", port), miServidor)

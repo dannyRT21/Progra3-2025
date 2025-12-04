@@ -73,10 +73,15 @@ def fail_500(error_message, status=500, data=None):
 
 @app.route('/')
 def index():
-    # ✅ Verificamos si el usuario está logueado
     if 'usuario' not in session:
         return redirect(url_for('login'))
-    return render_template('index.html')
+
+    rol = (session.get('rol') or 'cliente').strip().lower()
+
+    if rol == 'admin':
+        return render_template('panel_admin.html', rol=rol)
+    else:
+        return render_template('index.html', rol=rol)
 
 
 @app.route('/contact')
@@ -179,13 +184,20 @@ def product():
 
 @app.route('/panel_admin')
 def panel_admin():
-    return render_template('panel_admin.html')
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+
+    rol = (session.get('rol') or '').strip().lower()
+    if rol != 'admin':
+        return redirect(url_for('index'))
+
+    return render_template('panel_admin.html', rol=rol)
 
 @app.route('/login', methods=['GET'])
 def login():
     return render_template('Login.html')
 
-
+crudUsuarios = CrudUsuarios()
 
 crudUsuarios = CrudUsuarios()
 
@@ -198,20 +210,23 @@ def procesar_login():
     if not username or not password:
         return jsonify({"ok": False, "error": "Por favor, ingresa usuario y contraseña."})
 
-    # Consulta segura
-    resultado = crudUsuarios.db.execute_select(
-        "SELECT * FROM usuarios WHERE correo_electronico = %s LIMIT 1", (username,)
-    )
+    # 👉 usamos la función de negocio
+    result = crudUsuarios.verificar_login(username, password)
 
-    if not resultado:
-        return jsonify({"ok": False, "error": "Usuario no encontrado."})
+    if not result["ok"]:
+        return jsonify({"ok": False, "error": result["error"]})
 
-    usuario = resultado[0]
-    if usuario["contrasena"].strip() == password.strip():  # ⚠️ luego usar hashing (bcrypt)
-        session['usuario'] = username
-        return jsonify({"ok": True, "redirect": url_for('index')})
-    else:
-        return jsonify({"ok": False, "error": "Contraseña incorrecta."})
+    usuario = result["data"]
+
+    # ⚠️ IMPORTANTE: quitar espacios del CHAR(20)
+    rol = (usuario.get("rol") or "cliente").strip().lower()
+
+    session['usuario'] = usuario["correo_electronico"]
+    session['rol'] = rol
+
+    # Siempre mandamos a "/" y ahí decides la vista
+    return jsonify({"ok": True, "redirect": url_for('index')})
+
 
 
 # 🔸 Ruta para cerrar sesión
@@ -342,6 +357,35 @@ def listar_usuarios():
 # Registrar Blueprint del carrito
 app.register_blueprint(carrito_bp)
 
+@app.get('/api/mi_usuario')
+def mi_usuario():
+    """Devuelve el usuario logueado (nombre y rol) para la tarjeta del topbar."""
+    if 'usuario' not in session:
+        return jsonify({"ok": False, "error": "No autenticado"}), 401
+
+    correo = session['usuario']
+
+    try:
+        rows = usuarios_service.db.execute_select(
+            """
+            SELECT nombre, rol
+            FROM usuarios
+            WHERE correo_electronico = %s
+            LIMIT 1
+            """,
+            (correo,)
+        )
+    except DatabaseError as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+    if not rows:
+        return jsonify({"ok": False, "error": "Usuario no encontrado"}), 404
+
+    usuario = rows[0]
+    nombre = (usuario.get('nombre') or '').strip()
+    rol = (usuario.get('rol') or '').strip()
+
+    return jsonify({"ok": True, "data": {"nombre": nombre, "rol": rol}})
 
 
 # -------------------------------------------------------

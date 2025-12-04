@@ -24,34 +24,110 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+    <style>
+  /* Tarjeta de usuario compacta */
+.user-card {
+  background: #3405a3;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+  padding: 6px 12px;
+  min-width: 190px;
+  max-width: 230px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.user-card span {
+  font-weight: 600;
+  color: #ffffff;
+  display: block;
+  text-align: left;
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.user-card .user-role {
+  font-weight: 400;
+  font-size: 11px;
+  opacity: 0.9;
+  margin-top: 2px;
+}
+
+.user-card button {
+  margin-top: 6px;
+  padding: 3px 10px;
+  border-radius: 8px;
+  border: none;
+  background: #6b64f3;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 11px;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.user-card button:hover {
+  background: #534bf3;
+}
+
+/* ahora es inline dentro del topbar, nada de absolute */
+.topbar-user-card {
+  margin-left: 0;
+}
+
+/* Opcional: ocultar en pantallas pequeñas */
+@media (max-width: 767.98px) {
+  .topbar-user-card {
+    display: none;
+  }
+}
+
+    </style>
+
 </head>
 
 <body>
-    <!-- Topbar Start -->
-    <div class="container-fluid bg-primary py-3 d-none d-md-block">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 text-center text-lg-left mb-2 mb-lg-0">
-                    <div class="d-inline-flex align-items-center">
-                        <a class="text-white pr-3" href="#">Desarrolladores</a>
-                        <span class="text-white">|</span>
-                        <a class="text-white px-3" href="#">Ayuda</a>
-                        <span class="text-white">|</span>
-                        <a class="text-white pl-3" href="#">Soporte</a>
-                    </div>
+  <!-- Topbar Start -->
+<div class="container-fluid bg-primary py-3 d-none d-md-block">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 text-center text-lg-left mb-2 mb-lg-0">
+                <div class="d-inline-flex align-items-center">
+                    <a class="text-white pr-3" href="#">Desarrolladores</a>
+                    <span class="text-white">|</span>
+                    <a class="text-white px-3" href="#">Ayuda</a>
+                    <span class="text-white">|</span>
+                    <a class="text-white pl-3" href="#">Soporte panzona</a>
                 </div>
-                <div class="col-md-6 text-center text-lg-right">
-                    <div class="d-inline-flex align-items-center">
-                        <a class="text-white px-3" href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a class="text-white px-3" href="#"><i class="fab fa-twitter"></i></a>
-                        <a class="text-white px-3" href="#"><i class="fab fa-linkedin-in"></i></a>
-                        <a class="text-white px-3" href="#"><i class="fab fa-instagram"></i></a>
-                        <a class="text-white pl-3" href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+
+            <div class="col-md-6 text-center text-lg-right">
+                <div class="d-flex align-items-center justify-content-end">
+                    <!-- Tarjeta de usuario -->
+                    <div class="user-card topbar-user-card" id="userCard">
+                        <span id="userName">Usuario invitado</span>
+                        <span class="user-role" id="userRole">Sin rol</span>
+                        <button type="button" id="logoutBtn">Cerrar sesión</button>
+                    </div>
+
+                    <!-- Íconos sociales -->
+                    <div class="d-inline-flex align-items-center ml-3">
+                        <a class="text-white px-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a class="text-white px-2" href="#"><i class="fab fa-twitter"></i></a>
+                        <a class="text-white px-2" href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a class="text-white px-2" href="#"><i class="fab fa-instagram"></i></a>
+                        <a class="text-white pl-2" href="#"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<!-- Topbar End -->
+
     <!-- Topbar End -->
 
     <!-- Navbar Start -->
@@ -318,6 +394,40 @@
 
     <!-- Template Javascript -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <script>
+document.addEventListener("DOMContentLoaded", async () => {
+    const card = document.getElementById("userCard");
+    const nameEl = document.getElementById("userName");
+    const roleEl = document.getElementById("userRole");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    if (!card || !nameEl || !roleEl || !logoutBtn) return;
+
+    try {
+        const resp = await fetch("/api/mi_usuario");
+        if (!resp.ok) {
+            if (resp.status === 401) {
+                card.classList.add("d-none");
+            }
+            return;
+        }
+
+        const data = await resp.json();
+        if (data.ok && data.data) {
+            nameEl.textContent = data.data.nombre || "Sin nombre";
+            roleEl.textContent = data.data.rol || "Sin rol";
+        }
+    } catch (err) {
+        console.error("Error obteniendo usuario actual:", err);
+    }
+
+    logoutBtn.addEventListener("click", () => {
+        window.location.href = "/logout";
+    });
+});
+</script>
+
 </body>
 </html>
 

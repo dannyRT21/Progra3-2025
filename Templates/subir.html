@@ -6,83 +6,142 @@
     <title>copyVariedades - Subir Productos</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <!-- Favicon -->
     <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
 
-    <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
-    <!-- Libraries Stylesheet -->
     <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
 
-    <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
-</head>
+
+    <style>
+        /* Tarjeta de usuario compacta */
+        .user-card {
+            background: hsl(193, 94%, 33%);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+            padding: 6px 12px;
+            min-width: 190px;
+            max-width: 230px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .user-card span {
+            font-weight: 600;
+            color: #ffffff;
+            display: block;
+            text-align: left;
+            font-size: 13px;
+            line-height: 1.2;
+        }
+
+        .user-card .user-role {
+            font-weight: 400;
+            font-size: 11px;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+
+        .user-card button {
+            margin-top: 6px;
+            padding: 3px 10px;
+            border-radius: 8px;
+            border: none;
+            background: #f364e0;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+            align-self: flex-start;
+        }
+
+        .user-card button:hover {
+            background: #ceced4;
+        }
+
+        /* ahora es inline dentro del topbar, nada de absolute */
+        .topbar-user-card {
+            margin-left: 0;
+        }
+
+        /* Opcional: ocultar en pantallas pequeñas */
+        @media (max-width: 767.98px) {
+            .topbar-user-card {
+                display: none;
+            }
+        }
+    </style>
+    </head>
 
 <body>
-      <!-- Topbar Start -->
     <div class="container-fluid bg-primary py-3 d-none d-md-block">
         <div class="container">
             <div class="row">
                 <div class="col-md-6 text-center text-lg-left mb-2 mb-lg-0">
                     <div class="d-inline-flex align-items-center">
-                        <a class="text-white" href="{{ url_for('contact') }}">Soporte</a>
+                        <a class="text-white pr-3" href="#">Desarrolladores</a>
+                        <span class="text-white">|</span>
+                        <a class="text-white px-3" href="#">Ayuda</a>
+                        <span class="text-white">|</span>
+                        <a class="text-white pl-3" href="#">Soporte</a>
                     </div>
                 </div>
+
                 <div class="col-md-6 text-center text-lg-right">
-                    <div class="d-inline-flex align-items-center">
-                        <a class="text-white px-3" href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a class="text-white px-3" href="#"><i class="fab fa-twitter"></i></a>
-                        <a class="text-white px-3" href="#"><i class="fab fa-linkedin-in"></i></a>
-                        <a class="text-white px-3" href="#"><i class="fab fa-instagram"></i></a>
-                        <a class="text-white pl-3" href="#"><i class="fab fa-youtube"></i></a>
+                    <div class="d-flex align-items-center justify-content-end">
+                        <div class="user-card topbar-user-card" id="userCard">
+                            <span id="userName">Usuario invitado</span>
+                            <span class="user-role" id="userRole">Sin rol</span>
+                            <button type="button" id="logoutBtn">Cerrar sesión</button>
+                        </div>
+
+                        <div class="d-inline-flex align-items-center ml-3">
+                            <a class="text-white px-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a class="text-white px-2" href="#"><i class="fab fa-twitter"></i></a>
+                            <a class="text-white px-2" href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a class="text-white px-2" href="#"><i class="fab fa-instagram"></i></a>
+                            <a class="text-white pl-2" href="#"><i class="fab fa-youtube"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Topbar End -->
+    <div class="container-fluid position-relative nav-bar p-0">
+        <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
+            <nav class="navbar navbar-expand-lg bg-white navbar-light shadow p-lg-0 justify-content-center">
 
-
-    <!-- Navbar Start -->
-<div class="container-fluid position-relative nav-bar p-0">
-    <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
-        <nav class="navbar navbar-expand-lg bg-white navbar-light shadow p-lg-0 justify-content-center">
-            
-            <a href="{{ url_for('index') }}" class="navbar-brand d-block d-lg-none">
-                <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
-            </a>
-            
-            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
-                
-                <a href="{{ url_for('index') }}" class="navbar-brand d-none d-lg-block mr-3">
+                <a href="{{ url_for('index') }}" class="navbar-brand d-block d-lg-none">
                     <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
                 </a>
 
-                <div class="navbar-nav py-0"> 
-                    <a href="{{ url_for('service') }}" class="nav-item nav-link">impresiones</a>
-                    <a href="{{ url_for('gallery') }}" class="nav-item nav-link">papeleria</a>
-                    <a href="{{ url_for('contact') }}" class="nav-item nav-link">Abarrotes</a>
-                </div>
-                
-            </div>
-            
-        </nav>
-    </div>
-</div>
-    <!-- Navbar End -->
-    
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-    <!-- Header Start -->
+                <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
+
+                    <a href="{{ url_for('index') }}" class="navbar-brand d-none d-lg-block mr-3">
+                        <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
+                    </a>
+
+                    <div class="navbar-nav py-0">
+                        <a href="{{ url_for('productos') }}" class="nav-item nav-link">ver productos add</a>
+        
+                        <a href="{{ url_for('contact') }}" class="nav-item nav-link">Abarrotes</a>
+                    </div>
+
+                </div>
+
+            </nav>
+        </div>
+    </div>
     <div class="jumbotron jumbotron-fluid page-header" style="margin-bottom: 90px;">
         <div class="container text-center py-5">
             <h1 class="text-white display-3 mt-lg-5">Productos a Subir</h1>
@@ -95,173 +154,206 @@
             </div>
         </div>
     </div>
-    <!-- Header End -->
+    <div class="container-fluid py-5">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h2 class="section-title position-relative text-center mb-5">Formulario para Subir Productos</h2>
+                    <form id="productForm"
+                        class="bg-light p-5 rounded shadow"
+                        action="{{ url_for('subir') }}"
+                        method="POST"
+                        enctype="multipart/form-data">
+                        
+                        <div class="form-group">
+                            <label for="productImage" class="font-weight-bold">Subir Foto</label>
+                            <input type="file" class="form-control" id="productImage" name="imagen" accept="image/*" required>
+                        </div>
 
-    <!-- Upload Form Start -->
-<div class="container-fluid py-5">
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <h2 class="section-title position-relative text-center mb-5">Formulario para Subir Productos</h2>
-                <form id="productForm"
-                      class="bg-light p-5 rounded shadow"
-                      action="{{ url_for('subir') }}"
-                      method="POST"
-                      enctype="multipart/form-data">
-                    
-                    <!-- Imagen -->
-                    <div class="form-group">
-                        <label for="productImage" class="font-weight-bold">Subir Foto</label>
-                        <input type="file" class="form-control" id="productImage" name="imagen" accept="image/*" required>
-                    </div>
+                        <div class="form-group">
+                            <label for="productName" class="font-weight-bold">Nombre del Producto</label>
+                            <input type="text" class="form-control" id="productName" name="nombre" placeholder="Ejemplo: Cuaderno Norma" maxlength="100" required>
+                        </div>
 
-                    <!-- Nombre -->
-                    <div class="form-group">
-                        <label for="productName" class="font-weight-bold">Nombre del Producto</label>
-                        <input type="text" class="form-control" id="productName" name="nombre" placeholder="Ejemplo: Cuaderno Norma" maxlength="100" required>
-                    </div>
+                        <div class="form-group">
+                            <label for="productCategory" class="font-weight-bold">Categoría</label>
+                            <select class="form-control" id="productCategory" name="categoria_id" required>
+                                <option value="">Seleccione una categoría</option>
+                                <option value="uuid-categoria-1">Papelería</option>
+                                <option value="uuid-categoria-2">Abarrotes</option>
+                            </select>
+                        </div>
 
-                    <!-- Categoría -->
-                    <div class="form-group">
-                        <label for="productCategory" class="font-weight-bold">Categoría</label>
-                        <select class="form-control" id="productCategory" name="categoria_id" required>
-                            <option value="">Seleccione una categoría</option>
-                            <option value="uuid-categoria-1">Papelería</option>
-                            <option value="uuid-categoria-2">Abarrotes</option>
-                        </select>
-                    </div>
+                        <div class="form-group">
+                            <label for="productDescription" class="font-weight-bold">Descripción</label>
+                            <textarea class="form-control" id="productDescription" name="descripcion" rows="3" maxlength="255" required></textarea>
+                        </div>
 
-                    <!-- Descripción -->
-                    <div class="form-group">
-                        <label for="productDescription" class="font-weight-bold">Descripción</label>
-                        <textarea class="form-control" id="productDescription" name="descripcion" rows="3" maxlength="255" required></textarea>
-                    </div>
+                        <div class="form-group">
+                            <label for="productPrice" class="font-weight-bold">Precio ($)</label>
+                            <input type="number" class="form-control" id="productPrice" name="precio" step="0.01" required>
+                        </div>
 
-                    <!-- Precio -->
-                    <div class="form-group">
-                        <label for="productPrice" class="font-weight-bold">Precio ($)</label>
-                        <input type="number" class="form-control" id="productPrice" name="precio" step="0.01" required>
-                    </div>
+                        <div class="form-group">
+                            <label for="productCode" class="font-weight-bold">Código de Barras</label>
+                            <input type="text" class="form-control" id="productCode" name="cod_barras" maxlength="13" required>
+                        </div>
 
-                    <!-- Código de Barras -->
-                    <div class="form-group">
-                        <label for="productCode" class="font-weight-bold">Código de Barras</label>
-                        <input type="text" class="form-control" id="productCode" name="cod_barras" maxlength="13" required>
-                    </div>
+                        <div class="form-group">
+                            <label for="productInventory" class="font-weight-bold">Inventario</label>
+                            <input type="number" class="form-control" id="productInventory" name="inventario" min="0" required>
+                        </div>
 
-                    <!-- Inventario -->
-                    <div class="form-group">
-                        <label for="productInventory" class="font-weight-bold">Inventario</label>
-                        <input type="number" class="form-control" id="productInventory" name="inventario" min="0" required>
-                    </div>
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" id="productActive" name="activo" checked>
+                            <label class="form-check-label font-weight-bold" for="productActive">Producto activo</label>
+                        </div>
 
-                    <!-- Activo -->
-                    <div class="form-group form-check">
-                        <input type="checkbox" class="form-check-input" id="productActive" name="activo" checked>
-                        <label class="form-check-label font-weight-bold" for="productActive">Producto activo</label>
-                    </div>
+                        <button type="submit" class="btn btn-primary btn-block py-3">Subir Producto</button>
+                    </form>
 
-                    <button type="submit" class="btn btn-primary btn-block py-3">Subir Producto</button>
-                </form>
-
-                <!-- Vista Previa -->
-                <div id="previewContainer" class="bg-white border rounded shadow p-4 mt-5 d-none">
-                    <h4 class="text-center mb-4">Vista Previa del Producto</h4>
-                    <div class="text-center mb-3">
-                        <img id="previewImage" src="" alt="Imagen del producto" class="img-fluid rounded" style="max-height: 200px;">
-                    </div>
-                    <p><strong>Nombre:</strong> <span id="previewNombre"></span></p>
-                    <p><strong>Categoría:</strong> <span id="previewCategoria"></span></p>
-                    <p><strong>Descripción:</strong> <span id="previewDescripcion"></span></p>
-                    <p><strong>Precio:</strong> $<span id="previewPrecio"></span></p>
-                    <p><strong>Código de Barras:</strong> <span id="previewCodBarras"></span></p>
-                    <p><strong>Inventario:</strong> <span id="previewInventario"></span></p>
-                    <p><strong>Activo:</strong> <span id="previewActivo"></span></p>
-                    
-                    <div class="text-center mt-4">
-                        <button id="confirmButton" class="btn btn-success mx-2">Confirmar</button>
-                        <button id="editButton" class="btn btn-secondary mx-2">Seguir Editando</button>
+                    <div id="previewContainer" class="bg-white border rounded shadow p-4 mt-5 d-none">
+                        <h4 class="text-center mb-4">Vista Previa del Producto</h4>
+                        <div class="text-center mb-3">
+                            <img id="previewImage" src="" alt="Imagen del producto" class="img-fluid rounded" style="max-height: 200px;">
+                        </div>
+                        <p><strong>Nombre:</strong> <span id="previewNombre"></span></p>
+                        <p><strong>Categoría:</strong> <span id="previewCategoria"></span></p>
+                        <p><strong>Descripción:</strong> <span id="previewDescripcion"></span></p>
+                        <p><strong>Precio:</strong> $<span id="previewPrecio"></span></p>
+                        <p><strong>Código de Barras:</strong> <span id="previewCodBarras"></span></p>
+                        <p><strong>Inventario:</strong> <span id="previewInventario"></span></p>
+                        <p><strong>Activo:</strong> <span id="previewActivo"></span></p>
+                        
+                        <div class="text-center mt-4">
+                            <button id="confirmButton" class="btn btn-success mx-2">Confirmar</button>
+                            <button id="editButton" class="btn btn-secondary mx-2">Seguir Editando</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Upload Form End -->
+    <script>
+        // CÓDIGO JS EXISTENTE DEL FORMULARIO
+        const form = document.getElementById('productForm');
+        const previewContainer = document.getElementById('previewContainer');
 
-<!-- JS Script -->
-<script>
-    const form = document.getElementById('productForm');
-    const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+        const previewNombre = document.getElementById('previewNombre');
+        const previewCategoria = document.getElementById('previewCategoria');
+        const previewDescripcion = document.getElementById('previewDescripcion');
+        const previewPrecio = document.getElementById('previewPrecio');
+        const previewCodBarras = document.getElementById('previewCodBarras');
+        const previewInventario = document.getElementById('previewInventario');
+        const previewActivo = document.getElementById('previewActivo');
 
-    const previewImage = document.getElementById('previewImage');
-    const previewNombre = document.getElementById('previewNombre');
-    const previewCategoria = document.getElementById('previewCategoria');
-    const previewDescripcion = document.getElementById('previewDescripcion');
-    const previewPrecio = document.getElementById('previewPrecio');
-    const previewCodBarras = document.getElementById('previewCodBarras');
-    const previewInventario = document.getElementById('previewInventario');
-    const previewActivo = document.getElementById('previewActivo');
+        const confirmButton = document.getElementById('confirmButton');
+        const editButton = document.getElementById('editButton');
 
-    const confirmButton = document.getElementById('confirmButton');
-    const editButton = document.getElementById('editButton');
+        const categoryMap = {
+            "uuid-categoria-1": "Papelería",
+            "uuid-categoria-2": "Abarrotes"
+        };
 
-    const categoryMap = {
-        "uuid-categoria-1": "Papelería",
-        "uuid-categoria-2": "Abarrotes"
-    };
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // evita que se envíe automáticamente
 
-    form.addEventListener('submit', function(e) {
-        e.preventDefault(); // evita que se envíe automáticamente
+            // Obtener valores
+            const nombre = document.getElementById('productName').value;
+            const categoriaId = document.getElementById('productCategory').value;
+            const descripcion = document.getElementById('productDescription').value;
+            const precio = document.getElementById('productPrice').value;
+            const codBarras = document.getElementById('productCode').value;
+            const inventario = document.getElementById('productInventory').value;
+            const activo = document.getElementById('productActive').checked ? 'Sí' : 'No';
+            const imagenInput = document.getElementById('productImage');
 
-        // Obtener valores
-        const nombre = document.getElementById('productName').value;
-        const categoriaId = document.getElementById('productCategory').value;
-        const descripcion = document.getElementById('productDescription').value;
-        const precio = document.getElementById('productPrice').value;
-        const codBarras = document.getElementById('productCode').value;
-        const inventario = document.getElementById('productInventory').value;
-        const activo = document.getElementById('productActive').checked ? 'Sí' : 'No';
-        const imagenInput = document.getElementById('productImage');
-
-        // Cargar imagen como vista previa
-        const file = imagenInput.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewImage.src = e.target.result;
+            // Cargar imagen como vista previa
+            const file = imagenInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
             }
-            reader.readAsDataURL(file);
-        }
 
-        // Llenar campos de vista previa
-        previewNombre.textContent = nombre;
-        previewCategoria.textContent = categoryMap[categoriaId] || "No definida";
-        previewDescripcion.textContent = descripcion;
-        previewPrecio.textContent = parseFloat(precio).toFixed(2);
-        previewCodBarras.textContent = codBarras;
-        previewInventario.textContent = inventario;
-        previewActivo.textContent = activo;
+            // Llenar campos de vista previa
+            previewNombre.textContent = nombre;
+            previewCategoria.textContent = categoryMap[categoriaId] || "No definida";
+            previewDescripcion.textContent = descripcion;
+            previewPrecio.textContent = parseFloat(precio).toFixed(2);
+            previewCodBarras.textContent = codBarras;
+            previewInventario.textContent = inventario;
+            previewActivo.textContent = activo;
 
-        // Mostrar vista previa
-        previewContainer.classList.remove('d-none');
-        form.classList.add('d-none');
-    });
+            // Mostrar vista previa
+            previewContainer.classList.remove('d-none');
+            form.classList.add('d-none');
+        });
 
-    // Botón "Seguir editando"
-    editButton.addEventListener('click', function() {
-        previewContainer.classList.add('d-none');
-        form.classList.remove('d-none');
-    });
+        // Botón "Seguir editando"
+        editButton.addEventListener('click', function() {
+            previewContainer.classList.add('d-none');
+            form.classList.remove('d-none');
+        });
 
-    // Botón "Confirmar"
-    confirmButton.addEventListener('click', function() {
-        // Aquí realmente enviamos el formulario al servidor Flask
-        form.submit();
-    });
-</script>
+        // Botón "Confirmar"
+        confirmButton.addEventListener('click', function() {
+            // Aquí realmente enviamos el formulario al servidor Flask
+            form.submit();
+        });
 
-    <!-- Footer Start -->
+        // ==============================================
+        // NUEVO CÓDIGO JS PARA LA TARJETA DE USUARIO
+        document.addEventListener("DOMContentLoaded", async () => {
+            const card = document.getElementById("userCard");
+            const nameEl = document.getElementById("userName");
+            const roleEl = document.getElementById("userRole");
+            const logoutBtn = document.getElementById("logoutBtn");
+
+            // Se verifica si los elementos existen (deberían existir con el nuevo HTML)
+            if (!card || !nameEl || !roleEl || !logoutBtn) {
+                console.warn("Elementos de Tarjeta de Usuario no encontrados. Asegúrese de que el HTML del Topbar esté correctamente insertado.");
+                return;
+            }
+
+            try {
+                // Llama al endpoint de tu API para obtener los datos del usuario logueado
+                const resp = await fetch("/api/mi_usuario"); 
+
+                if (!resp.ok) {
+                    // Si el usuario no está autenticado (401 Unauthorized), ocultamos la tarjeta.
+                    if (resp.status === 401) {
+                        card.classList.add("d-none");
+                    }
+                    return;
+                }
+
+                const data = await resp.json();
+                
+                // Si la respuesta es exitosa, actualiza la tarjeta con los datos.
+                if (data.ok && data.data) {
+                    nameEl.textContent = data.data.nombre || "Sin nombre";
+                    roleEl.textContent = data.data.rol || "Sin rol";
+                    // Asegura que la tarjeta esté visible (en caso de que el CSS la oculte por defecto en algún estado)
+                    card.classList.remove("d-none"); 
+                }
+            } catch (err) {
+                console.error("Error obteniendo usuario actual:", err);
+                card.classList.add("d-none"); // Ocultar si hay un error de red
+            }
+
+            // Manejo del botón de cerrar sesión
+            logoutBtn.addEventListener("click", () => {
+                window.location.href = "/logout";
+            });
+        });
+        // ==============================================
+    </script>
+
+
     <div class="container-fluid footer bg-light py-5" style="margin-top: 90px;">
         <div class="container text-center py-5">
             <div class="row">
@@ -297,12 +389,8 @@
             </div>
         </div>
     </div>
-    <!-- Footer End -->
-
-    <!-- Back to Top -->
     <a href="#" class="btn btn-secondary px-2 back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
-    <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
@@ -311,7 +399,6 @@
     <script src="{{ url_for('static', filename='lib/isotope/isotope.pkgd.min.js') }}"></script>
     <script src="{{ url_for('static', filename='lib/lightbox/js/lightbox.min.js') }}"></script>
 
-    <!-- Template Javascript -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 

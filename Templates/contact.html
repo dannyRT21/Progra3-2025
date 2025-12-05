@@ -5,27 +5,20 @@
     <title>iCREAM - Contactanos</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <!-- Favicon -->
     <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
 
-    <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
-    <!-- Bootstrap CSS (necesario) -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Libraries Stylesheet -->
     <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
 
-    <!-- Customized Stylesheet -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 
-    <!-- Estilos personalizados -->
     <style>
         .btn-secundario-azul {
             background-color: #00aaff !important;
@@ -63,11 +56,72 @@
         }
         /* Estética modal: encabezado con color y texto blanco */
         .modal-header.bg-primary { background: #007bff; color: #fff; }
+
+        /* ============================================== */
+        /* NUEVOS ESTILOS PARA LA TARJETA DE USUARIO */
+        .user-card {
+            background: hsl(193, 94%, 33%);
+            /* Color de fondo similar al Topbar */
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+            padding: 6px 12px;
+            min-width: 190px;
+            max-width: 230px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .user-card span {
+            font-weight: 600;
+            color: #ffffff;
+            display: block;
+            text-align: left;
+            font-size: 13px;
+            line-height: 1.2;
+        }
+
+        .user-card .user-role {
+            font-weight: 400;
+            font-size: 11px;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+
+        .user-card button {
+            margin-top: 6px;
+            padding: 3px 10px;
+            border-radius: 8px;
+            border: none;
+            background: #f364e0;
+            /* Color de botón distintivo */
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+            align-self: flex-start;
+        }
+
+        .user-card button:hover {
+            background: #ceced4;
+        }
+
+        .topbar-user-card {
+            margin-right: 15px;
+            /* Separación de los íconos sociales */
+        }
+
+        /* Opcional: ocultar en pantallas pequeñas */
+        @media (max-width: 991.98px) {
+            .topbar-user-card {
+                display: none;
+            }
+        }
+        /* ============================================== */
     </style>
 </head>
 
 <body>
-    <!-- Topbar Start -->
     <div class="container-fluid bg-primary py-3 d-none d-md-block">
         <div class="container">
             <div class="row">
@@ -77,24 +131,29 @@
                         <span class="text-white">|</span>
                         <a class="text-white px-3" href="#">Ayuda</a>
                         <span class="text-white">|</span>
-                        <a class="text-white pl-3" href="#">Soporte panzona</a>
+                        <a class="text-white pl-3" href="#">Soporte</a>
                     </div>
                 </div>
+
                 <div class="col-md-6 text-center text-lg-right">
-                    <div class="d-inline-flex align-items-center">
-                        <a class="text-white px-3" href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a class="text-white px-3" href="#"><i class="fab fa-twitter"></i></a>
-                        <a class="text-white px-3" href="#"><i class="fab fa-linkedin-in"></i></a>
-                        <a class="text-white px-3" href="#"><i class="fab fa-instagram"></i></a>
-                        <a class="text-white pl-3" href="#"><i class="fab fa-youtube"></i></a>
+                    <div class="d-flex align-items-center justify-content-end">
+                        <div class="user-card topbar-user-card" id="userCard" style="display: none;">
+                            <span id="userName">Usuario invitado</span>
+                            <span class="user-role" id="userRole">Sin rol</span>
+                            <button type="button" id="logoutBtn">Cerrar sesión</button>
+                        </div>
+                        <div class="d-inline-flex align-items-center">
+                            <a class="text-white px-3" href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a class="text-white px-3" href="#"><i class="fab fa-twitter"></i></a>
+                            <a class="text-white px-3" href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a class="text-white px-3" href="#"><i class="fab fa-instagram"></i></a>
+                            <a class="text-white pl-3" href="#"><i class="fab fa-youtube"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Topbar End -->
-
-    <!-- Navbar Start -->
     <div class="container-fluid position-relative nav-bar p-0">
         <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
             <nav class="navbar navbar-expand-lg bg-white navbar-light shadow p-lg-0 justify-content-center">
@@ -119,9 +178,6 @@
             </nav>
         </div>
     </div>
-    <!-- Navbar End -->
-
-    <!-- Header -->
     <div class="jumbotron jumbotron-fluid page-header" style="margin-bottom: 90px;">
         <div class="container text-center py-5">
             <h1 class="text-white display-3 mt-lg-5">Contáctanos</h1>
@@ -129,7 +185,6 @@
         </div>
     </div>
 
-    <!-- Contact Section -->
     <div class="container-fluid py-5">
         <div class="container py-5">
             <div class="row justify-content-center mb-4">
@@ -138,10 +193,6 @@
                     <p class="text-muted">Envíanos tus sugerencias, preguntas o quejas. Responderemos lo antes posible.</p>
                 </div>
 
-    <!-- Contact Section -->
-    <div class="container-fluid py-5">
-        <div class="container py-5">
-            <div class="row justify-content-center">
                 <div class="col-lg-9">
                     <div class="contact-form bg-light rounded p-5">
                         <form id="contactForm">
@@ -167,7 +218,6 @@
                 </div>
             </div>
 
-            <!-- Tabla de comentarios -->
             <div class="row justify-content-center mt-5">
                 <div class="col-lg-11">
                     <h3 class="text-center mb-4">Comentarios Recibidos</h3>
@@ -190,7 +240,6 @@
         </div>
     </div>
 
-    <!-- MODAL DE EDICIÓN -->
     <div class="modal fade" id="editarModal" tabindex="-1" role="dialog" aria-labelledby="editarModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -227,7 +276,6 @@
         </div>
     </div>
 
-    <!-- CRUD Scripts -->
     <script>
         const API_URL = "http://localhost:2020/api/comentarios";
         let idComentario = null;
@@ -340,9 +388,57 @@
                 alert("❌ Error de red: " + err);
             }
         }
+
+        /* ============================================== */
+        /* NUEVO CÓDIGO JS PARA LA TARJETA DE USUARIO */
+        document.addEventListener("DOMContentLoaded", async () => {
+            const card = document.getElementById("userCard");
+            const nameEl = document.getElementById("userName");
+            const roleEl = document.getElementById("userRole");
+            const logoutBtn = document.getElementById("logoutBtn");
+
+            // Se verifica si los elementos existen 
+            if (!card || !nameEl || !roleEl || !logoutBtn) {
+                console.warn("Elementos de Tarjeta de Usuario no encontrados.");
+                return;
+            }
+
+            try {
+                // Llama al endpoint de tu API para obtener los datos del usuario logueado
+                // NOTA: Este endpoint es un ejemplo, ajústalo a tu API de Flask
+                const resp = await fetch("/api/mi_usuario"); 
+
+                if (!resp.ok) {
+                    // Si el usuario no está autenticado (ej. 401 Unauthorized), ocultamos la tarjeta.
+                    if (resp.status === 401) {
+                        card.style.display = 'none';
+                    }
+                    return;
+                }
+
+                const data = await resp.json();
+                
+                // Si la respuesta es exitosa, actualiza la tarjeta con los datos.
+                if (data.ok && data.data) {
+                    nameEl.textContent = data.data.nombre || "Sin nombre";
+                    roleEl.textContent = data.data.rol || "Sin rol";
+                    // Asegura que la tarjeta esté visible 
+                    card.style.display = 'flex'; 
+                }
+            } catch (err) {
+                console.error("Error obteniendo usuario actual:", err);
+                card.style.display = 'none'; // Ocultar si hay un error de red
+            }
+
+            // Manejo del botón de cerrar sesión
+            logoutBtn.addEventListener("click", () => {
+                 // Redirigir al endpoint de cerrar sesión de Flask
+                window.location.href = "/logout"; 
+            });
+        });
+        /* ============================================== */
     </script>
 
-    <!-- JS Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
 </body>

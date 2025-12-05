@@ -1,77 +1,255 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - CopyVariedades</title>
-    <style>
-        * { box-sizing: border-box; }
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to right, #a1c4fd, #c2e9fb);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .login-container {
-            background-color: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 400px;
-        }
-        .login-container h2 { text-align: center; margin-bottom: 30px; color: #00aaff; }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; color: #333; margin-bottom: 5px; }
-        .form-group input {
-            width: 100%; padding: 10px;
-            border: 2px solid #a1c4fd;
-            border-radius: 8px; font-size: 16px;
-            outline: none; transition: border-color 0.3s;
-        }
-        .form-group input:focus { border-color: #00aaff; }
-        .btn-login {
-            width: 100%; background-color: #00aaff; color: white;
-            border: none; padding: 12px; border-radius: 8px;
-            font-size: 16px; cursor: pointer; transition: background-color 0.3s;
-        }
-        .btn-login:hover { background-color: #0099dd; }
-        .footer { text-align: center; margin-top: 20px; color: #666; font-size: 14px; }
-        .footer span { font-weight: bold; color: #00aaff; }
-        .error { color: red; text-align: center; margin-bottom: 15px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - CopyVariedades</title>
+  
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #a1c4fd, #c2e9fb);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* 3 columnas centradas: login, tarjeta 1, tarjeta 2 */
+    .main-container {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(260px, 1fr));
+      gap: 40px;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      align-items: stretch;
+      justify-items: center;
+    }
+
+    /* Responsive: 2 columnas y luego 1 columna en pantallas pequeñas */
+    @media (max-width: 992px) {
+      .main-container {
+        grid-template-columns: repeat(2, minmax(260px, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .main-container {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .login-container {
+      background-color: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 400px;
+      min-height: 380px;       /* misma sensación de tamaño que las tarjetas */
+    }
+
+    .login-container h2 { 
+      text-align: center; 
+      margin-bottom: 30px; 
+      color: #00aaff; 
+    }
+
+    .form-group { margin-bottom: 20px; }
+
+    .form-group label { 
+      display: block; 
+      color: #333; 
+      margin-bottom: 5px; 
+    }
+
+    .form-group input {
+      width: 100%; 
+      padding: 10px;
+      border: 2px solid #a1c4fd;
+      border-radius: 8px; 
+      font-size: 16px;
+      outline: none; 
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus { border-color: #00aaff; }
+
+    .btn-login {
+      width: 100%; 
+      background-color: #00aaff; 
+      color: white;
+      border: none; 
+      padding: 12px; 
+      border-radius: 8px;
+      font-size: 16px; 
+      cursor: pointer; 
+      transition: background-color 0.3s;
+    }
+
+    .btn-login:hover { background-color: #0099dd; }
+
+    .footer { 
+      text-align: center; 
+      margin-top: 20px; 
+      color: #666; 
+      font-size: 14px; 
+    }
+
+    .footer span { 
+      font-weight: bold; 
+      color: #00aaff; 
+    }
+
+    .error { 
+      color: red; 
+      text-align: center; 
+      margin-bottom: 15px; 
+    }
+
+    /* --- Estilos para las tarjetas informativas (mismo tamaño que login) --- */
+
+    .card {
+      position: relative;
+      width: 100%;
+      max-width: 400px;      /* igual que el login */
+      min-height: 380px;     /* igual que el login */
+      perspective: 1000px;
+      border-radius: 12px;
+    }
+
+    .content {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.4s;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .card:hover .content {
+      transform: rotateY(180deg);
+    }
+
+    .front, .back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 12px;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+    }
+
+    .front {
+      background: linear-gradient(135deg, #00aaff, #66c2ff);
+    }
+
+    .back {
+      background: linear-gradient(135deg, #005f88, #008fcc);
+      transform: rotateY(180deg);
+    }
+
+    .card-title {
+      font-size: 20px;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    .card-text {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+  </style>
 </head>
-
 <body>
-
+  <div class="main-container">
+    <!-- 1) TARJETA DE LOGIN -->
     <div class="login-container">
-        <h2>CopyVariedades</h2>
-        <p id="error-msg" class="error"></p>
+      <h2>CopyVariedades</h2>
+      <p id="error-msg" class="error"></p>
 
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="username">Correo electrónico</label>
-                <input type="email" id="username" name="username" placeholder="usuario@correo.com" required>
-            </div>
-
-            <div class="form-group">
-                <label for="password">Contraseña</label>
-                <input type="password" id="password" name="password" placeholder="********" required>
-            </div>
-
-            <button type="submit" class="btn-login">Iniciar sesión</button>
-        </form>
-
-        <div class="footer">
-            &copy; 2025 <span>CopyVariedades</span>. Todos los derechos reservados.
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username">Correo electrónico</label>
+          <input type="email" id="username" name="username" placeholder="usuario@correo.com" required autocomplete="username">
         </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" name="password" placeholder="********" required autocomplete="current-password">
+        </div>
+
+        <button type="submit" class="btn-login">Iniciar sesión</button>
+      </form>
+
+      <div class="footer">
+        &copy; 2025 <span>CopyVariedades</span>. Todos los derechos reservados.
+      </div>
     </div>
 
+    <!-- 2) TARJETA INFORMACIÓN ADMIN / VENTAS -->
+    <div class="card">
+      <div class="content">
+        <div class="front">
+          <div>
+            <div class="card-title">Administración / Ventas</div>
+            <div class="card-text">
+              Sistema de administración de productos, comentarios de clientes, y venta de fotocopias e impresiones, 
+              todo lo que el administrador/vendedor necesita para administrar su tienda.
+            </div>
+          </div>
+        </div>
+        <div class="back">
+          <div>
+            <div class="card-title">Detalles</div>
+            <div class="card-text">
+              Panel de control, gestión de inventario, historial de ventas, gestión de clientes y más.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3) TARJETA INFORMACIÓN PÁGINA WEB / E-COMMERCE -->
+    <div class="card">
+      <div class="content">
+        <div class="front">
+          <div>
+            <div class="card-title">Página Web / E-commerce</div>
+            <div class="card-text">
+              Página web (carrito de compras y otros servicios de ventas) más soporte para mejoras de producto y más, 
+              una página web en dos…
+            </div>
+          </div>
+        </div>
+        <div class="back">
+          <div>
+            <div class="card-title">Más Servicios</div>
+            <div class="card-text">
+              Diseño responsivo, integración de pagos, soporte continuo y mejoras de interfaz / funcionalidad.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div> <!-- fin main-container -->
+
 <script>
-document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  document.getElementById("loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const username = document.getElementById("username").value.trim();
@@ -81,35 +259,35 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
     const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
     if (!username || !emailRegex.test(username)) {
-        errorMsg.textContent = "Por favor, ingresa un correo electrónico válido.";
-        return;
+      errorMsg.textContent = "Por favor, ingresa un correo electrónico válido.";
+      return;
     }
     if (!password || password.length < 4) {
-        errorMsg.textContent = "La contraseña debe tener al menos 4 caracteres.";
-        return;
+      errorMsg.textContent = "La contraseña debe tener al menos 4 caracteres.";
+      return;
     }
 
     errorMsg.textContent = "⏳ Conectando...";
     try {
-        const response = await fetch("/procesar_login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, password })
-        });
+      const response = await fetch("/procesar_login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
 
-        const data = await response.json();
-        console.log("Respuesta del servidor:", data);
+      const data = await response.json();
+      console.log("Respuesta del servidor:", data);
 
-        if (data.ok) {
-            window.location.href = data.redirect || "/";
-        } else {
-            errorMsg.textContent = data.error || "Usuario o contraseña incorrectos.";
-        }
+      if (data.ok) {
+        window.location.href = data.redirect || "/";
+      } else {
+        errorMsg.textContent = data.error || "Usuario o contraseña incorrectos.";
+      }
     } catch (error) {
-        console.error("Error:", error);
-        errorMsg.textContent = "Error de conexión con el servidor.";
+      console.error("Error:", error);
+      errorMsg.textContent = "Error de conexión con el servidor.";
     }
-});
+  });
 </script>
 </body>
 </html>

@@ -302,6 +302,64 @@
       color: #5F5D6B;
       bottom: 5px;
     }
+
+    /* --- Tarjeta de usuario en topbar --- */
+    .user-card {
+      background: hsl(193, 94%, 33%);
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+      padding: 6px 12px;
+      min-width: 190px;
+      max-width: 230px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .user-card span {
+      font-weight: 600;
+      color: #ffffff;
+      display: block;
+      text-align: left;
+      font-size: 13px;
+      line-height: 1.2;
+    }
+
+    .user-card .user-role {
+      font-weight: 400;
+      font-size: 11px;
+      opacity: 0.9;
+      margin-top: 2px;
+    }
+
+    .user-card button {
+      margin-top: 6px;
+      padding: 3px 10px;
+      border-radius: 8px;
+      border: none;
+      background: #f364e0;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 11px;
+      cursor: pointer;
+      align-self: flex-start;
+    }
+
+    .user-card button:hover {
+      background: #ceced4;
+    }
+
+    /* ahora es inline dentro del topbar, nada de absolute */
+    .topbar-user-card {
+      margin-left: 0;
+    }
+
+    /* Opcional: ocultar en pantallas pequeñas */
+    @media (max-width: 767.98px) {
+      .topbar-user-card {
+        display: none;
+      }
+    }
     </style>
 </head>
 
@@ -315,17 +373,27 @@
                         <span class="text-white">|</span>
                         <a class="text-white px-3" href="">Ayuda</a>
                         <span class="text-white">|</span>
-                        <a class="text-white pl-3" href="">Soporte panzona</a>
+                        <a class="text-white pl-3" href="">Soporte</a>
                     </div>
                 </div>
                 <div class="col-md-6 text-center text-lg-right">
-                    <div class="d-inline-flex align-items-center">
-                        <a class="text-white px-3" href=""><i class="fab fa-facebook-f"></i></a>
-                        <a class="text-white px-3" href=""><i class="fab fa-twitter"></i></a>
-                        <a class="text-white px-3" href=""><i class="fab fa-linkedin-in"></i></a>
-                        <a class="text-white px-3" href=""><i class="fab fa-instagram"></i></a>
-                        <a class="text-white pl-3" href=""><i class="fab fa-youtube"></i></a>
+                    <!-- Bloque derecho: tarjeta de usuario + redes -->
+                    <div class="d-flex align-items-center justify-content-end">
+                        <div class="user-card topbar-user-card" id="userCard">
+                            <span id="userName">Usuario invitado</span>
+                            <span class="user-role" id="userRole">Sin rol</span>
+                            <button type="button" id="logoutBtn">Cerrar sesión</button>
+                        </div>
+
+                        <div class="d-inline-flex align-items-center ml-3">
+                            <a class="text-white px-3" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="text-white px-3" href=""><i class="fab fa-twitter"></i></a>
+                            <a class="text-white px-3" href=""><i class="fab fa-linkedin-in"></i></a>
+                            <a class="text-white px-3" href=""><i class="fab fa-instagram"></i></a>
+                            <a class="text-white pl-3" href=""><i class="fab fa-youtube"></i></a>
+                        </div>
                     </div>
+                    <!-- Fin bloque derecho -->
                 </div>
             </div>
         </div>
@@ -348,7 +416,6 @@
                     </a>
 
                     <div class="navbar-nav py-0">
-                        <a href="{{ url_for('subir') }}" class="nav-item nav-link">Impreciones</a>
                         <a href="{{ url_for('index') }}" class="nav-item nav-link">home</a>
                         <a href="{{ url_for('contact') }}" class="nav-item nav-link">comentarios</a>
                     </div>
@@ -416,16 +483,24 @@
     </div>
 
     <script>
-    // Métodos provisionales para manejar carrito
+    // Inicialización general al cargar el DOM
     document.addEventListener('DOMContentLoaded', () => {
+      // Carrito
       fetchCartItems();
       const searchInput = document.getElementById('search-input');
       if (searchInput) {
         searchInput.addEventListener('input', filterCartItems);
       }
-      document.getElementById('checkout-btn').addEventListener('click', handleCheckout);
+      const checkoutBtn = document.getElementById('checkout-btn');
+      if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', handleCheckout);
+      }
+
+      // Tarjeta de usuario (topbar)
+      initUserCard();
     });
 
+    // ----------- LÓGICA DEL CARRITO -----------
     function fetchCartItems() {
       // endpoint provisional: '/api/cart'
       fetch('/api/cart')
@@ -444,17 +519,22 @@
 
     function renderCartItems(items) {
       const container = document.getElementById('cart-products');
+      if (!container) return;
+
       container.innerHTML = '';
       let subtotal = 0;
 
       items.forEach(item => {
         // item expected: { id, nombre, descripcion, cod_barras, imagen, precio, cantidad }
+        const nombreLower = (item.nombre || '').toLowerCase();
+        const codigoLower = (item.cod_barras || '').toLowerCase();
+
         const productHtml = `
-          <div class="product" data-nombre="${item.nombre.toLowerCase()}" data-codigo="${item.cod_barras.toLowerCase()}">
+          <div class="product" data-nombre="${nombreLower}" data-codigo="${codigoLower}">
             <img src="/static/img/productos/${item.imagen || 'placeholder.png'}" alt="${item.nombre}">
             <span>${item.nombre}</span>
             <div class="qty">
-              <button onclick="updateQuantity('${item.id}', ${item.cantidad - 1})">‑</button>
+              <button onclick="updateQuantity('${item.id}', ${item.cantidad - 1})">-</button>
               <input type="text" value="${item.cantidad}" readonly style="width:30px; text-align:center; border:none; background:transparent;">
               <button onclick="updateQuantity('${item.id}', ${item.cantidad + 1})">+</button>
             </div>
@@ -479,8 +559,8 @@
       const products = document.querySelectorAll('#cart-products .product');
       let visibleCount = 0;
       products.forEach(prod => {
-        const nombre = prod.getAttribute('data-nombre');
-        const codigo = prod.getAttribute('data-codigo');
+        const nombre = prod.getAttribute('data-nombre') || '';
+        const codigo = prod.getAttribute('data-codigo') || '';
         const visible = nombre.includes(search) || codigo.includes(search);
         prod.style.display = visible ? 'grid' : 'none';
         if (visible) visibleCount++;
@@ -523,6 +603,46 @@
       })
       .catch(err => alert("Error de conexión en checkout: " + err));
     }
+
+    // ----------- LÓGICA TARJETA USUARIO (API /api/mi_usuario) -----------
+    function initUserCard() {
+      const card = document.getElementById("userCard");
+      const nameEl = document.getElementById("userName");
+      const roleEl = document.getElementById("userRole");
+      const logoutBtn = document.getElementById("logoutBtn");
+
+      if (!card || !nameEl || !roleEl || !logoutBtn) {
+        return;
+      }
+
+      // Llamada a la API para traer usuario actual
+      fetch("/api/mi_usuario")
+        .then(resp => {
+          if (!resp.ok) {
+            if (resp.status === 401) {
+              // No hay usuario logueado: ocultamos la card
+              card.classList.add("d-none");
+            }
+            return null;
+          }
+          return resp.json();
+        })
+        .then(data => {
+          if (!data) return;
+          if (data.ok && data.data) {
+            nameEl.textContent = data.data.nombre || "Sin nombre";
+            roleEl.textContent = data.data.rol || "Sin rol";
+          }
+        })
+        .catch(err => {
+          console.error("Error obteniendo usuario actual:", err);
+        });
+
+      // Botón de cerrar sesión
+      logoutBtn.addEventListener("click", () => {
+        window.location.href = "/logout";
+      });
+    }
     </script>
 
     <div class="container-fluid footer bg-light py-5" style="margin-top: 90px;">
@@ -544,7 +664,7 @@
                         <div class="col-sm-6 text-center text-sm-right border-right mb-3 mb-sm-0">
                             <h5 class="font-weight-bold mb-2">Contáctanos</h5>
                             <p class="mb-2">4Av Guandique, al lado del Banco Agrícola</p>
-                            <p class="mb-0">+ 503 1234‑5678</p>
+                            <p class="mb-0">+ 503 1234-5678</p>
                         </div>
                         <div class="col-sm-6 text-center text-sm-left">
                             <h5 class="font-weight-bold mb-2">Horarios de apertura</h5>

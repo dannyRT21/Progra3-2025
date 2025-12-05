@@ -1,576 +1,321 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
     <meta charset="utf-8">
-    <title>CopyVariedades - carrito de compras</title>
+    <title>iCREAM - Contactanos</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
+    <!-- Favicon -->
     <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
 
+    <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
+    <!-- Bootstrap CSS (necesario) -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
     <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
 
+    <!-- Customized Stylesheet -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 
+    <!-- Estilos personalizados -->
     <style>
-    /* --- tarjeta producto (adaptada) --- */
-     .card {
-        --primary: #0ea5e9;
-        --primary-800: #0284c7;
-        --light: #f1f5f9;
-        --bg-linear: linear-gradient(0deg, var(--primary) 40%, var(--light) 120%);
-
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-
-        padding: 1rem;
-        width: 100%;
-        background-color: white !important; /* TARJETA BLANCA */
-        border-radius: 1rem;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    .image_container {
-        overflow: hidden;
-        position: relative;
-        width: 100%;
-        height: 10rem;
-        background-color: var(--primary-800);
-        border-radius: 0.5rem;
-    }
-
-    .product-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-    }
-    .image_container:hover .product-image {
-        transform: scale(1.05);
-    }
-
-    .title {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: black;
-        text-transform: capitalize;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-    }
-
-    .description {
-        font-size: 0.85rem;
-        color: #444;
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-    }
-
-    .inventory-code {
-        font-size: 0.75rem;
-        color: #666;
-    }
-
-    .action {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        margin-top: 0.5rem;
-    }
-
-    .price {
-        font-size: 1.6rem;
-        font-weight: 700;
-        color: #22c55e;
-        text-align: center;
-    }
-
-    .cart-button {
-        cursor: pointer;
-        padding: 0.7rem;
-        font-size: 0.9rem;
-        font-weight: 600;
-        color: white;
-        border-radius: 8px;
-        text-align: center;
-        border: none;
-        width: 100%;
-        background: var(--bg-linear);
-        border: 1px solid #7dd3fc;
-        box-shadow: inset 0 0 0.25rem 1px var(--light);
-        transition: transform 0.2s ease, background-color 0.3s;
-    }
-
-    .cart-button:hover {
-        background-color: var(--primary);
-        transform: scale(1.02);
-    }
-
-    .cart-icon {
-        width: 1rem;
-        margin-right: 0.5rem;
-        fill: white;
-    }
-
-    /* --- Barra de búsqueda reutilizada --- */
-    .input-container {
-      width: 100%;
-      max-width: 400px;
-      position: relative;
-      margin: auto;
-    }
-
-    .icon {
-      position: absolute;
-      right: 10px;
-      top: calc(50% + 5px);
-      transform: translateY(calc(-50% - 5px));
-    }
-
-    .input {
-      width: 100%;
-      height: 40px;
-      padding: 10px;
-      transition: .2s linear;
-      border: 2.5px solid black;
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
-
-    .input:focus {
-      outline: none;
-      border: 0.5px solid black;
-      box-shadow: -5px -5px 0px black;
-    }
-
-    .input-container:hover > .icon {
-      animation: anim 1s linear infinite;
-    }
-
-    @keyframes anim {
-      0%, 100% {
-        transform: translateY(calc(-50% - 5px)) scale(1);
-      }
-      50% {
-        transform: translateY(calc(-50% - 5px)) scale(1.1);
-      }
-    }
-
-    /* --- Carrito y Checkout estilos adaptados --- */
-    .master-container {
-      display: grid;
-      gap: 20px;
-      max-width: 1200px;
-      margin: auto;
-      padding: 20px;
-    }
-
-    .cart {
-      border-radius: 19px 19px 7px 7px;
-      background: #fff;
-      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-      padding: 20px;
-    }
-
-    .cart .products {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .cart .products .product {
-      display: grid;
-      grid-template-columns: 60px 1fr 80px 1fr;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .cart .products .product img {
-      width: 60px;
-      height: auto;
-      border-radius: 5px;
-    }
-
-    .cart .products .product span {
-      font-size: 13px;
-      font-weight: 600;
-      color: #47484b;
-      display: block;
-    }
-
-    .cart .products .product .qty {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .quantity {
-      display: grid;
-      grid-template-columns: 30px auto 30px;
-      height: 30px;
-      background-color: #ffffff;
-      border: 1px solid #e5e5e5;
-      border-radius: 7px;
-      align-items: center;
-      filter: drop-shadow(0px 1px 0px #efefef) drop-shadow(0px 1px 0.5px rgba(239,239,239,0.5));
-    }
-
-    .quantity button {
-      width: 30px;
-      height: 30px;
-      border: none;
-      background: transparent;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .checkout {
-      border-radius: 9px 9px 19px 19px;
-      background: #fff;
-      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-      padding: 20px;
-    }
-
-    .checkout .details {
-      display: grid;
-      grid-template-columns: 3fr 1fr;
-      gap: 5px;
-      padding-bottom: 10px;
-    }
-
-    .checkout .details span:nth-child(odd) {
-      font-size: 11px;
-      font-weight: 700;
-      color: #707175;
-      margin: auto auto auto 0;
-    }
-
-    .checkout .details span:nth-child(even) {
-      font-size: 13px;
-      font-weight: 600;
-      color: #47484b;
-      margin: auto 0 auto auto;
-    }
-
-    .checkout .checkout--footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background-color: #efeff3;
-      padding: 10px 20px;
-      margin-top: 15px;
-    }
-
-    .checkout .checkout-btn {
-      width: 150px;
-      height: 36px;
-      background: linear-gradient(180deg, #4480FF 0%, #115DFC 50%, #0550ED 100%);
-      border-radius: 7px;
-      border: none;
-      color: #ffffff;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.15,0.83,0.66,1);
-    }
-
-    .checkout .price {
-      position: relative;
-      font-size: 22px;
-      color: #2B2B2F;
-      font-weight: 900;
-    }
-
-    .checkout .price sup {
-      font-size: 13px;
-    }
-
-    .checkout .price sub {
-      position: absolute;
-      font-size: 11px;
-      color: #5F5D6B;
-      bottom: 5px;
-    }
+        .btn-secundario-azul {
+            background-color: #00aaff !important;
+            border-color: #00aaff !important;
+            color: white !important;
+        }
+        .btn-secundario-azul:hover {
+            background-color: #0099dd !important;
+            border-color: #0099dd !important;
+        }
+        .btn-accion-rojo {
+            background-color: #E74C3C !important;
+            border-color: #E74C3C !important;
+            color: white !important;
+        }
+        .btn-accion-rojo:hover {
+            background-color: #C0392B !important;
+            border-color: #C0392B !important;
+        }
+        .btn-row {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .btn-row .btn {
+            flex: 1 1 30%;
+            margin: 5px;
+        }
+        @media (max-width: 576px) {
+            .btn-row .btn {
+                flex: 1 1 100%;
+                margin: 5px 0;
+            }
+        }
+        /* Estética modal: encabezado con color y texto blanco */
+        .modal-header.bg-primary { background: #007bff; color: #fff; }
     </style>
 </head>
 
 <body>
+    <!-- Topbar Start -->
     <div class="container-fluid bg-primary py-3 d-none d-md-block">
         <div class="container">
             <div class="row">
                 <div class="col-md-6 text-center text-lg-left mb-2 mb-lg-0">
                     <div class="d-inline-flex align-items-center">
-                        <a class="text-white pr-3" href="">Desarrolladores</a>
+                        <a class="text-white pr-3" href="#">Desarrolladores</a>
                         <span class="text-white">|</span>
-                        <a class="text-white px-3" href="">Ayuda</a>
+                        <a class="text-white px-3" href="#">Ayuda</a>
                         <span class="text-white">|</span>
-                        <a class="text-white pl-3" href="">Soporte panzona</a>
+                        <a class="text-white pl-3" href="#">Soporte</a>
                     </div>
                 </div>
                 <div class="col-md-6 text-center text-lg-right">
                     <div class="d-inline-flex align-items-center">
-                        <a class="text-white px-3" href=""><i class="fab fa-facebook-f"></i></a>
-                        <a class="text-white px-3" href=""><i class="fab fa-twitter"></i></a>
-                        <a class="text-white px-3" href=""><i class="fab fa-linkedin-in"></i></a>
-                        <a class="text-white px-3" href=""><i class="fab fa-instagram"></i></a>
-                        <a class="text-white pl-3" href=""><i class="fab fa-youtube"></i></a>
+                        <a class="text-white px-3" href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a class="text-white px-3" href="#"><i class="fab fa-twitter"></i></a>
+                        <a class="text-white px-3" href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a class="text-white px-3" href="#"><i class="fab fa-instagram"></i></a>
+                        <a class="text-white pl-3" href="#"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="container-fluid position-relative nav-bar p-0">
-        <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
-            <nav class="navbar navbar-expand-lg bg-white navbar-light shadow p-lg-0 justify-content-center">
-                <a href="{{ url_for('index') }}" class="navbar-brand d-block d-lg-none">
-                    <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
-                </a>
-
-                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
-                    <a href="{{ url_for('index') }}" class="navbar-brand d-none d-lg-block mr-3">
-                        <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
-                    </a>
-
-                    <div class="navbar-nav py-0">
-                        <a href="{{ url_for('subir') }}" class="nav-item nav-link">Impreciones</a>
-                        <a href="{{ url_for('index') }}" class="nav-item nav-link">home</a>
-                        <a href="{{ url_for('contact') }}" class="nav-item nav-link">comentarios</a>
-                    </div>
-                </div>
-            </nav>
-        </div>
-    </div>
-
+    <!-- Topbar End -->
+    <!-- Header -->
     <div class="jumbotron jumbotron-fluid page-header" style="margin-bottom: 90px;">
         <div class="container text-center py-5">
-            <h1 class="text-white display-3 mt-lg-5">Tu Carrito</h1>
-            <div class="d-inline-flex align-items-center text-white">
-                <p class="m-0"><a class="text-white" href="{{ url_for('index') }}">Home</a></p>
-                <i class="fa fa-angle-double-right px-2"></i>
-                <p class="m-0">Carrito</p>
-            </div>
+            <h1 class="text-white display-3 mt-lg-5">Contáctanos</h1>
+            <h1 class="text-white display-4 mb-4">para consultas y sugerencias</h1>
         </div>
     </div>
 
-    <!-- Contador simple -->
-    <div class="container mb-4">
-        <div class="row justify-content-center">
-            <div class="col-lg-4 col-md-6">
-                <div class="bg-secondary text-white text-center rounded py-3">
-                    <h5 class="mb-1">Total de items</h5>
-                    <h2 id="item-counter" class="mb-0 display-4">0</h2>
+    <!-- Contact Section -->
+    <div class="container-fluid py-5">
+        <div class="container py-5">
+            <div class="row justify-content-center mb-4">
+                <div class="col-lg-6 text-center">
+                    <h1 class="section-title position-relative mb-3">Contáctenos para consultas aquí:</h1>
+                    <p class="text-muted">Envíanos tus sugerencias, preguntas o quejas. Responderemos lo antes posible.</p>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Barra de búsqueda reutilizada para filtrar en carrito -->
-    <div class="container mb-4">
-        <div class="row justify-content-center">
-            <div class="col-lg-6 col-md-8">
-                <div class="input-container">
-                    <input type="text" id="search-input" class="input" placeholder="BUSCAR EN TU CARRITO...">
-                    <span class="icon"><i class="fas fa-search"></i></span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Contenedor de carrito + checkout -->
-    <div class="master-container">
-        <div class="cart" id="cart-container">
-            <div class="title">TU CARRITO</div>
-            <div class="products" id="cart-products">
-              <!-- Aquí se inyectan los productos del carrito -->
-            </div>
-        </div>
-
-        <div class="checkout" id="checkout-container">
-            <div class="title">CHECKOUT</div>
-            <div class="details">
-                <span>Subtotal:</span> <span id="subtotal-amount">$0.00</span>
-                <span>Impuestos:</span> <span id="tax-amount">$0.00</span>
-                <span>Total:</span> <span id="total-amount">$0.00</span>
-            </div>
-            <div class="checkout--footer">
-              <div class="price">$<span id="checkout-price">0.00</span></div>
-              <button class="checkout-btn" id="checkout-btn">Pagar Ahora</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-    // Métodos provisionales para manejar carrito
-    document.addEventListener('DOMContentLoaded', () => {
-      fetchCartItems();
-      const searchInput = document.getElementById('search-input');
-      if (searchInput) {
-        searchInput.addEventListener('input', filterCartItems);
-      }
-      document.getElementById('checkout-btn').addEventListener('click', handleCheckout);
-    });
-
-    function fetchCartItems() {
-      // endpoint provisional: '/api/cart'
-      fetch('/api/cart')
-        .then(r => r.json())
-        .then(res => {
-          if (res.ok) {
-            renderCartItems(res.data);
-          } else {
-            console.error("Error al obtener carrito:", res.error);
-          }
-        })
-        .catch(err => {
-          console.error("Error de conexión carrito:", err);
-        });
-    }
-
-    function renderCartItems(items) {
-      const container = document.getElementById('cart-products');
-      container.innerHTML = '';
-      let subtotal = 0;
-
-      items.forEach(item => {
-        // item expected: { id, nombre, descripcion, cod_barras, imagen, precio, cantidad }
-        const productHtml = `
-          <div class="product" data-nombre="${item.nombre.toLowerCase()}" data-codigo="${item.cod_barras.toLowerCase()}">
-            <img src="/static/img/productos/${item.imagen || 'placeholder.png'}" alt="${item.nombre}">
-            <span>${item.nombre}</span>
-            <div class="qty">
-              <button onclick="updateQuantity('${item.id}', ${item.cantidad - 1})">‑</button>
-              <input type="text" value="${item.cantidad}" readonly style="width:30px; text-align:center; border:none; background:transparent;">
-              <button onclick="updateQuantity('${item.id}', ${item.cantidad + 1})">+</button>
-            </div>
-            <span>$${(item.precio * item.cantidad).toFixed(2)}</span>
-          </div>`;
-        container.insertAdjacentHTML('beforeend', productHtml);
-
-        subtotal += item.precio * item.cantidad;
-      });
-
-      document.getElementById('item-counter').textContent = items.length;
-      document.getElementById('subtotal-amount').textContent = `$${subtotal.toFixed(2)}`;
-      const tax = subtotal * 0.13;  // ejemplo 13% impuesto
-      document.getElementById('tax-amount').textContent = `$${tax.toFixed(2)}`;
-      const total = subtotal + tax;
-      document.getElementById('total-amount').textContent = `$${total.toFixed(2)}`;
-      document.getElementById('checkout-price').textContent = total.toFixed(2);
-    }
-
-    function filterCartItems() {
-      const search = this.value.toLowerCase();
-      const products = document.querySelectorAll('#cart-products .product');
-      let visibleCount = 0;
-      products.forEach(prod => {
-        const nombre = prod.getAttribute('data-nombre');
-        const codigo = prod.getAttribute('data-codigo');
-        const visible = nombre.includes(search) || codigo.includes(search);
-        prod.style.display = visible ? 'grid' : 'none';
-        if (visible) visibleCount++;
-      });
-      document.getElementById('item-counter').textContent = visibleCount;
-    }
-
-    function updateQuantity(itemId, newQty) {
-      if (newQty < 1) return;
-      // endpoint provisional: '/api/cart/update'
-      fetch('/api/cart/update', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ id: itemId, quantity: newQty })
-      })
-      .then(r => r.json())
-      .then(res => {
-        if (res.ok) {
-          fetchCartItems();  // recargar carrito
-        } else {
-          console.error("Error al actualizar cantidad:", res.error);
-        }
-      })
-      .catch(err => console.error("Error de conexión actualizar:", err));
-    }
-
-    function handleCheckout() {
-      // endpoint provisional: '/api/cart/checkout'
-      fetch('/api/cart/checkout', {
-        method: 'POST'
-      })
-      .then(r => r.json())
-      .then(res => {
-        if (res.ok) {
-          alert("Checkout exitoso!");
-          fetchCartItems();
-        } else {
-          alert("Error en checkout: " + res.error);
-        }
-      })
-      .catch(err => alert("Error de conexión en checkout: " + err));
-    }
-    </script>
-
-    <div class="container-fluid footer bg-light py-5" style="margin-top: 90px;">
-        <div class="container text-center py-5">
-            <div class="row">
-                <div class="col-12 mb-4">
-                    <a href="{{ url_for('index') }}" class="navbar-brand m-0">
-                        <h1 class="m-0 mt-n2 display-4 text-primary"><span class="text-secondary">Copy</span>Variedades</h1>
-                    </a>
-                </div>
-                <div class="col-12 mb-4">
-                    <a class="btn btn-outline-secondary btn-social mr-2" href="#"><i class="fab fa-twitter"></i></a>
-                    <a class="btn btn-outline-secondary btn-social mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-outline-secondary btn-social mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
-                    <a class="btn btn-outline-secondary btn-social" href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-                <div class="col-12 mt-2 mb-4">
-                    <div class="row">
-                        <div class="col-sm-6 text-center text-sm-right border-right mb-3 mb-sm-0">
-                            <h5 class="font-weight-bold mb-2">Contáctanos</h5>
-                            <p class="mb-2">4Av Guandique, al lado del Banco Agrícola</p>
-                            <p class="mb-0">+ 503 1234‑5678</p>
-                        </div>
-                        <div class="col-sm-6 text-center text-sm-left">
-                            <h5 class="font-weight-bold mb-2">Horarios de apertura</h5>
-                            <p class="mb-2">Lunes – Viernes: 9AM – 5PM</p>
-                            <p class="mb-0">Domingo: Cerrado</p>
-                        </div>
+    <!-- Contact Section -->
+    <div class="container-fluid py-5">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-9">
+                    <div class="contact-form bg-light rounded p-5">
+                        <form id="contactForm">
+                            <div class="form-row">
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control p-4" id="txtNombre" placeholder="Su nombre" required />
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="email" class="form-control p-4" id="txtEmail" placeholder="Su correo" required />
+                                </div>
+                            </div>
+                            <div class="form-group mt-3">
+                                <input type="text" class="form-control p-4" id="txtAsunto" placeholder="Asunto" required />
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-control p-4" rows="6" id="txtMensaje" placeholder="Mensaje" required></textarea>
+                            </div>
+                            <div class="btn-row">
+                                <button class="btn btn-primary py-3" type="button" onclick="guardarComentario()">Enviar sugerencia</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-                <div class="col-12">
-                    <p class="m-0">&copy; <a href="#">Domain</a>. All Rights Reserved. Designed by <a
-                            href="https://htmlcodex.com">HTML Codex</a></p>
+            </div>
+
+            <!-- Tabla de comentarios -->
+            <div class="row justify-content-center mt-5">
+                <div class="col-lg-11">
+                    <h3 class="text-center mb-4">Comentarios Recibidos</h3>
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Asunto</th>
+                                    <th>Comentario</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaComentarios"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <a href="#" class="btn btn-secondary px-2 back-to-top"><i class="fa fa-angle-double-up"></i></a>
+    <!-- MODAL DE EDICIÓN -->
+    <div class="modal fade" id="editarModal" tabindex="-1" role="dialog" aria-labelledby="editarModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="editarModalLabel">Editar comentario</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editId">
+                    <div class="form-group">
+                        <label>Nombre:</label>
+                        <input type="text" id="editNombre" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="editEmail" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Asunto:</label>
+                        <input type="text" id="editAsunto" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Comentario:</label>
+                        <textarea id="editComentario" class="form-control" rows="4" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" onclick="guardarEdicion()">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- CRUD Scripts -->
+    <script>
+        const API_URL = "http://localhost:2020/api/comentarios";
+        let idComentario = null;
+
+        document.addEventListener('DOMContentLoaded', cargarComentarios);
+
+        function getDatosFormulario() {
+            return {
+                nombre: document.getElementById('txtNombre').value.trim(),
+                e_mail: document.getElementById('txtEmail').value.trim(),
+                asunto: document.getElementById('txtAsunto').value.trim(),
+                comentario: document.getElementById('txtMensaje').value.trim()
+            };
+        }
+
+        async function guardarComentario() {
+            const datos = getDatosFormulario();
+            if (Object.values(datos).some(v => !v)) return alert("Todos los campos son obligatorios");
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(datos)
+                });
+                const r = await res.json();
+                if (r.ok) {
+                    alert("Comentario agregado correctamente.");
+                    document.getElementById("contactForm").reset();
+                    cargarComentarios();
+                } else alert("⚠️ " + r.error);
+            } catch (err) {
+                alert("❌ Error de red: " + err);
+            }
+        }
+
+        async function cargarComentarios() {
+            try {
+                const res = await fetch(API_URL);
+                const r = await res.json();
+                if (r.ok) renderizarComentarios(r.data);
+            } catch (err) {
+                alert("❌ Error: " + err);
+            }
+        }
+
+        function renderizarComentarios(lista) {
+            const tbody = document.getElementById("tablaComentarios");
+            tbody.innerHTML = "";
+            lista.forEach(com => {
+                const fila = document.createElement("tr");
+                fila.innerHTML = `
+                    <td>${com.nombre}</td>
+                    <td>${com.e_mail}</td>
+                    <td>${com.asunto}</td>
+                    <td>${com.comentario}</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick='abrirModal(${JSON.stringify(com)})'>Editar</button>
+                        <button class="btn btn-sm btn-danger" onclick='eliminarComentario(${com.id})'>Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(fila);
+            });
+        }
+
+        function abrirModal(com) {
+            document.getElementById("editId").value = com.id;
+            document.getElementById("editNombre").value = com.nombre;
+            document.getElementById("editEmail").value = com.e_mail;
+            document.getElementById("editAsunto").value = com.asunto;
+            document.getElementById("editComentario").value = com.comentario;
+            $("#editarModal").modal("show");
+        }
+
+        async function guardarEdicion() {
+            const id = document.getElementById("editId").value;
+            const datos = {
+                nombre: document.getElementById("editNombre").value.trim(),
+                e_mail: document.getElementById("editEmail").value.trim(),
+                asunto: document.getElementById("editAsunto").value.trim(),
+                comentario: document.getElementById("editComentario").value.trim()
+            };
+            try {
+                const res = await fetch(`${API_URL}/${id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(datos)
+                });
+                const r = await res.json();
+                if (r.ok) {
+                    alert("Comentario actualizado correctamente.");
+                    $("#editarModal").modal("hide");
+                    cargarComentarios();
+                } else alert("⚠️ " + r.error);
+            } catch (err) {
+                alert("❌ Error al actualizar: " + err);
+            }
+        }
+
+        async function eliminarComentario(id) {
+            if (!confirm("¿Desea eliminar este comentario?")) return;
+            try {
+                const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+                const r = await res.json();
+                if (r.ok) {
+                    alert("Comentario eliminado.");
+                    cargarComentarios();
+                } else alert("⚠️ " + r.error);
+            } catch (err) {
+                alert("❌ Error de red: " + err);
+            }
+        }
+    </script>
+
+    <!-- JS Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='lib/isotope/isotope.pkgd.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='lib/lightbox/js/lightbox.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-
 </body>
 </html>

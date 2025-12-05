@@ -6,7 +6,6 @@ from Model.crud_de_login import CrudUsuarios
 from Model.crud_de_base import PostgresDB, DatabaseError
 from Model.crud_carrito import carrito_bp
 
-
 from werkzeug.utils import secure_filename
 from Model.crud_productos import CrudProductos
 import uuid
@@ -57,6 +56,7 @@ def fail(error_message, status=400, data=None):
         "message": None,
         "error": error_message
     }), status
+
 
 def fail_500(error_message, status=500, data=None):
     return jsonify({
@@ -182,6 +182,7 @@ def gallery():
 def product():
     return render_template('product.html')
 
+
 @app.route('/panel_admin')
 def panel_admin():
     if 'usuario' not in session:
@@ -193,13 +194,18 @@ def panel_admin():
 
     return render_template('panel_admin.html', rol=rol)
 
+
 @app.route('/login', methods=['GET'])
 def login():
     return render_template('Login.html')
 
-crudUsuarios = CrudUsuarios()
+
+# -------------------------------------------------------
+# LOGIN / LOGOUT
+# -------------------------------------------------------
 
 crudUsuarios = CrudUsuarios()
+
 
 @app.route('/procesar_login', methods=['POST'])
 def procesar_login():
@@ -210,7 +216,7 @@ def procesar_login():
     if not username or not password:
         return jsonify({"ok": False, "error": "Por favor, ingresa usuario y contraseña."})
 
-    # 👉 usamos la función de negocio
+    # usamos la función de negocio
     result = crudUsuarios.verificar_login(username, password)
 
     if not result["ok"]:
@@ -218,27 +224,30 @@ def procesar_login():
 
     usuario = result["data"]
 
-    # ⚠️ IMPORTANTE: quitar espacios del CHAR(20)
+    # limpiamos nombre y rol (por los CHAR)
+    nombre = (usuario.get("nombre") or "").strip()
     rol = (usuario.get("rol") or "cliente").strip().lower()
 
     session['usuario'] = usuario["correo_electronico"]
+    session['nombre'] = nombre
     session['rol'] = rol
 
     # Siempre mandamos a "/" y ahí decides la vista
     return jsonify({"ok": True, "redirect": url_for('index')})
 
 
-
-# 🔸 Ruta para cerrar sesión
 @app.route('/logout')
 def logout():
     session.pop('usuario', None)
+    session.pop('nombre', None)
+    session.pop('rol', None)
     return redirect(url_for('login'))
 
 
 @app.route('/service')
 def service():
     return render_template('service.html')
+
 
 @app.route('/productos_clientes')
 def productos_clientes():
@@ -247,6 +256,7 @@ def productos_clientes():
         return fail(result["error"], status=500)
     productos = result["data"]
     return render_template('vistas_clientes/productos_clientes.html', productos=productos)
+
 
 @app.route('/carrito_compras')
 def carrito_compras():
@@ -340,7 +350,6 @@ def listar_productos():
     """
     Devuelve la lista de productos en formato JSON para el frontend.
     """
-    # Usamos el mismo método que ya usas en /productos
     result = productos_service.listar()
 
     if result["ok"]:
@@ -348,14 +357,17 @@ def listar_productos():
     else:
         return fail(result["error"], status=500)
 
+
 @app.get('/api/usuarios')
 def listar_usuarios():
     buscar = request.args.get("buscar", "", type=str)
     result = usuarios_service.consultar(buscar)
     return ok(data=result["data"]) if result["ok"] else fail(result["error"], status=500)
 
+
 # Registrar Blueprint del carrito
 app.register_blueprint(carrito_bp)
+
 
 @app.get('/api/mi_usuario')
 def mi_usuario():
@@ -363,27 +375,8 @@ def mi_usuario():
     if 'usuario' not in session:
         return jsonify({"ok": False, "error": "No autenticado"}), 401
 
-    correo = session['usuario']
-
-    try:
-        rows = usuarios_service.db.execute_select(
-            """
-            SELECT nombre, rol
-            FROM usuarios
-            WHERE correo_electronico = %s
-            LIMIT 1
-            """,
-            (correo,)
-        )
-    except DatabaseError as e:
-        return jsonify({"ok": False, "error": str(e)}), 500
-
-    if not rows:
-        return jsonify({"ok": False, "error": "Usuario no encontrado"}), 404
-
-    usuario = rows[0]
-    nombre = (usuario.get('nombre') or '').strip()
-    rol = (usuario.get('rol') or '').strip()
+    nombre = (session.get('nombre') or '').strip()
+    rol = (session.get('rol') or '').strip()
 
     return jsonify({"ok": True, "data": {"nombre": nombre, "rol": rol}})
 
@@ -413,8 +406,8 @@ def internal_error(e):
 
 if __name__ == "__main__":
     print(f"🚀 Servidor Flask corriendo en: http://{APP_HOST}:{APP_PORT}")
-    
-    # 🧠 Solución: abrir automáticamente la vista de login sin error 500
+
+    # abrir automáticamente la vista de login
     import webbrowser, threading, time
 
     def abrir_login():

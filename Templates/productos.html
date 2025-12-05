@@ -3,24 +3,19 @@
 
 <head>
     <meta charset="utf-8">
-    <title>iCREAM - Productos</title>
+    <title>copyVariedades - Productos</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <!-- Favicon -->
     <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
 
-    <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
-    <!-- Libraries Stylesheet -->
     <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
 
-    <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 
     <style>
@@ -83,11 +78,105 @@
         .close-btn:hover {
             color: #000;
         }
+
+        .product-item {
+            position: relative;
+            padding-top: 60px;
+            /* Espacio para botones y precio */
+        }
+
+        .product-buttons {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 10;
+        }
+
+        .product-buttons .btn {
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+        }
+
+        .price-badge {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #007bff;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-weight: bold;
+            z-index: 5;
+            font-size: 0.9rem;
+        }
+
+        /* ============================================== */
+        /* NUEVOS ESTILOS PARA LA TARJETA DE USUARIO */
+        .user-card {
+            background: hsl(193, 94%, 33%);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+            padding: 6px 12px;
+            min-width: 190px;
+            max-width: 230px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .user-card span {
+            font-weight: 600;
+            color: #ffffff;
+            display: block;
+            text-align: left;
+            font-size: 13px;
+            line-height: 1.2;
+        }
+
+        .user-card .user-role {
+            font-weight: 400;
+            font-size: 11px;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+
+        .user-card button {
+            margin-top: 6px;
+            padding: 3px 10px;
+            border-radius: 8px;
+            border: none;
+            background: #f364e0;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+            align-self: flex-start;
+        }
+
+        .user-card button:hover {
+            background: #ceced4;
+        }
+
+        .topbar-user-card {
+            margin-right: 15px; /* Separación de los íconos sociales */
+        }
+
+        /* Opcional: ocultar en pantallas pequeñas */
+        @media (max-width: 991.98px) {
+            .topbar-user-card {
+                display: none;
+            }
+        }
+        /* ============================================== */
     </style>
 </head>
 
 <body>
-    <!-- Topbar Start -->
     <div class="container-fluid bg-primary py-3 d-none d-md-block">
         <div class="container">
             <div class="row">
@@ -97,25 +186,29 @@
                         <span class="text-white">|</span>
                         <a class="text-white px-3" href="">Ayuda</a>
                         <span class="text-white">|</span>
-                        <a class="text-white pl-3" href="">Soporte panzona</a>
+                        <a class="text-white pl-3" href="">Soporte</a>
                     </div>
                 </div>
+
                 <div class="col-md-6 text-center text-lg-right">
-                    <div class="d-inline-flex align-items-center">
-                        <a class="text-white px-3" href=""><i class="fab fa-facebook-f"></i></a>
-                        <a class="text-white px-3" href=""><i class="fab fa-twitter"></i></a>
-                        <a class="text-white px-3" href=""><i class="fab fa-linkedin-in"></i></a>
-                        <a class="text-white px-3" href=""><i class="fab fa-instagram"></i></a>
-                        <a class="text-white pl-3" href=""><i class="fab fa-youtube"></i></a>
+                    <div class="d-flex align-items-center justify-content-end">
+                         <div class="user-card topbar-user-card" id="userCard" style="display: none;">
+                            <span id="userName">Usuario invitado</span>
+                            <span class="user-role" id="userRole">Sin rol</span>
+                            <button type="button" id="logoutBtn">Cerrar sesión</button>
+                        </div>
+                        <div class="d-inline-flex align-items-center">
+                            <a class="text-white px-3" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="text-white px-3" href=""><i class="fab fa-twitter"></i></a>
+                            <a class="text-white px-3" href=""><i class="fab fa-linkedin-in"></i></a>
+                            <a class="text-white px-3" href=""><i class="fab fa-instagram"></i></a>
+                            <a class="text-white pl-3" href=""><i class="fab fa-youtube"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Topbar End -->
-
-
-    <!-- Navbar Start -->
     <div class="container-fluid position-relative nav-bar p-0">
         <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
             <nav class="navbar navbar-expand-lg bg-white navbar-light shadow p-lg-0 justify-content-center">
@@ -135,9 +228,7 @@
                     </a>
 
                     <div class="navbar-nav py-0">
-                        <a href="{{ url_for('subir') }}" class="nav-item nav-link">Volver a Agregar Productos</a>
-                        <a href="{{ url_for('gallery') }}" class="nav-item nav-link">papeleria</a>
-                        <a href="{{ url_for('contact') }}" class="nav-item nav-link">Abarrotes</a>
+                        <a href="{{ url_for('subir') }}" class="nav-item nav-link">Volver a Agregar Productos</a
                     </div>
 
                 </div>
@@ -145,10 +236,6 @@
             </nav>
         </div>
     </div>
-    <!-- Navbar End -->
-
-
-    <!-- Header Start -->
     <div class="jumbotron jumbotron-fluid page-header" style="margin-bottom: 90px;">
         <div class="container text-center py-5">
             <h1 class="text-white display-3 mt-lg-5">Productos subidos</h1>
@@ -159,10 +246,6 @@
             </div>
         </div>
     </div>
-    <!-- Header End -->
-
-
-    <!-- Products Counter Start -->
     <div class="container mb-4">
         <div class="row justify-content-center">
             <div class="col-lg-4 col-md-6">
@@ -173,136 +256,87 @@
             </div>
         </div>
     </div>
-    <!-- Products Counter End -->
-
-     <!-- Search Bar Start -->
-<div class="container mb-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-6 col-md-8">
-            <input type="text" id="search-input" class="form-control form-control-lg" placeholder="Buscar por nombre o código de barras...">
+    <div class="container mb-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                <input type="text" id="search-input" class="form-control form-control-lg" placeholder="Buscar por nombre o código de barras...">
+            </div>
         </div>
     </div>
-</div>
-<!-- Search Bar End -->
+    <div class="container-fluid py-5">
+        <div class="container py-5">
+            <div class="row" id="product-list">
+                {% for p in productos %}
+                <div class="col-lg-3 col-md-6 mb-4 pb-2 product-card">
+                    <div class="product-item d-flex flex-column align-items-center text-center bg-light rounded px-3 pb-5 pt-4">
 
- <style>
-    .product-item {
-        position: relative;
-        padding-top: 60px; /* Espacio para botones y precio */
-    }
+                        <div class="product-buttons">
+                            <button class="btn btn-sm btn-primary"
+                                onclick="editarProducto('{{ p.id }}', '{{ p.nombre }}', '{{ p.descripcion }}', '{{ p.precio }}', '{{ p.inventario }}')">Editar</button>
+                            <button class="btn btn-sm btn-danger" onclick="eliminarProducto('{{ p.id }}')">Eliminar</button>
+                        </div>
 
-    .product-buttons {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        z-index: 10;
-    }
+                        <div class="price-badge">
+                            ${{ '%.2f'|format(p.precio) }}
+                        </div>
 
-    .product-buttons .btn {
-        padding: 4px 10px;
-        font-size: 0.75rem;
-        white-space: nowrap;
-    }
+                        <div class="position-relative bg-primary rounded-circle mt-5 mb-4 p-3" style="width: 150px; height: 150px;">
+                            <img class="rounded-circle w-100 h-100"
+                                src="{{ url_for('static', filename='img/productos/' ~ (p.imagen or 'placeholder.png')) }}"
+                                style="object-fit: cover;" alt="{{ p.nombre }}">
+                        </div>
 
-    .price-badge {
-        position: absolute;
-        top: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: #007bff;
-        color: white;
-        padding: 6px 12px;
-        border-radius: 10px;
-        font-weight: bold;
-        z-index: 5;
-        font-size: 0.9rem;
-    }
-</style>
-
-<!-- Products List -->
-<div class="container-fluid py-5">
-    <div class="container py-5">
-        <div class="row" id="product-list">
-            {% for p in productos %}
-            <div class="col-lg-3 col-md-6 mb-4 pb-2 product-card">
-                <div class="product-item d-flex flex-column align-items-center text-center bg-light rounded px-3 pb-5 pt-4">
-                    
-                    <!-- Botones Editar / Eliminar -->
-                    <div class="product-buttons">
-                        <button class="btn btn-sm btn-primary"
-                            onclick="editarProducto('{{ p.id }}', '{{ p.nombre }}', '{{ p.descripcion }}', '{{ p.precio }}', '{{ p.inventario }}')">Editar</button>
-                        <button class="btn btn-sm btn-danger" onclick="eliminarProducto('{{ p.id }}')">Eliminar</button>
+                        <h5 class="font-weight-bold mb-2">{{ p.nombre }}</h5>
+                        <p class="mb-3">{{ p.descripcion or 'Sin descripción' }}</p>
+                        <small class="text-muted">Código: {{ p.cod_barras }}</small><br>
+                        <small class="text-muted">Inventario: {{ p.inventario }}</small>
                     </div>
-
-                    <!-- Precio -->
-                    <div class="price-badge">
-                        ${{ '%.2f'|format(p.precio) }}
-                    </div>
-
-                    <!-- Imagen del producto -->
-                    <div class="position-relative bg-primary rounded-circle mt-5 mb-4 p-3" style="width: 150px; height: 150px;">
-                        <img class="rounded-circle w-100 h-100"
-                            src="{{ url_for('static', filename='img/productos/' ~ (p.imagen or 'placeholder.png')) }}"
-                            style="object-fit: cover;" alt="{{ p.nombre }}">
-                    </div>
-
-                    <!-- Detalles del producto -->
-                    <h5 class="font-weight-bold mb-2">{{ p.nombre }}</h5>
-                    <p class="mb-3">{{ p.descripcion or 'Sin descripción' }}</p>
-                    <small class="text-muted">Código: {{ p.cod_barras }}</small><br>
-                    <small class="text-muted">Inventario: {{ p.inventario }}</small>
                 </div>
-            </div>
-            {% else %}
-            <div class="col-12 text-center">
-                <div class="alert alert-warning">
-                    <h4>No hay productos disponibles</h4>
-                    <p>¡Sube el primer producto haciendo clic en el botón!</p>
-                    <a href="{{ url_for('subir') }}" class="btn btn-primary">Subir Producto</a>
+                {% else %}
+                <div class="col-12 text-center">
+                    <div class="alert alert-warning">
+                        <h4>No hay productos disponibles</h4>
+                        <p>¡Sube el primer producto haciendo clic en el botón!</p>
+                        <a href="{{ url_for('subir') }}" class="btn btn-primary">Subir Producto</a>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
     </div>
-</div>
 
-<!-- Modal flotante para editar producto -->
-<div class="modal-overlay" id="modalEditar">
-    <div class="modal-content">
-        <button class="close-btn" onclick="cerrarModal()">×</button>
-        <h4 class="text-primary mb-3">Editar producto</h4>
-        <form id="formEditarProducto">
-            <input type="hidden" id="edit-id">
-            <div class="form-group mb-2">
-                <label>Nombre</label>
-                <input type="text" class="form-control" id="edit-nombre" required>
-            </div>
-            <div class="form-group mb-2">
-                <label>Descripción</label>
-                <textarea class="form-control" id="edit-descripcion" rows="2"></textarea>
-            </div>
-            <div class="form-group mb-2">
-                <label>Precio</label>
-                <input type="number" class="form-control" id="edit-precio" step="0.01" required>
-            </div>
-            <div class="form-group mb-2">
-                <label>Inventario</label>
-                <input type="number" class="form-control" id="edit-inventario" required>
-            </div>
-            <div class="form-group mb-3">
-                <label>Imagen</label>
-                <input type="file" class="form-control" id="edit-imagen">
-            </div>
-            <button type="button" class="btn btn-primary w-100" onclick="guardarCambios()">Guardar Cambios</button>
-        </form>
+    <div class="modal-overlay" id="modalEditar">
+        <div class="modal-content">
+            <button class="close-btn" onclick="cerrarModal()">×</button>
+            <h4 class="text-primary mb-3">Editar producto</h4>
+            <form id="formEditarProducto">
+                <input type="hidden" id="edit-id">
+                <div class="form-group mb-2">
+                    <label>Nombre</label>
+                    <input type="text" class="form-control" id="edit-nombre" required>
+                </div>
+                <div class="form-group mb-2">
+                    <label>Descripción</label>
+                    <textarea class="form-control" id="edit-descripcion" rows="2"></textarea>
+                </div>
+                <div class="form-group mb-2">
+                    <label>Precio</label>
+                    <input type="number" class="form-control" id="edit-precio" step="0.01" required>
+                </div>
+                <div class="form-group mb-2">
+                    <label>Inventario</label>
+                    <input type="number" class="form-control" id="edit-inventario" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label>Imagen</label>
+                    <input type="file" class="form-control" id="edit-imagen">
+                </div>
+                <button type="button" class="btn btn-primary w-100" onclick="guardarCambios()">Guardar Cambios</button>
+            </form>
+        </div>
     </div>
-</div>
 
- 
-    <!-- JavaScript para funcionalidades -->
+
     <script>
         // 🧹 Eliminar producto
         function eliminarProducto(id) {
@@ -376,29 +410,77 @@
         });
 
         // 🔍 Buscador por nombre y código de barras
-document.getElementById('search-input').addEventListener('input', function () {
-    const search = this.value.toLowerCase();
-    const cards = document.querySelectorAll('.product-card');
-    let visibles = 0;
+        document.getElementById('search-input').addEventListener('input', function () {
+            const search = this.value.toLowerCase();
+            const cards = document.querySelectorAll('.product-card');
+            let visibles = 0;
 
-    cards.forEach(card => {
-        const nombre = card.querySelector('h5')?.textContent.toLowerCase() || '';
-        const codBar = Array.from(card.querySelectorAll('small.text-muted'))
-                            .find(el => el.textContent.toLowerCase().includes('código'))?.textContent.toLowerCase() || '';
-        const codLimpio = codBar.replace('código: ', '');
+            cards.forEach(card => {
+                const nombre = card.querySelector('h5')?.textContent.toLowerCase() || '';
+                const codBar = Array.from(card.querySelectorAll('small.text-muted'))
+                    .find(el => el.textContent.toLowerCase().includes('código'))?.textContent.toLowerCase() || '';
+                const codLimpio = codBar.replace('código: ', '');
 
-        const visible = nombre.includes(search) || codLimpio.includes(search);
-        card.style.display = visible ? 'block' : 'none';
-        if (visible) visibles++;
-    });
+                const visible = nombre.includes(search) || codLimpio.includes(search);
+                card.style.display = visible ? 'block' : 'none';
+                if (visible) visibles++;
+            });
 
-    // Actualizar el contador visible
-    document.getElementById('product-counter').textContent = visibles;
-});
+            // Actualizar el contador visible
+            document.getElementById('product-counter').textContent = visibles;
+        });
+
+        /* ============================================== */
+        /* NUEVO CÓDIGO JS PARA LA TARJETA DE USUARIO */
+        document.addEventListener("DOMContentLoaded", async () => {
+            const card = document.getElementById("userCard");
+            const nameEl = document.getElementById("userName");
+            const roleEl = document.getElementById("userRole");
+            const logoutBtn = document.getElementById("logoutBtn");
+
+            // Se verifica si los elementos existen 
+            if (!card || !nameEl || !roleEl || !logoutBtn) {
+                console.warn("Elementos de Tarjeta de Usuario no encontrados.");
+                return;
+            }
+
+            try {
+                // Llama al endpoint de tu API para obtener los datos del usuario logueado
+                // NOTA: Este endpoint es un ejemplo, ajústalo a tu API de Flask
+                const resp = await fetch("/api/mi_usuario"); 
+
+                if (!resp.ok) {
+                    // Si el usuario no está autenticado (ej. 401 Unauthorized), ocultamos la tarjeta.
+                    if (resp.status === 401) {
+                        card.style.display = 'none';
+                    }
+                    return;
+                }
+
+                const data = await resp.json();
+                
+                // Si la respuesta es exitosa, actualiza la tarjeta con los datos.
+                if (data.ok && data.data) {
+                    nameEl.textContent = data.data.nombre || "Sin nombre";
+                    roleEl.textContent = data.data.rol || "Sin rol";
+                    // Asegura que la tarjeta esté visible 
+                    card.style.display = 'flex'; 
+                }
+            } catch (err) {
+                console.error("Error obteniendo usuario actual:", err);
+                card.style.display = 'none'; // Ocultar si hay un error de red
+            }
+
+            // Manejo del botón de cerrar sesión
+            logoutBtn.addEventListener("click", () => {
+                 // Redirigir al endpoint de cerrar sesión de Flask
+                window.location.href = "/logout"; 
+            });
+        });
+        /* ============================================== */
 
     </script>
 
-    <!-- Footer Start -->
     <div class="container-fluid footer bg-light py-5" style="margin-top: 90px;">
         <div class="container text-center py-5">
             <div class="row">
@@ -429,13 +511,11 @@ document.getElementById('search-input').addEventListener('input', function () {
                 </div>
                 <div class="col-12">
                     <p class="m-0">&copy; <a href="#">Domain</a>. All Rights Reserved. Designed by <a
-                            href="https://htmlcodex.com">HTML Codex</a></p>
+                                href="https://htmlcodex.com">HTML Codex</a></p>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Footer End -->
-
     <a href="#" class="btn btn-secondary px-2 back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -447,4 +527,5 @@ document.getElementById('search-input').addEventListener('input', function () {
     <script src="{{ url_for('static', filename='lib/lightbox/js/lightbox.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
+
 </html>

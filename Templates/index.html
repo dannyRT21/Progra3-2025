@@ -28,7 +28,7 @@
     <style>
   /* Tarjeta de usuario compacta */
 .user-card {
-  background: #3405a3;
+  background: hsl(193, 94%, 33%); 
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
   padding: 6px 12px;
@@ -60,7 +60,7 @@
   padding: 3px 10px;
   border-radius: 8px;
   border: none;
-  background: #6b64f3;
+  background: #f364e0;
   color: #ffffff;
   font-weight: 600;
   font-size: 11px;
@@ -69,7 +69,7 @@
 }
 
 .user-card button:hover {
-  background: #534bf3;
+  background: #ceced4;
 }
 
 /* ahora es inline dentro del topbar, nada de absolute */
@@ -99,7 +99,7 @@
                     <span class="text-white">|</span>
                     <a class="text-white px-3" href="#">Ayuda</a>
                     <span class="text-white">|</span>
-                    <a class="text-white pl-3" href="#">Soporte panzona</a>
+                    <a class="text-white pl-3" href="#">Soporte</a>
                 </div>
             </div>
 
@@ -145,10 +145,9 @@
                         <h1 class="m-0 display-4 text-primary"><span class="text-secondary">copy</span>Variedades</h1>
                     </a>
                     <div class="navbar-nav py-0">
-                        <a href="{{ url_for('subir') }}" class="nav-item nav-link">agregar archivos</a>
-                        <a href="{{ url_for('productos') }}" class="nav-item nav-link">papeleria y abarrotes</a>
+                        <a href="{{  url_for('productos_clientes') }}" class="nav-item nav-link">papeleria y abarrotes</a>
+                        <a href="{{ url_for('carrito_compras') }}" class="nav-item nav-link">Mis productos</a>
                         <a href="{{ url_for('contact') }}" class="nav-item nav-link">contactanos</a>
-                        <a href="{{ url_for('productos_clientes') }}" class="nav-item nav-link">clientes vista</a>
                     
                     </div>
                 </div>
@@ -164,9 +163,9 @@
                     <img class="w-100" src="{{ url_for('static', filename='img/Mercado Libre.jpg') }}" alt="Image">
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3" style="max-width: 900px;">
-                            <h4 class="text-white text-uppercase mb-md-3">Tienda (ver panel de admins)</h4>
-                            <h1 class="display-3 text-white mb-md-4">Encuentra lo que necesites, como el panel</h1>
-                            <a href="{{ url_for('panel_admin') }}" class="btn btn-primary py-md-3 px-md-5 mt-2">Ver panel</a>
+                            <h4 class="text-white text-uppercase mb-md-3">Tienda de abarrotes y papelería</h4>
+                            <h1 class="display-3 text-white mb-md-4">Encuentra lo que necesites</h1>
+                            <a href="{{ url_for('productos_clientes') }}" class="btn btn-primary py-md-3 px-md-5 mt-2">Comprar Ya!l</a>
                         </div>
                     </div>
                 </div>
@@ -176,7 +175,7 @@
                         <div class="p-3" style="max-width: 900px;">
                             <h4 class="text-white text-uppercase mb-md-3">Papelería y útiles</h4>
                             <h1 class="display-3 text-white mb-md-4">Libros, cuadernos, colores y todo lo que buscas aquí</h1>
-                            <a href="{{ url_for('productos') }}" class="btn btn-primary py-md-3 px-md-5 mt-2">Ver libros y cuadernos</a>
+                            <a href="{{ url_for('productos_clientes') }}"" class="btn btn-primary py-md-3 px-md-5 mt-2">Ver libros y cuadernos</a>
                         </div>
                     </div>
                 </div>
@@ -184,9 +183,9 @@
                     <img class="w-100" src="{{ url_for('static', filename='img/copias jsjs.jpg') }}" alt="Image">
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3" style="max-width: 900px;">
-                            <h4 class="text-white text-uppercase mb-md-3">Servicio de impresiones</h4>
+                            <h4 class="text-white text-uppercase mb-md-3">Servicio de impresiones muy</h4>
                             <h1 class="display-3 text-white mb-md-4">Copias y fotocopias aquí!</h1>
-                            <a href="{{ url_for('productos') }}" class="btn btn-primary py-md-3 px-md-5 mt-2">Fotocopias ahora</a>
+                            <a href="{{ url_for('productos_clientes') }}"" class="btn btn-primary py-md-3 px-md-5 mt-2">Fotocopias ahora</a>
                         </div>
                     </div>
                 </div>
@@ -252,7 +251,7 @@
                             <div class="position-relative text-center bg-light rounded p-4 pb-5" style="margin-top: -75px;">
                                 <h5 class="font-weight-semi-bold mt-5 mb-3 pt-5">Tienda de abarrotes</h5>
                                 <p>Todos los articulos de abarrotes, bebidas, panaderia, golosinas todo eso encuentras aca.</p>
-                                <a href="{{ url_for('abarrotes') }}" class="border-bottom border-secondary text-decoration-none text-secondary">ir de compras</a>
+                                <a href="{{ url_for('productos_clientes') }}" class="border-bottom border-secondary text-decoration-none text-secondary">ir de compras</a>
                             </div>
                         </div>
                         <div class="service-item">
@@ -262,7 +261,7 @@
                             <div class="position-relative text-center bg-light rounded p-4 pb-5" style="margin-top: -75px;">
                                 <h5 class="font-weight-semi-bold mt-5 mb-3 pt-5">Papelería y útiles</h5>
                                 <p>Libros, cuadernos, colores, paginas y cartulinas... todo lo relazado con la papeleria y utiles lo tenemos.</p>
-                                <a href="{{ url_for('papeleria') }}" class="border-bottom border-secondary text-decoration-none text-secondary">ver cositas</a>
+                                <a href="{{ url_for('productos_clientes') }}" class="border-bottom border-secondary text-decoration-none text-secondary">ver cositas</a>
                             </div>
                         </div>
                         <div class="service-item">
@@ -272,7 +271,7 @@
                             <div class="position-relative text-center bg-light rounded p-4 pb-5" style="margin-top: -75px;">
                                 <h5 class="font-weight-semi-bold mt-5 mb-3 pt-5">copias y fotocopias</h5>
                                 <p>Puedes subir tus archivos y espeficicar lo que vas a imprimir y solo pasas a recoger y pagar.</p>
-                                <a href="{{ url_for('copias') }}" class="border-bottom border-secondary text-decoration-none text-secondary">Vamos a imprimir</a>
+                                <a href="{{ url_for('productos_clientes') }}" class="border-bottom border-secondary text-decoration-none text-secondary">Vamos a imprimir</a>
                             </div>
                         </div>
                     </div>
